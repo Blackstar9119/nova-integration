@@ -1,0 +1,34 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Nova",
+        "description": "Storage for Nova Cards: theme, notes, shopping and recipes. All devices share the same data. Choose the active modules in the options afterwards."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Nova is already set up."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Modules",
+        "description": "Disabled modules keep their data; their cards only show a hint.",
+        "data": {
+          "modules": "Active modules"
+        }
+      }
+    }
+  },
+  "selector": {
+    "modules": {
+      "options": {
+        "theme": "Theme (replaces the “Nova Theme” helper)",
+        "notes": "Notes",
+        "shopping": "Shopping",
+        "recipes": "Recipes"
+      }
+    }
+  }
+}
