@@ -310,7 +310,8 @@ async def import_recipe(hass: HomeAssistant, url: str) -> dict:
     draft["image_data"] = None
     if img := _image_url(r.get("image") or r.get("thumbnailUrl"), final):
         try:
-            data, ctype, _ = await _get(hass, img, IMAGE_MAX, IMAGE_HEADERS)
+            # Referer wie im Browser: manche Bild-Server (CDN) liefern sonst nichts oder ein anderes Format
+            data, ctype, _ = await _get(hass, img, IMAGE_MAX, {**IMAGE_HEADERS, "Referer": final})
             # Pillow erkennt das Format selbst (JPEG, PNG, WebP, AVIF …), gespeichert wird später immer JPEG
             small = await hass.async_add_executor_job(shrink, data)
             if small:
