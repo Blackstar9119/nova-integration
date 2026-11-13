@@ -265,6 +265,7 @@ async def _get(hass: HomeAssistant, url: str, limit: int, headers: dict = HEADER
     session = async_get_clientsession(hass)
     try:
         async with session.get(url, headers=headers, timeout=aiohttp.ClientTimeout(total=TIMEOUT), allow_redirects=True, max_redirects=5) as resp:
+            _LOGGER.debug("Rezept-Import: GET %s → HTTP %s, Content-Type %r, Ziel %s", url, resp.status, resp.headers.get("Content-Type"), resp.url)
             if resp.status in (401, 403, 429):
                 raise RecipeImportError("blocked", "Die Seite lässt keinen Abruf zu")
             if resp.status >= 400:
@@ -279,6 +280,7 @@ async def _get(hass: HomeAssistant, url: str, limit: int, headers: dict = HEADER
                     raise RecipeImportError("too_large", "Die Seite ist zu groß")
             return body, resp.headers.get("Content-Type", ""), str(resp.url)
     except (aiohttp.ClientError, asyncio.TimeoutError) as err:
+        _LOGGER.debug("Rezept-Import: GET %s fehlgeschlagen: %r", url, err)
         raise RecipeImportError("fetch_failed", "Die Seite ist nicht erreichbar") from err
 
 
@@ -308,7 +310,9 @@ async def import_recipe(hass: HomeAssistant, url: str) -> dict:
     if not draft["title"] and not draft["ingredients"]:
         raise RecipeImportError("no_recipe", "")
     draft["image_data"] = None
-    if img := _image_url(r.get("image") or r.get("thumbnailUrl"), final):
+    img = _image_url(r.get("image") or r.get("thumbnailUrl"), final)
+    _LOGGER.debug("Rezept-Import: Bild-Angabe %r → %s", r.get("image") or r.get("thumbnailUrl"), img)
+    if img:
         try:
             # Referer wie im Browser: manche Bild-Server (CDN) liefern sonst nichts oder ein anderes Format
             data, ctype, _ = await _get(hass, img, IMAGE_MAX, {**IMAGE_HEADERS, "Referer": final})
@@ -317,7 +321,7 @@ async def import_recipe(hass: HomeAssistant, url: str) -> dict:
             if small:
                 draft["image_data"] = "data:image/jpeg;base64," + base64.b64encode(small).decode()
             else:
-                _LOGGER.debug("Rezept-Import: Bild %s nicht lesbar (%s, %d Bytes)", img, ctype, len(data))
+                _LOGGER.debug("Rezept-Import: Bild %s nicht lesbar (%s, %d Bytes, Anfang %r)", img, ctype, len(data), data[:16])
         except RecipeImportError as err:
             _LOGGER.debug("Rezept-Import: Bild %s nicht geladen: %s", img, err)  # ohne Bild geht es auch
     return draft
