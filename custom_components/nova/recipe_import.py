@@ -16,12 +16,16 @@ from io import BytesIO
 from html import escape, unescape
 from urllib.parse import urljoin, urlsplit
 
+import logging
+
 import aiohttp
 from PIL import Image, UnidentifiedImageError
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .const import RECIPE_UNITS
+
+_LOGGER = logging.getLogger(__name__)
 
 PAGE_MAX = 3_000_000
 IMAGE_MAX = 6_000_000
@@ -32,7 +36,8 @@ HEADERS = {
     "Accept": "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8",
     "Accept-Language": "de-DE,de;q=0.9,en;q=0.6",
 }
-MAGIC = ((b"RIFF", "webp"), (b"\xff\xd8\xff", "jpg"), (b"\x89PNG\r\n\x1a\n", "png"))
+# Bilder: lieber JPEG/PNG/WebP als AVIF, das kann nicht jede Pillow-Version
+IMAGE_HEADERS = {**HEADERS, "Accept": "image/jpeg,image/png,image/webp;q=0.9,image/*;q=0.5,*/*;q=0.1"}
 IMG_SIDE = 960  # wie die Karten beim Hochladen
 
 
@@ -49,8 +54,8 @@ class RecipeImportError(Exception):
 UNIT_WORDS = {
     "g": "g", "gr": "g", "gramm": "g", "kg": "kg", "kilo": "kg", "kilogramm": "kg",
     "ml": "ml", "milliliter": "ml", "l": "l", "liter": "l", "cl": "cl", "zentiliter": "cl",
-    "el": "EL", "essl": "EL", "esslöffel": "EL", "eßlöffel": "EL", "tbsp": "EL",
-    "tl": "TL", "teel": "TL", "teelöffel": "TL", "tsp": "TL",
+    "el": "EL", "essl": "EL", "esslöffel": "EL", "eßlöffel": "EL", "tbsp": "EL", "tablespoon": "EL", "tablespoons": "EL",
+    "tl": "TL", "teel": "TL", "teelöffel": "TL", "tsp": "TL", "teaspoon": "TL", "teaspoons": "TL",
     "prise": "Prise", "prisen": "Prise", "msp": "Msp.", "messerspitze": "Msp.", "messerspitzen": "Msp.",
     "tasse": "Tasse", "tassen": "Tasse", "cup": "Cup", "cups": "Cup", "becher": "Becher",
     "bund": "Bund", "dose": "Dose", "dosen": "Dose", "glas": "Glas", "gläser": "Glas",
@@ -237,7 +242,7 @@ def shrink(data: bytes) -> bytes | None:
             out = BytesIO()
             im.convert("RGB").save(out, "JPEG", quality=82, optimize=True)
             return out.getvalue()
-    except (UnidentifiedImageError, OSError, ValueError):
+    except (UnidentifiedImageError, OSError, ValueError, Image.DecompressionBombError):
         return None
 
 
@@ -255,11 +260,11 @@ async def _check_host(hass: HomeAssistant, url: str) -> None:
             raise RecipeImportError("blocked", "Adressen im eigenen Netz werden nicht importiert")
 
 
-async def _get(hass: HomeAssistant, url: str, limit: int) -> tuple[bytes, str, str]:
+async def _get(hass: HomeAssistant, url: str, limit: int, headers: dict = HEADERS) -> tuple[bytes, str, str]:
     await _check_host(hass, url)
     session = async_get_clientsession(hass)
     try:
-        async with session.get(url, headers=HEADERS, timeout=aiohttp.ClientTimeout(total=TIMEOUT), allow_redirects=True, max_redirects=5) as resp:
+        async with session.get(url, headers=headers, timeout=aiohttp.ClientTimeout(total=TIMEOUT), allow_redirects=True, max_redirects=5) as resp:
             if resp.status in (401, 403, 429):
                 raise RecipeImportError("blocked", "Die Seite lässt keinen Abruf zu")
             if resp.status >= 400:
@@ -305,11 +310,13 @@ async def import_recipe(hass: HomeAssistant, url: str) -> dict:
     draft["image_data"] = None
     if img := _image_url(r.get("image") or r.get("thumbnailUrl"), final):
         try:
-            data, _, _ = await _get(hass, img, IMAGE_MAX)
-            if any(data.startswith(sig) for sig, _ in MAGIC):
-                small = await hass.async_add_executor_job(shrink, data)
-                if small:
-                    draft["image_data"] = "data:image/jpeg;base64," + base64.b64encode(small).decode()
-        except RecipeImportError:
-            pass  # ohne Bild geht es auch
+            data, ctype, _ = await _get(hass, img, IMAGE_MAX, IMAGE_HEADERS)
+            # Pillow erkennt das Format selbst (JPEG, PNG, WebP, AVIF …), gespeichert wird später immer JPEG
+            small = await hass.async_add_executor_job(shrink, data)
+            if small:
+                draft["image_data"] = "data:image/jpeg;base64," + base64.b64encode(small).decode()
+            else:
+                _LOGGER.debug("Rezept-Import: Bild %s nicht lesbar (%s, %d Bytes)", img, ctype, len(data))
+        except RecipeImportError as err:
+            _LOGGER.debug("Rezept-Import: Bild %s nicht geladen: %s", img, err)  # ohne Bild geht es auch
     return draft

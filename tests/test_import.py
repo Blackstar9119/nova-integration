@@ -42,6 +42,7 @@ def test_parse_ingredient():
     assert parse_ingredient("1-2 Zehe/n Knoblauch") == {"qty": 1, "unit": "Zehe", "name": "Knoblauch"}
     assert parse_ingredient("1/2 Liter Brühe") == {"qty": .5, "unit": "l", "name": "Brühe"}
     assert parse_ingredient("2 Tomate/n") == {"qty": 2, "unit": "", "name": "Tomate"}
+    assert parse_ingredient("3 tablespoons butter, melted") == {"qty": 3, "unit": "EL", "name": "butter, melted"}
     assert parse_ingredient("  ") is None
 
 
