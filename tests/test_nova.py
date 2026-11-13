@@ -178,3 +178,11 @@ async def test_todo_sync(hass, ws, tmp_path):
     await ws("nova/shopping/clear_done")
     await _settle(hass)
     assert await _todo(hass, eid) == {} and data.shop["items"] == []
+
+
+async def test_schriften(hass, hass_client, nova):
+    """Die Schriften des Rezeptbuchs kommen unter /nova/static/fonts von Home Assistant selbst."""
+    client = await hass_client()
+    res = await client.get("/nova/static/fonts/nova-hand-400.woff2")
+    assert res.status == 200
+    assert (await res.read())[:4] == b"wOF2"

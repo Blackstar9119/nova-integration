@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import os
+
+from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 
@@ -11,6 +14,9 @@ from .todo_sync import TodoSync
 from .websocket_api import async_register
 
 REGISTERED = f"{DOMAIN}_registered"
+# Schriften des Nova Rezeptbuchs (Caveat, EB Garamond, Latin-Subset, SIL Open Font License) – die Karte lädt sie erst,
+# wenn ein Buch zu sehen ist. Nichts kommt aus dem Internet.
+STATIC_URL = "/nova/static"
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -21,6 +27,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # WebSocket-Befehle lassen sich nicht wieder abmelden – deshalb nur einmal pro HA-Start anmelden
     if not hass.data.get(REGISTERED):
         async_register(hass)
+        # Statische Pfade lassen sich ebenfalls nicht abmelden
+        static = os.path.join(os.path.dirname(__file__), "static")
+        await hass.http.async_register_static_paths([StaticPathConfig(STATIC_URL, static, True)])
         hass.data[REGISTERED] = True
     if "shopping" in enabled:
         sync = TodoSync(hass, data)
