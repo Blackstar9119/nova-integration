@@ -163,14 +163,34 @@ def _find_recipe(node):
 LD_RE = re.compile(r"<script[^>]*type\s*=\s*[\"']?application/ld\+json[\"']?[^>]*>(.*?)</script>", re.I | re.S)
 
 
-def extract_recipe(page: str) -> dict | None:
+def _ld_blocks(page: str) -> list:
+    out = []
     for block in LD_RE.findall(page):
         block = block.strip().removeprefix("<!--").removesuffix("-->").strip()
         block = re.sub(r"^//\s*<!\[CDATA\[|//\s*\]\]>$", "", block).strip()
         try:
-            data = json.loads(block, strict=False)
+            out.append(json.loads(block, strict=False))
         except ValueError:
             continue
+    return out
+
+
+def _index(node, idx: dict) -> dict:
+    """Alle Objekte mit @id sammeln – Angaben wie "image": {"@id": "…#primaryimage"} verweisen darauf (Yoast, Chefkoch)."""
+    if isinstance(node, list):
+        for x in node:
+            _index(x, idx)
+    elif isinstance(node, dict):
+        if isinstance(node.get("@id"), str) and len(node) > 1:
+            idx.setdefault(node["@id"], node)
+        for v in node.values():
+            if isinstance(v, (dict, list)):
+                _index(v, idx)
+    return idx
+
+
+def extract_recipe(page: str) -> dict | None:
+    for data in _ld_blocks(page):
         if (r := _find_recipe(data)) is not None:
             return r
     return None
@@ -193,14 +213,19 @@ def _steps(v) -> list[str]:
     return out
 
 
-def _image_url(v, base: str) -> str | None:
+def _image_url(v, base: str, idx: dict | None = None, depth: int = 0) -> str | None:
+    if depth > 4:
+        return None
     if isinstance(v, list):
         for x in v:
-            if u := _image_url(x, base):
+            if u := _image_url(x, base, idx, depth + 1):
                 return u
         return None
     if isinstance(v, dict):
-        return _image_url(v.get("url") or v.get("contentUrl"), base)
+        # nur ein Verweis per @id → das Objekt dazu nachschlagen
+        if not (v.get("url") or v.get("contentUrl")) and idx and (ref := idx.get(v.get("@id"))) is not None and ref is not v:
+            return _image_url(ref, base, idx, depth + 1)
+        return _image_url(v.get("url") or v.get("contentUrl"), base, idx, depth + 1)
     if isinstance(v, str) and v.strip():
         u = urljoin(base, v.strip())
         return u if urlsplit(u).scheme in ("http", "https") else None
@@ -310,7 +335,15 @@ async def import_recipe(hass: HomeAssistant, url: str) -> dict:
     if not draft["title"] and not draft["ingredients"]:
         raise RecipeImportError("no_recipe", "")
     draft["image_data"] = None
-    img = _image_url(r.get("image") or r.get("thumbnailUrl"), final)
+    idx: dict = {}
+    for data in _ld_blocks(page):
+        _index(data, idx)
+    img = _image_url(r.get("image") or r.get("thumbnailUrl"), final, idx)
+    if not img:
+        # Ersatz: Vorschaubild der Seite (og:image)
+        og = re.search(r"<meta[^>]+property=[\"']og:image[\"'][^>]+content=[\"']([^\"']+)", page, re.I) or \
+            re.search(r"<meta[^>]+content=[\"']([^\"']+)[\"'][^>]+property=[\"']og:image[\"']", page, re.I)
+        img = _image_url(unescape(og.group(1)), final) if og else None
     _LOGGER.debug("Rezept-Import: Bild-Angabe %r → %s", r.get("image") or r.get("thumbnailUrl"), img)
     if img:
         try:
