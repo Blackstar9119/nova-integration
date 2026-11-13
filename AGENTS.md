@@ -13,10 +13,11 @@ Oberfläche – kein YAML.
 ```
 custom_components/nova/
   manifest.json        Metadaten, Versionsnummer (einzige Stelle)
-  __init__.py          Einrichten/Entladen des Eintrags, Module aus den Optionen, startet den todo-Abgleich
-  config_flow.py       Einrichtung (ohne Eingaben) und Optionen (aktive Module)
+  __init__.py          Einrichten/Entladen des Eintrags, startet/stoppt den todo-Abgleich je nach Modul Einkauf
+  config_flow.py       Einrichtung (ohne Eingaben) und Optionen (aktive Module, schreibt module.* der Einstellungen)
   const.py             Konstanten: Domain, Module, Einheiten, Themes, Bildordner
   storage.py           NovaData – ALLE Daten und ihre Regeln (prüfen, bereinigen, speichern, Abonnenten benachrichtigen)
+  settings.py          Einstellungen: Standardwerte, voluptuous-Schema, Migration des Speichers, Ansicht ohne Geheimnisse
   websocket_api.py     WebSocket-Befehle nova/<modul>/<befehl> – dünn, ruft nur storage.py auf
   recipe_import.py     Rezept-Import per Link: Seite laden (nur öffentliche Adressen), schema.org Recipe aus JSON-LD lesen,
                        Zutaten zerlegen, Bild verkleinern (Pillow) – liefert nur einen Entwurf, speichert nichts
@@ -34,7 +35,15 @@ README.md              Kurzbeschreibung für Nutzer
 - **Module:** `theme`, `notes`, `shopping`, `recipes` (Liste `MODULES` in `const.py`). Ein neues Modul bekommt: Eintrag in
   `MODULES`, Daten + Methoden in `storage.py`, Befehle in `websocket_api.py` (mit `@_guard("<modul>")`), Übersetzung des
   Namens in `translations/*.json` und Tests. Abgeschaltete Module behalten ihre Daten, antworten aber mit `module_disabled`.
-- **Speicher nur über den HA-Store** (`.storage/nova.<modul>`), nie eigene Dateien. Einzige Ausnahme: Bilder, die liegen
+- **Einstellungen** (`nova/settings/get|set|subscribe|reset`, Speicher `.storage/nova.settings`): Bereiche `allgemein`, `module`,
+  `einkauf`, `notizen`, `rezepte`, `mealie`. Sie sind immer an (kein Modul). Neue Felder: Standardwert in `DEFAULTS` und Prüfung
+  in `SCHEMA` (`settings.py`); ändert sich der Aufbau, `SETTINGS_VERSION`/`SETTINGS_MINOR_VERSION` erhöhen und `migrate()`
+  ergänzen. `set`/`reset` nur Admins, Lesen alle. Das Theme steht dort (`allgemein.theme`), ebenso die aktiven Module
+  (`module.*`, der Options-Dialog schreibt dorthin, Umschalten wirkt ohne Neuladen) und die todo-Liste (`einkauf.todo_entity`).
+  `nova/theme/*` und `nova/shopping/set_sync` bleiben als alte Befehle und dürfen weiter alle Nutzer.
+- **Geheimnisse** (z. B. `mealie.token`, Liste `SECRETS` in `settings.py`) gehen nie an Karten oder Panel: `settings_view()`
+  liefert nur `<feld>_gesetzt`. Auf dem Server liest man sie mit `NovaData.secret()`.
+- **Speicher nur über den HA-Store** (`.storage/nova.<name>`, Liste `STORES`), nie eigene Dateien. Einzige Ausnahme: Bilder, die liegen
   verkleinert in `/config/www/nova/<modul>/` (ausgeliefert als `/local/nova/<modul>/<datei>`).
 - **Nichts ungeprüft speichern.** Alles, was von einer Karte kommt, geht in `storage.py` durch `clean_text`/`clean_html`,
   Icons und Bildnamen durch die Muster dort. Formatierter Text ist HTML aus einer festen Liste (`sanitize.py`); dieselbe Liste

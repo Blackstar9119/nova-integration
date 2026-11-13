@@ -14,7 +14,7 @@
     "step": {
       "init": {
         "title": "Modules",
-        "description": "Disabled modules keep their data; their cards only show a hint.",
+        "description": "Disabled modules keep their data; their cards only show a hint. Changes apply immediately.",
         "data": {
           "modules": "Active modules"
         }

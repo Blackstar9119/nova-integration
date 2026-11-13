@@ -63,7 +63,13 @@ class TodoSync:
         self._entity: str | None = None
         self._entity_unsub = []
 
+    @property
+    def running(self) -> bool:
+        return bool(self._unsubs)
+
     async def start(self) -> None:
+        if self.running:
+            return
         self.data.on_shop_change = self.schedule
         self._unsubs.append(async_track_time_interval(self.hass, callback(lambda _now: self.schedule()), POLL))
         self._watch()
@@ -77,10 +83,11 @@ class TodoSync:
         for u in self._unsubs + self._entity_unsub:
             u()
         self._unsubs, self._entity_unsub = [], []
+        self._timer, self._entity = None, None
 
     @property
     def entity(self) -> str | None:
-        return self.data.shop["sync"].get("entity_id")
+        return self.data.settings["einkauf"]["todo_entity"]
 
     @callback
     def _watch(self) -> None:

@@ -1,6 +1,6 @@
-"""Daten der Nova-Integration: Theme, Notizen, Einkauf, Rezeptbuch und Bilder.
+"""Daten der Nova-Integration: Einstellungen (mit Theme), Notizen, Einkauf, Rezeptbuch und Bilder.
 
-Gespeichert wird je Modul mit dem Store von Home Assistant (.storage/nova.<modul>). Bilder liegen verkleinert unter
+Gespeichert wird mit dem Store von Home Assistant (.storage/nova.<name>, Liste STORES). Bilder liegen verkleinert unter
 /config/www/nova/<modul>/. Jede Änderung geht an alle Abonnenten (Karten auf allen Geräten).
 """
 
@@ -27,12 +27,14 @@ from .const import (
     RECIPE_UNITS,
     SAVE_DELAY,
     STORAGE_VERSION,
+    STORES,
     THEME_HELPER,
     THEMES,
     UNITS,
 )
 from .recipe_import import clean_url
 from .sanitize import clean_html, clean_text
+from .settings import SECTIONS, SETTINGS_MINOR_VERSION, SETTINGS_VERSION, defaults, migrate, normalize, validate, view
 
 ICON_RE = re.compile(r"^[a-z0-9-]{1,32}:[a-z0-9-]{1,64}$")
 IMAGE_RE = re.compile(r"^[a-f0-9]{32}\.(webp|jpg|png)$")
@@ -74,30 +76,34 @@ def hkey(name: str) -> str:
     return " ".join(name.lower().split())
 
 
+class _SettingsStore(Store):
+    """Store der Einstellungen mit Migration älterer Versionen (settings.migrate)."""
+
+    async def _async_migrate_func(self, old_major_version, old_minor_version, old_data):
+        return await migrate(old_major_version, old_minor_version, old_data)
+
+
 class NovaData:
     """Alle Daten + Abonnenten."""
 
-    def __init__(self, hass: HomeAssistant, enabled: set[str]) -> None:
+    def __init__(self, hass: HomeAssistant, modules: set[str] | None = None) -> None:
         self.hass = hass
-        self.enabled = enabled
-        self._stores = {m: Store(hass, STORAGE_VERSION, f"nova.{m}") for m in MODULES}
-        self.theme: dict = {"theme": None}
+        # Module aus den Optionen des Eintrags – nur beim allerersten Start, danach gelten die Einstellungen
+        self._initial_modules = set(MODULES if modules is None else modules)
+        self._stores = {m: Store(hass, STORAGE_VERSION, f"nova.{m}") for m in STORES if m != "settings"}
+        self._stores["settings"] = _SettingsStore(hass, SETTINGS_VERSION, "nova.settings", minor_version=SETTINGS_MINOR_VERSION)
+        self.settings: dict = defaults()
         self.notes: list[dict] = []
         self.shop: dict = {}
         self.recipes: list[dict] = []
         self.image_root = Path(hass.config.path(IMAGE_DIR))
-        self._listeners: dict[str, set[Callable[[], None]]] = {m: set() for m in MODULES}
+        self._listeners: dict[str, set[Callable[[], None]]] = {m: set() for m in (*MODULES, "settings")}
         # wird von der todo-Synchronisation gesetzt: nach jeder Änderung an der Einkaufsliste aufrufen
         self.on_shop_change: Callable[[], None] | None = None
 
     async def async_load(self) -> None:
-        load = {m: await self._stores[m].async_load() or {} for m in MODULES}
-        self.theme = {"theme": load["theme"].get("theme")}
-        if self.theme["theme"] not in THEMES:
-            # Erster Start: Wert des bisherigen Helfers input_select.nova_theme übernehmen
-            st = self.hass.states.get(THEME_HELPER)
-            key = st.state.lower().removeprefix("nova ").strip() if st else None
-            self.theme["theme"] = key if key in THEMES else None
+        raw_settings = await self._stores["settings"].async_load()
+        load = {m: await self._stores[m].async_load() or {} for m in STORES if m != "settings"}
         self.notes = load["notes"].get("notes", [])
         shop = load["shopping"]
         self.shop = {
@@ -107,6 +113,13 @@ class NovaData:
             "sync": shop.get("sync", {"entity_id": None, "snap": {}, "remove": []}),
         }
         self.recipes = load["recipes"].get("recipes", [])
+        if raw_settings is None:
+            await self._first_settings()
+        else:
+            self.settings = normalize(raw_settings)
+        # Abgleich gehört zu einer anderen Liste als eingestellt → Zuordnung vergessen
+        if self.shop["sync"].get("entity_id") != self.settings["einkauf"]["todo_entity"]:
+            self._reset_sync(self.settings["einkauf"]["todo_entity"], notify=False)
 
         def mkdirs() -> None:
             for m in IMAGE_MODULES:
@@ -114,12 +127,33 @@ class NovaData:
 
         await self.hass.async_add_executor_job(mkdirs)
 
+    async def _first_settings(self) -> None:
+        """Erster Start mit Einstellungen: bisherige Werte übernehmen – Module aus den Optionen, Theme aus nova.theme
+        (oder dem alten Helfer input_select.nova_theme), todo-Liste aus dem Einkaufs-Abgleich. Danach gibt es nur noch
+        die Einstellungen; der alte Speicher nova.theme wird gelöscht."""
+        s = defaults()
+        s["module"] = {m: m in self._initial_modules for m in MODULES}
+        old_theme = Store(self.hass, STORAGE_VERSION, "nova.theme")
+        key = ((await old_theme.async_load()) or {}).get("theme")
+        if key not in THEMES:
+            st = self.hass.states.get(THEME_HELPER)
+            key = st.state.lower().removeprefix("nova ").strip() if st else None
+        s["allgemein"]["theme"] = key if key in THEMES else None
+        s["einkauf"]["todo_entity"] = normalize({"einkauf": {"todo_entity": self.shop["sync"].get("entity_id")}})["einkauf"]["todo_entity"]
+        self.settings = s
+        await self._stores["settings"].async_save(s)
+        await old_theme.async_remove()
+
+    @property
+    def enabled(self) -> set[str]:
+        return {m for m in MODULES if self.settings["module"].get(m)}
+
     def require(self, module: str) -> None:
         if module not in self.enabled:
             raise ModuleDisabled(module)
 
-    def _dump(self, module: str) -> dict:
-        return {"theme": self.theme, "notes": {"notes": self.notes}, "shopping": self.shop, "recipes": {"recipes": self.recipes}}[module]
+    def _dump(self, store: str) -> dict:
+        return {"settings": self.settings, "notes": {"notes": self.notes}, "shopping": self.shop, "recipes": {"recipes": self.recipes}}[store]
 
     # ---------- Abonnenten ----------
     @callback
@@ -128,29 +162,72 @@ class NovaData:
         return lambda: self._listeners[kind].discard(fn)
 
     @callback
+    def _notify(self, kind: str) -> None:
+        for fn in list(self._listeners[kind]):
+            fn()
+
+    @callback
     def _changed(self, kind: str, sync: bool = True) -> None:
         self._stores[kind].async_delay_save(lambda: self._dump(kind), SAVE_DELAY)
         if kind == "shopping" and sync and self.on_shop_change:
             self.on_shop_change()
-        for fn in list(self._listeners[kind]):
-            fn()
+        self._notify(kind)
 
     async def async_flush(self) -> None:
         """Ausstehende Änderungen sofort schreiben (beim Entladen)."""
-        for m in MODULES:
+        for m in STORES:
             await self._stores[m].async_save(self._dump(m))
 
-    # ---------- Theme ----------
+    # ---------- Einstellungen ----------
+    def settings_view(self) -> dict:
+        """Alle Einstellungen ohne Geheimnisse (Mealie-Token nur als token_gesetzt)."""
+        return view(self.settings)
+
+    def secret(self, section: str, key: str):
+        """Geheimnis für den Server selbst (z. B. Mealie-Import). Nie an eine Karte schicken."""
+        return self.settings[section][key]
+
+    @callback
+    def settings_set(self, patch: dict) -> dict:
+        clean = validate(patch)
+        shop = clean.get("einkauf", {}).get("standard_geschaeft")
+        if shop and not any(s["id"] == shop for s in self.shop["stores"]):
+            raise ValueError("Ungültige Einstellung – einkauf.standard_geschaeft: Geschäft gibt es nicht")
+        new = {sec: dict(vals) for sec, vals in self.settings.items()}
+        for sec, vals in clean.items():
+            new[sec].update(vals)
+        self._apply_settings(new)
+        return self.settings_view()
+
+    @callback
+    def settings_reset(self, section: str | None = None) -> dict:
+        new = {sec: dict(vals) for sec, vals in self.settings.items()}
+        for sec in (section,) if section else SECTIONS:
+            new[sec] = defaults()[sec]
+        self._apply_settings(new)
+        return self.settings_view()
+
+    @callback
+    def _apply_settings(self, new: dict) -> None:
+        old = self.settings
+        if new == old:
+            return
+        self.settings = new
+        self._changed("settings")
+        if new["allgemein"]["theme"] != old["allgemein"]["theme"]:
+            self._notify("theme")
+        if new["einkauf"]["todo_entity"] != old["einkauf"]["todo_entity"]:
+            self._reset_sync(new["einkauf"]["todo_entity"])
+
+    # ---------- Theme (liegt in den Einstellungen, allgemein.theme) ----------
     def theme_view(self) -> dict:
-        return {"theme": self.theme["theme"], "themes": list(THEMES)}
+        return {"theme": self.settings["allgemein"]["theme"], "themes": list(THEMES)}
 
     @callback
     def theme_set(self, key: str) -> None:
         if key not in THEMES:
             raise ValueError(f"Unbekanntes Theme: {key}")
-        if self.theme["theme"] != key:
-            self.theme["theme"] = key
-            self._changed("theme")
+        self.settings_set({"allgemein": {"theme": key}})
 
     # ---------- Notizen ----------
     def notes_view(self) -> dict:
@@ -185,7 +262,7 @@ class NovaData:
             "items": self.shop["items"],
             "stores": self.shop["stores"],
             "history": hist[:60],
-            "sync_entity": self.shop["sync"].get("entity_id"),
+            "sync_entity": self.settings["einkauf"]["todo_entity"],
             "units": UNITS,
         }
 
@@ -316,17 +393,22 @@ class NovaData:
             if h.get("store") == sid:
                 h["store"] = None
         self._changed("shopping", False)
+        if self.settings["einkauf"]["standard_geschaeft"] == sid:
+            self.settings_set({"einkauf": {"standard_geschaeft": None}})
 
     @callback
     def set_sync(self, entity_id: str | None) -> None:
-        sync = self.shop["sync"]
-        if sync.get("entity_id") == entity_id:
-            return
+        """todo-Liste für den Abgleich (alter Befehl nova/shopping/set_sync) – steht in den Einstellungen."""
+        self.settings_set({"einkauf": {"todo_entity": entity_id}})
+
+    @callback
+    def _reset_sync(self, entity_id: str | None, notify: bool = True) -> None:
         # Neue Liste: Zuordnung vergessen, beim nächsten Abgleich wird über den Namen zusammengeführt
         self.shop["sync"] = {"entity_id": entity_id, "snap": {}, "remove": []}
         for it in self.shop["items"]:
             it["todo_uid"] = None
-        self._changed("shopping")
+        if notify:
+            self._changed("shopping")
 
     # ---------- Rezeptbuch ----------
     def recipes_view(self) -> dict:
