@@ -29,12 +29,18 @@ class NovaConfigFlow(ConfigFlow, domain=DOMAIN):
 
 
 class NovaOptionsFlow(OptionsFlow):
-    """Module an- und abschalten."""
+    """Module an- und abschalten (landet in den Einstellungen unter module.*)."""
 
     async def async_step_init(self, user_input=None) -> ConfigFlowResult:
         if user_input is not None:
-            return self.async_create_entry(data={CONF_MODULES: [m for m in MODULES if m in user_input[CONF_MODULES]]})
-        current = self.config_entry.options.get(CONF_MODULES, list(MODULES))
+            mods = [m for m in MODULES if m in user_input[CONF_MODULES]]
+            # direkt übernehmen: sind die Optionen unverändert, ruft HA den Update-Listener nicht auf
+            if data := self.hass.data.get(DOMAIN):
+                data.settings_set({"module": {m: m in mods for m in MODULES}})
+            return self.async_create_entry(data={CONF_MODULES: mods})
+        # Stand aus den Einstellungen (module.*), die auch per nova/settings/set geändert werden können
+        data = self.hass.data.get(DOMAIN)
+        current = sorted(data.enabled, key=MODULES.index) if data else self.config_entry.options.get(CONF_MODULES, list(MODULES))
         schema = vol.Schema({
             vol.Required(CONF_MODULES, default=current): selector.SelectSelector(selector.SelectSelectorConfig(
                 options=list(MODULES), multiple=True, mode=selector.SelectSelectorMode.LIST, translation_key=CONF_MODULES)),

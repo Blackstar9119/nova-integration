@@ -14,7 +14,7 @@
     "step": {
       "init": {
         "title": "Module",
-        "description": "Abgeschaltete Module behalten ihre Daten, die Karten dazu zeigen nur einen Hinweis.",
+        "description": "Abgeschaltete Module behalten ihre Daten, die Karten dazu zeigen nur einen Hinweis. Die Änderung wirkt sofort.",
         "data": {
           "modules": "Aktive Module"
         }

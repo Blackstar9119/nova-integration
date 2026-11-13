@@ -8,6 +8,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import config_validation as cv
 
 from .const import API_VERSION, CONF_MODULES, DOMAIN, IMAGE_MODULES, MODULES
+from .settings import SECTIONS
 from .storage import ModuleDisabled, NovaData
 
 
@@ -41,7 +42,8 @@ def _guard(module: str | None):
 
 
 def _subscribe(kind: str, view):
-    @_guard(kind)
+    # Einstellungen gibt es immer, alle anderen Abos hängen am Modul
+    @_guard(None if kind == "settings" else kind)
     def handler(hass, connection, msg, data: NovaData):
         mid = msg["id"]
 
@@ -64,10 +66,43 @@ async def ws_info(hass, connection, msg):
         "api": API_VERSION,
         "ready": data is not None,
         CONF_MODULES: [m for m in MODULES if data and m in data.enabled],
+        "settings": True,
     })
 
 
-# ---------- Theme ----------
+# ---------- Einstellungen ----------
+# Lesen: jeder angemeldete Nutzer. Schreiben/Zurücksetzen: nur Admins. Geheimnisse (Mealie-Token) gehen nie raus.
+@websocket_api.websocket_command({vol.Required("type"): "nova/settings/get"})
+@websocket_api.async_response
+@_guard(None)
+async def ws_settings_get(hass, connection, msg, data: NovaData):
+    connection.send_result(msg["id"], data.settings_view())
+
+
+@websocket_api.websocket_command({vol.Required("type"): "nova/settings/subscribe"})
+@websocket_api.async_response
+async def ws_settings_subscribe(hass, connection, msg):
+    await _subscribe("settings", lambda d: d.settings_view())(hass, connection, msg)
+
+
+@websocket_api.websocket_command({vol.Required("type"): "nova/settings/set", vol.Required("settings"): dict})
+@websocket_api.require_admin
+@websocket_api.async_response
+@_guard(None)
+async def ws_settings_set(hass, connection, msg, data: NovaData):
+    connection.send_result(msg["id"], data.settings_set(msg["settings"]))
+
+
+@websocket_api.websocket_command({vol.Required("type"): "nova/settings/reset", vol.Optional("bereich"): vol.In(SECTIONS)})
+@websocket_api.require_admin
+@websocket_api.async_response
+@_guard(None)
+async def ws_settings_reset(hass, connection, msg, data: NovaData):
+    connection.send_result(msg["id"], data.settings_reset(msg.get("bereich")))
+
+
+# ---------- Theme (alte Befehle, lesen/schreiben allgemein.theme der Einstellungen) ----------
+# nova/theme/set darf jeder angemeldete Nutzer (Themes Schalter auf Wandpanels ohne Admin-Konto).
 @websocket_api.websocket_command({vol.Required("type"): "nova/theme/subscribe"})
 @websocket_api.async_response
 async def ws_theme_subscribe(hass, connection, msg):
@@ -200,6 +235,7 @@ async def ws_store_delete(hass, connection, msg, data: NovaData):
 @websocket_api.async_response
 @_guard("shopping")
 async def ws_set_sync(hass, connection, msg, data: NovaData):
+    # Alter Befehl, schreibt einkauf.todo_entity. Bleibt für alle offen: die Einkauf Card ruft ihn selbst auf.
     data.set_sync(msg["entity_id"])
     connection.send_result(msg["id"])
 
@@ -265,7 +301,8 @@ async def ws_image_upload(hass, connection, msg, data: NovaData):
 
 
 COMMANDS = (
-    ws_info, ws_theme_subscribe, ws_theme_set, ws_notes_subscribe, ws_notes_save, ws_notes_delete,
+    ws_info, ws_settings_get, ws_settings_subscribe, ws_settings_set, ws_settings_reset,
+    ws_theme_subscribe, ws_theme_set, ws_notes_subscribe, ws_notes_save, ws_notes_delete,
     ws_shop_subscribe, ws_item_save, ws_item_delete, ws_clear_done, ws_reorder, ws_history_delete,
     ws_store_save, ws_store_delete, ws_set_sync,
     ws_recipes_subscribe, ws_recipes_save, ws_recipes_delete, ws_recipes_to_shopping, ws_image_upload,
