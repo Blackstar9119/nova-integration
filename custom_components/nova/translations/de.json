@@ -30,5 +30,11 @@
         "recipes": "Rezeptbuch"
       }
     }
+  },
+  "issues": {
+    "old_cards_resource": {
+      "title": "Alte Nova-Cards-Ressource entfernen",
+      "description": "Nova Cards kommen jetzt mit der Nova-Integration. Unter Dashboards → Ressourcen steht aber noch die separat installierte Datei: {url}\n\nDie Karten laufen trotzdem nur einmal (die Version der Integration gewinnt), die alte Datei wird aber unnötig mitgeladen. So wirst du sie los:\n\n1. **Marketplace** öffnen, **Nova Cards** suchen und **Entfernen** wählen – das nimmt auch die Ressource mit.\n2. Ohne Marketplace: **Einstellungen → Dashboards → ⋮ → Ressourcen** und den Eintrag löschen.\n3. Browser einmal hart neu laden (Strg/Cmd+Shift+R bzw. App-Cache leeren).\n\nDeine Dashboards bleiben, wie sie sind – die Kartentypen `custom:nova-…` ändern sich nicht."
+    }
   }
 }

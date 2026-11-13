@@ -1,6 +1,7 @@
 {
   "domain": "nova",
   "name": "Nova",
+  "after_dependencies": ["lovelace"],
   "codeowners": ["@Blackstar9119"],
   "config_flow": true,
   "dependencies": ["http", "websocket_api", "todo", "frontend", "panel_custom"],
@@ -10,5 +11,5 @@
   "issue_tracker": "https://github.com/Blackstar9119/nova-integration/issues",
   "requirements": [],
   "single_config_entry": true,
-  "version": "0.1.0b5"
+  "version": "0.1.0b6"
 }

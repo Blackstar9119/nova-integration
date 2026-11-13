@@ -10,6 +10,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.loader import async_get_integration
 
+from .cards import NovaCards
 from .const import CONF_MODULES, DOMAIN, MODULES
 from .storage import NovaData
 from .todo_sync import NoteSync, TodoSync
@@ -53,6 +54,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     await apply_modules()
     entry.async_on_unload(entry.add_update_listener(_options_changed))
     await _register_panel(hass)
+    # Nova Cards kommen mit der Integration – keine eigene Dashboard-Ressource nötig
+    cards = NovaCards(hass)
+    await cards.start()
+    entry.async_on_unload(cards.stop)
     entry.async_on_unload(lambda: frontend.async_remove_panel(hass, PANEL_URL, warn_if_unknown=False))
     return True
 
