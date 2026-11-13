@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import os
 
+from homeassistant.components import frontend, panel_custom
 from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.loader import async_get_integration
 
 from .const import CONF_MODULES, DOMAIN, MODULES
 from .storage import NovaData
@@ -17,6 +19,10 @@ REGISTERED = f"{DOMAIN}_registered"
 # Schriften des Nova Rezeptbuchs (Caveat, EB Garamond, Latin-Subset, SIL Open Font License) – die Karte lädt sie erst,
 # wenn ein Buch zu sehen ist. Nichts kommt aus dem Internet.
 STATIC_URL = "/nova/static"
+# Nova-Panel in der Seitenleiste (Einstellungen, nur Admins). Die Datei static/nova-panel.js wird in nova-cards gebaut
+# („npm run panel“ aus src/panel.js) und hierher kopiert – nicht direkt bearbeiten.
+PANEL_URL = "nova"
+PANEL_ELEMENT = "nova-settings-panel"
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -44,7 +50,24 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     entry.async_on_unload(data.listen("settings", lambda: hass.async_create_task(apply_modules())))
     await apply_modules()
     entry.async_on_unload(entry.add_update_listener(_options_changed))
+    await _register_panel(hass)
+    entry.async_on_unload(lambda: frontend.async_remove_panel(hass, PANEL_URL, warn_if_unknown=False))
     return True
+
+
+async def _register_panel(hass: HomeAssistant) -> None:
+    version = (await async_get_integration(hass, DOMAIN)).version
+    await panel_custom.async_register_panel(
+        hass,
+        frontend_url_path=PANEL_URL,
+        webcomponent_name=PANEL_ELEMENT,
+        sidebar_title="Nova",
+        sidebar_icon="mdi:star-four-points-outline",
+        # Version im Pfad, damit Browser nach einem Update die neue Datei laden
+        module_url=f"{STATIC_URL}/nova-panel.js?v={version}",
+        require_admin=True,
+        config={},
+    )
 
 
 async def _options_changed(hass: HomeAssistant, entry: ConfigEntry) -> None:

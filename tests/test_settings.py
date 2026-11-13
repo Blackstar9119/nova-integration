@@ -214,3 +214,19 @@ async def test_options_flow_writes_settings(hass, ws, nova):
     await hass.config_entries.options.async_configure(res["flow_id"], {CONF_MODULES: ["theme", "notes", "shopping", "recipes"]})
     await hass.async_block_till_done()
     assert hass.data[DOMAIN].settings["module"]["notes"] is True
+
+
+async def test_panel(hass, hass_client, nova):
+    """Panel „Nova“ in der Seitenleiste (nur Admins), Datei kommt unter /nova/static."""
+    panels = hass.data["frontend_panels"]
+    assert "nova" in panels
+    panel = panels["nova"]
+    assert panel.require_admin and panel.sidebar_title == "Nova"
+    assert panel.config["_panel_custom"]["name"] == "nova-settings-panel"
+    url = panel.config["_panel_custom"]["module_url"]
+    client = await hass_client()
+    res = await client.get(url)
+    assert res.status == 200 and "nova-settings-panel" in await res.text()
+    # Entladen nimmt das Panel wieder raus
+    assert await hass.config_entries.async_unload(nova.entry_id)
+    assert "nova" not in hass.data["frontend_panels"]

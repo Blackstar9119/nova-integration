@@ -24,6 +24,8 @@ custom_components/nova/
   sanitize.py          Bereinigung von formatiertem Text (feste Liste erlaubter Elemente) und einfachem Text
   todo_sync.py         Abgleich der Einkaufsliste mit einer todo-Entität (für Assist)
   translations/        de.json, en.json
+  static/nova-panel.js ERZEUGT in nova-cards („npm run panel“ aus src/panel.js) – Nova-Panel in der Seitenleiste (Einstellungen,
+                       nur Admins), hierher kopieren, nie direkt bearbeiten
   static/fonts/        Schriften des Nova Rezeptbuchs (Caveat, EB Garamond als Latin-Subset, OFL), ausgeliefert unter /nova/static
 tests/                 pytest (pytest-homeassistant-custom-component)
 hacs.json              Metadaten für den Marketplace
@@ -77,6 +79,6 @@ Mit `# HA-INTERN:` markiert, jeweils mit Fallback:
 ## Tests ausführen
 
 ```
-python -m venv .venv && .venv/bin/pip install pytest-homeassistant-custom-component ical
+python -m venv .venv && .venv/bin/pip install pytest-homeassistant-custom-component ical home-assistant-frontend
 .venv/bin/pytest
 ```
