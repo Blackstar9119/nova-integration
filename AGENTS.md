@@ -18,6 +18,8 @@ custom_components/nova/
   const.py             Konstanten: Domain, Module, Einheiten, Themes, Bildordner
   storage.py           NovaData – ALLE Daten und ihre Regeln (prüfen, bereinigen, speichern, Abonnenten benachrichtigen)
   websocket_api.py     WebSocket-Befehle nova/<modul>/<befehl> – dünn, ruft nur storage.py auf
+  recipe_import.py     Rezept-Import per Link: Seite laden (nur öffentliche Adressen), schema.org Recipe aus JSON-LD lesen,
+                       Zutaten zerlegen, Bild verkleinern (Pillow) – liefert nur einen Entwurf, speichert nichts
   sanitize.py          Bereinigung von formatiertem Text (feste Liste erlaubter Elemente) und einfachem Text
   todo_sync.py         Abgleich der Einkaufsliste mit einer todo-Entität (für Assist)
   translations/        de.json, en.json

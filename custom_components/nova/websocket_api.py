@@ -8,6 +8,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import config_validation as cv
 
 from .const import API_VERSION, CONF_MODULES, DOMAIN, IMAGE_MODULES, MODULES
+from .recipe_import import RecipeImportError, import_recipe
 from .storage import ModuleDisabled, NovaData
 
 
@@ -223,6 +224,7 @@ async def ws_recipes_subscribe(hass, connection, msg):
         vol.Optional("ingredients"): [dict],
         vol.Optional("steps"): str,
         vol.Optional("favorite"): bool,
+        vol.Optional("source"): vol.Any(None, str),
     },
 })
 @websocket_api.async_response
@@ -251,6 +253,19 @@ async def ws_recipes_to_shopping(hass, connection, msg, data: NovaData):
     connection.send_result(msg["id"], {"added": data.recipe_to_shopping(msg["recipe_id"], msg.get("servings"), msg.get("only"))})
 
 
+@websocket_api.websocket_command({vol.Required("type"): "nova/recipes/import", vol.Required("url"): str})
+@websocket_api.async_response
+@_guard("recipes")
+async def ws_recipes_import(hass, connection, msg, data: NovaData):
+    """Rezeptseite lesen und als Entwurf zurückgeben (nichts wird gespeichert), dazu mögliche Doppelte."""
+    try:
+        draft = await import_recipe(hass, msg["url"])
+    except RecipeImportError as err:
+        connection.send_error(msg["id"], err.code, str(err))
+        return
+    connection.send_result(msg["id"], {"recipe": draft, "duplicates": data.recipe_duplicates(draft["title"], draft["source"])})
+
+
 # ---------- Bilder ----------
 @websocket_api.websocket_command({
     vol.Required("type"): "nova/image/upload",
@@ -268,7 +283,7 @@ COMMANDS = (
     ws_info, ws_theme_subscribe, ws_theme_set, ws_notes_subscribe, ws_notes_save, ws_notes_delete,
     ws_shop_subscribe, ws_item_save, ws_item_delete, ws_clear_done, ws_reorder, ws_history_delete,
     ws_store_save, ws_store_delete, ws_set_sync,
-    ws_recipes_subscribe, ws_recipes_save, ws_recipes_delete, ws_recipes_to_shopping, ws_image_upload,
+    ws_recipes_subscribe, ws_recipes_save, ws_recipes_delete, ws_recipes_to_shopping, ws_recipes_import, ws_image_upload,
 )
 
 
