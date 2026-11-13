@@ -120,6 +120,10 @@ async def test_recipes(hass, ws):
     assert (await ws("nova/recipes/to_shopping", recipe_id=rec["id"], servings=4))["result"]["added"] == 3
     items = {i["name"]: i for i in data.shop["items"]}
     assert items["Mehl"]["qty"] == 600 and items["Eier"]["qty"] == 4 and items["Salz"]["qty"] == 1
+    # Küchen-Einheiten wie Tasse/Cup bleiben, unbekannte fallen weg
+    cup = (await ws("nova/recipes/save", recipe={"title": "Muffins", "ingredients": [{"name": "Mehl", "qty": 2, "unit": "Tasse"}, {"name": "Zucker", "qty": 1, "unit": "Cup"}, {"name": "Öl", "qty": 1, "unit": "Fass"}]}))["result"]["recipe"]
+    assert [i["unit"] for i in cup["ingredients"]] == ["Tasse", "Cup", ""]
+    await ws("nova/recipes/delete", recipe_id=cup["id"])
     assert (await ws("nova/recipes/to_shopping", recipe_id=rec["id"], only=[1]))["result"]["added"] == 1
     assert {i["name"]: i for i in data.shop["items"]}["Eier"]["qty"] == 6
     await ws("nova/recipes/delete", recipe_id=rec["id"])
