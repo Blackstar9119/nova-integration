@@ -13,8 +13,8 @@ Oberfläche – kein YAML.
 ```
 custom_components/nova/
   manifest.json        Metadaten, Versionsnummer (einzige Stelle)
-  __init__.py          Einrichten/Entladen des Eintrags, Module aus den Optionen, startet den todo-Abgleich
-  config_flow.py       Einrichtung (ohne Eingaben) und Optionen (aktive Module)
+  __init__.py          Einrichten/Entladen des Eintrags, startet/stoppt den todo-Abgleich je nach Modul Einkauf
+  config_flow.py       Einrichtung (ohne Eingaben) und Optionen (aktive Module, schreibt module.* der Einstellungen)
   const.py             Konstanten: Domain, Module, Einheiten, Themes, Bildordner
   storage.py           NovaData – ALLE Daten und ihre Regeln (prüfen, bereinigen, speichern, Abonnenten benachrichtigen)
   settings.py          Einstellungen: Standardwerte, voluptuous-Schema, Migration des Speichers, Ansicht ohne Geheimnisse
