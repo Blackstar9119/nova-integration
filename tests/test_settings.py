@@ -13,7 +13,7 @@ TOKEN = "geheim-1234567890"
 
 async def test_get_defaults(hass, ws):
     res = (await ws("nova/settings/get"))["result"]
-    assert res["allgemein"] == {"theme": None, "animationen": "normal", "schriftgroesse": "normal"}
+    assert res["allgemein"] == {"theme": None, "animationen": "normal", "schriftgroesse": "normal", "hintergrund": "keiner"}
     assert res["module"] == {"theme": True, "notes": True, "shopping": True, "recipes": True}
     assert res["rezepte"] == {"buch_variante": "old", "standard_portionen": 2}
     assert res["mealie"] == {"url": None, "token_gesetzt": False}
@@ -26,7 +26,7 @@ async def test_set_values_and_sections(hass, ws):
     assert res["result"]["allgemein"]["schriftgroesse"] == "gross" and res["result"]["allgemein"]["animationen"] == "normal"
     assert res["result"]["rezepte"] == {"buch_variante": "old", "standard_portionen": 4}
     # ganzer Bereich
-    notizen = {"standard_schriftgroesse": "klein", "kompakt": True}
+    notizen = {"standard_schriftgroesse": "klein", "kompakt": True, "todo_entity": None}
     assert (await ws("nova/settings/set", settings={"notizen": notizen}))["result"]["notizen"] == notizen
 
 
@@ -193,14 +193,17 @@ async def test_load_repairs_stored_settings(hass, hass_storage):
     entry.add_to_hass(hass)
     assert await hass.config_entries.async_setup(entry.entry_id)
     s = hass.data[DOMAIN].settings
-    assert s["allgemein"] == {"theme": None, "animationen": "normal", "schriftgroesse": "klein"}
+    assert s["allgemein"] == {"theme": None, "animationen": "normal", "schriftgroesse": "klein", "hintergrund": "keiner"}
     assert s["module"] == {"theme": True, "notes": True, "shopping": True, "recipes": False}
     assert "weg" not in s
 
 
 async def test_migrate_func():
     data = {"allgemein": {"theme": "hell"}}
-    assert await migrate(1, 1, data) == data
+    # 1.1 → 1.2: Hintergrund und todo-Liste der Notizen kommen dazu
+    assert await migrate(1, 1, data) == {"allgemein": {"theme": "hell", "hintergrund": "keiner"}, "notizen": {"todo_entity": None}}
+    assert data == {"allgemein": {"theme": "hell"}}
+    assert await migrate(1, 2, data) == data
     with pytest.raises(NotImplementedError):
         await migrate(2, 1, data)
     assert normalize(None) == DEFAULTS
@@ -230,3 +233,18 @@ async def test_panel(hass, hass_client, nova):
     # Entladen nimmt das Panel wieder raus
     assert await hass.config_entries.async_unload(nova.entry_id)
     assert "nova" not in hass.data["frontend_panels"]
+
+
+async def test_hintergrund(hass, ws, nova):
+    res = await ws("nova/settings/set", settings={"allgemein": {"hintergrund": "passend"}})
+    assert res["result"]["allgemein"]["hintergrund"] == "passend"
+    assert not (await ws("nova/settings/set", settings={"allgemein": {"hintergrund": "pink"}}))["success"]
+    res = await ws("nova/settings/set", settings={"notizen": {"todo_entity": "light.x"}})
+    assert not res["success"]
+
+
+async def test_todo_lists_distinct(hass, ws, nova):
+    assert (await ws("nova/settings/set", settings={"einkauf": {"todo_entity": "todo.a"}}))["success"]
+    res = await ws("nova/settings/set", settings={"notizen": {"todo_entity": "todo.a"}})
+    assert not res["success"] and "Einkauf" in res["error"]["message"]
+    assert (await ws("nova/info"))["result"]["version"]

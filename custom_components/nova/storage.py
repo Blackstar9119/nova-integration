@@ -100,11 +100,15 @@ class NovaData:
         self._listeners: dict[str, set[Callable[[], None]]] = {m: set() for m in (*MODULES, "settings")}
         # wird von der todo-Synchronisation gesetzt: nach jeder Änderung an der Einkaufsliste aufrufen
         self.on_shop_change: Callable[[], None] | None = None
+        # dasselbe für den Abgleich der Notizen (notizen.todo_entity)
+        self.on_notes_change: Callable[[], None] | None = None
+        self.notes_sync: dict = {"entity_id": None, "snap": {}, "remove": []}
 
     async def async_load(self) -> None:
         raw_settings = await self._stores["settings"].async_load()
         load = {m: await self._stores[m].async_load() or {} for m in STORES if m != "settings"}
         self.notes = load["notes"].get("notes", [])
+        self.notes_sync = load["notes"].get("sync") or {"entity_id": None, "snap": {}, "remove": []}
         shop = load["shopping"]
         self.shop = {
             "items": shop.get("items", []),
@@ -120,6 +124,8 @@ class NovaData:
         # Abgleich gehört zu einer anderen Liste als eingestellt → Zuordnung vergessen
         if self.shop["sync"].get("entity_id") != self.settings["einkauf"]["todo_entity"]:
             self._reset_sync(self.settings["einkauf"]["todo_entity"], notify=False)
+        if self.notes_sync.get("entity_id") != self.settings["notizen"]["todo_entity"]:
+            self._reset_notes_sync(self.settings["notizen"]["todo_entity"], notify=False)
 
         def mkdirs() -> None:
             for m in IMAGE_MODULES:
@@ -153,7 +159,7 @@ class NovaData:
             raise ModuleDisabled(module)
 
     def _dump(self, store: str) -> dict:
-        return {"settings": self.settings, "notes": {"notes": self.notes}, "shopping": self.shop, "recipes": {"recipes": self.recipes}}[store]
+        return {"settings": self.settings, "notes": {"notes": self.notes, "sync": self.notes_sync}, "shopping": self.shop, "recipes": {"recipes": self.recipes}}[store]
 
     # ---------- Abonnenten ----------
     @callback
@@ -171,6 +177,8 @@ class NovaData:
         self._stores[kind].async_delay_save(lambda: self._dump(kind), SAVE_DELAY)
         if kind == "shopping" and sync and self.on_shop_change:
             self.on_shop_change()
+        if kind == "notes" and sync and self.on_notes_change:
+            self.on_notes_change()
         self._notify(kind)
 
     async def async_flush(self) -> None:
@@ -196,6 +204,9 @@ class NovaData:
         new = {sec: dict(vals) for sec, vals in self.settings.items()}
         for sec, vals in clean.items():
             new[sec].update(vals)
+        # Einkauf und Notizen dürfen nicht dieselbe todo-Liste abgleichen (sonst landen Notizen im Einkauf)
+        if new["einkauf"]["todo_entity"] and new["einkauf"]["todo_entity"] == new["notizen"]["todo_entity"]:
+            raise ValueError("Ungültige Einstellung – notizen.todo_entity: Diese Liste nutzt schon der Einkauf")
         self._apply_settings(new)
         return self.settings_view()
 
@@ -218,6 +229,8 @@ class NovaData:
             self._notify("theme")
         if new["einkauf"]["todo_entity"] != old["einkauf"]["todo_entity"]:
             self._reset_sync(new["einkauf"]["todo_entity"])
+        if new["notizen"]["todo_entity"] != old["notizen"]["todo_entity"]:
+            self._reset_notes_sync(new["notizen"]["todo_entity"])
 
     # ---------- Theme (liegt in den Einstellungen, allgemein.theme) ----------
     def theme_view(self) -> dict:
@@ -234,7 +247,7 @@ class NovaData:
         return {"notes": self.notes}
 
     @callback
-    def note_save(self, data: dict) -> dict:
+    def note_save(self, data: dict, sync: bool = True) -> dict:
         nid = data.get("id")
         note = next((n for n in self.notes if n["id"] == nid), None) if nid else None
         if note is None:
@@ -247,13 +260,25 @@ class NovaData:
         if "pinned" in data:
             note["pinned"] = bool(data["pinned"])
         note["updated"] = _now()
-        self._changed("notes")
+        self._changed("notes", sync)
         return note
 
     @callback
-    def note_delete(self, nid: str) -> None:
+    def note_delete(self, nid: str, sync: bool = True) -> None:
+        gone = next((n for n in self.notes if n["id"] == nid), None)
         self.notes = [n for n in self.notes if n["id"] != nid]
-        self._changed("notes")
+        if gone and gone.get("todo_uid") and sync:
+            self.notes_sync.setdefault("remove", []).append(gone["todo_uid"])
+        self._changed("notes", sync)
+
+    @callback
+    def _reset_notes_sync(self, entity_id: str | None, notify: bool = True) -> None:
+        # Neue Liste: Zuordnung vergessen; beim nächsten Abgleich kommen alle Notizen neu in die Liste
+        self.notes_sync = {"entity_id": entity_id, "snap": {}, "remove": []}
+        for n in self.notes:
+            n["todo_uid"] = None
+        if notify:
+            self._changed("notes")
 
     # ---------- Einkauf ----------
     def shop_view(self) -> dict:

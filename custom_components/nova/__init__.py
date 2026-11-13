@@ -12,7 +12,7 @@ from homeassistant.loader import async_get_integration
 
 from .const import CONF_MODULES, DOMAIN, MODULES
 from .storage import NovaData
-from .todo_sync import TodoSync
+from .todo_sync import NoteSync, TodoSync
 from .websocket_api import async_register
 
 REGISTERED = f"{DOMAIN}_registered"
@@ -37,15 +37,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         static = os.path.join(os.path.dirname(__file__), "static")
         await hass.http.async_register_static_paths([StaticPathConfig(STATIC_URL, static, True)])
         hass.data[REGISTERED] = True
-    # todo-Abgleich läuft nur mit Modul Einkauf – Umschalten in den Einstellungen wirkt sofort, ohne Neuladen
-    sync = TodoSync(hass, data)
-    entry.async_on_unload(sync.stop)
+    # todo-Abgleich läuft nur mit Modul Einkauf bzw. Notizen – Umschalten in den Einstellungen wirkt sofort, ohne Neuladen
+    syncs = {"shopping": TodoSync(hass, data), "notes": NoteSync(hass, data)}
+    for sync in syncs.values():
+        entry.async_on_unload(sync.stop)
 
     async def apply_modules() -> None:
-        if "shopping" in data.enabled:
-            await sync.start()
-        else:
-            sync.stop()
+        for module, sync in syncs.items():
+            if module in data.enabled:
+                await sync.start()
+            else:
+                sync.stop()
 
     entry.async_on_unload(data.listen("settings", lambda: hass.async_create_task(apply_modules())))
     await apply_modules()
