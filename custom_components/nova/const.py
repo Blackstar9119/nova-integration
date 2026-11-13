@@ -22,5 +22,5 @@ BOOK_STYLES = ("old", "modern", "fantasy")
 THEME_HELPER = "input_select.nova_theme"
 
 UNITS = ["Stk", "g", "kg", "ml", "l", "Packung"]
-RECIPE_UNITS = [*UNITS, "TL", "EL", "Prise", "Bund", "Dose", "Zehe", "Scheibe", ""]
+RECIPE_UNITS = [*UNITS, "TL", "EL", "Prise", "Msp.", "Tasse", "Cup", "Becher", "cl", "Bund", "Dose", "Glas", "Zehe", "Scheibe", "Blatt", "Handvoll", ""]
 HISTORY_MAX = 200

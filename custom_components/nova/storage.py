@@ -32,6 +32,7 @@ from .const import (
     THEMES,
     UNITS,
 )
+from .recipe_import import clean_url
 from .sanitize import clean_html, clean_text
 from .settings import SECTIONS, SETTINGS_MINOR_VERSION, SETTINGS_VERSION, defaults, migrate, normalize, validate, view
 
@@ -438,7 +439,7 @@ class NovaData:
             if not clean_text(data.get("title"), 200):
                 raise ValueError("Titel fehlt")
             rec = {"id": _id(), "created": _now(), "title": "", "image": None, "servings": 2, "time": None, "tags": [],
-                   "ingredients": [], "steps": "", "favorite": False}
+                   "ingredients": [], "steps": "", "favorite": False, "source": None}
             self.recipes.insert(0, rec)
         if "title" in data and clean_text(data["title"], 200):
             rec["title"] = clean_text(data["title"], 200)
@@ -457,10 +458,20 @@ class NovaData:
             rec["steps"] = clean_html(data["steps"])
         if "favorite" in data:
             rec["favorite"] = bool(data["favorite"])
+        if "source" in data:
+            rec["source"] = clean_url(data["source"])
         rec["updated"] = _now()
         self._gc_later()
         self._changed("recipes")
         return rec
+
+    def recipe_duplicates(self, title: str, source: str | None) -> list[dict]:
+        """Rezepte mit demselben Link oder (fast) demselben Titel – für die Nachfrage beim Import."""
+        def norm(t) -> str:
+            return re.sub(r"[^a-z0-9äöüß]+", "", (t or "").lower())
+        key = norm(title)
+        return [{"id": r["id"], "title": r["title"]} for r in self.recipes
+                if (source and r.get("source") == source) or (key and norm(r["title"]) == key)]
 
     @callback
     def recipe_delete(self, rid: str) -> None:
