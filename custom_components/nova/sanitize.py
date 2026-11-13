@@ -7,6 +7,7 @@ Erlaubt ist nur eine feste Liste von Elementen und Klassen. Alles andere fliegt 
 
 from __future__ import annotations
 
+import re
 from html import escape
 from html.parser import HTMLParser
 
@@ -119,3 +120,43 @@ def clean_text(value, limit: int = 200) -> str:
     if not isinstance(value, str):
         return ""
     return "".join(ch for ch in value if ch >= " " or ch == "\t").strip()[:limit]
+
+
+BLOCK = {"p", "div", "li", "h1", "h2", "h3", "blockquote", "ul", "ol"}
+
+
+def to_plain(value) -> str:
+    """Formatierten Text in Klartext umwandeln (für die todo-Liste): Absätze und <br> werden Zeilenumbrüche."""
+    if not isinstance(value, str) or not value:
+        return ""
+    out: list[str] = []
+
+    class P(HTMLParser):
+        def handle_starttag(self, tag, attrs):
+            if tag == "br":
+                out.append("\n")
+            elif tag == "li":
+                out.append("\0• ")
+            elif tag in BLOCK:
+                out.append("\0")
+
+        def handle_endtag(self, tag):
+            if tag in BLOCK:
+                out.append("\0")
+
+        def handle_data(self, data):
+            out.append(data)
+
+    p = P(convert_charrefs=True)
+    p.feed(value[:MAX_LEN])
+    p.close()
+    # Grenzen von Absätzen/Listen (\0) zählen zusammen als ein Zeilenumbruch, <br> jeweils einzeln
+    text = re.sub(r"\0+", "\n", "".join(out))
+    return "\n".join(ln.strip() for ln in text.splitlines()).strip()
+
+
+def from_plain(text) -> str:
+    """Klartext (z. B. aus der todo-Liste) als formatierten Text: Zeilen werden Absätze."""
+    if not isinstance(text, str) or not text.strip():
+        return ""
+    return "".join(f"<p>{escape(ln) or '<br>'}</p>" for ln in text.strip()[:MAX_LEN].splitlines())

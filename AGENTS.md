@@ -22,7 +22,8 @@ custom_components/nova/
   recipe_import.py     Rezept-Import per Link: Seite laden (nur öffentliche Adressen), schema.org Recipe aus JSON-LD lesen,
                        Zutaten zerlegen, Bild verkleinern (Pillow) – liefert nur einen Entwurf, speichert nichts
   sanitize.py          Bereinigung von formatiertem Text (feste Liste erlaubter Elemente) und einfachem Text
-  todo_sync.py         Abgleich der Einkaufsliste mit einer todo-Entität (für Assist)
+  todo_sync.py         Abgleich mit todo-Entitäten (für Assist): Einkaufsliste (einkauf.todo_entity) und Notizen
+                       (notizen.todo_entity, Titel + Klartext); beide dürfen nicht dieselbe Liste nutzen
   translations/        de.json, en.json
   static/nova-panel.js ERZEUGT in nova-cards („npm run panel“ aus src/panel.js) – Nova-Panel in der Seitenleiste (Einstellungen,
                        nur Admins), hierher kopieren, nie direkt bearbeiten

@@ -15,17 +15,19 @@ from homeassistant.helpers import config_validation as cv
 from .const import BOOK_STYLES, MODULES, THEMES
 
 SETTINGS_VERSION = 1
-SETTINGS_MINOR_VERSION = 1
+SETTINGS_MINOR_VERSION = 2
 
 SIZES = ("klein", "normal", "gross")
 ANIMATIONS = ("normal", "vereinfacht", "aus")
 GROUPING = ("geschaeft", "keine")
+# Hintergrund der Dashboards mit Nova Cards: keiner (wie bisher), passend zum Theme oder ein fester
+BACKGROUNDS = ("keiner", "passend", *THEMES)
 
 DEFAULTS: dict = {
-    "allgemein": {"theme": None, "animationen": "normal", "schriftgroesse": "normal"},
+    "allgemein": {"theme": None, "animationen": "normal", "schriftgroesse": "normal", "hintergrund": "keiner"},
     "module": {m: True for m in MODULES},
     "einkauf": {"standard_geschaeft": None, "gruppierung": "geschaeft", "todo_entity": None, "bilder": True},
-    "notizen": {"standard_schriftgroesse": "normal", "kompakt": False},
+    "notizen": {"standard_schriftgroesse": "normal", "kompakt": False, "todo_entity": None},
     "rezepte": {"buch_variante": "old", "standard_portionen": 2},
     "mealie": {"url": None, "token": None},
 }
@@ -71,6 +73,7 @@ SCHEMA = vol.Schema({
         vol.Optional("theme"): vol.Any(None, _choice(THEMES)),
         vol.Optional("animationen"): _choice(ANIMATIONS),
         vol.Optional("schriftgroesse"): _choice(SIZES),
+        vol.Optional("hintergrund"): _choice(BACKGROUNDS),
     },
     vol.Optional("module"): {vol.Optional(m): bool for m in MODULES},
     vol.Optional("einkauf"): {
@@ -82,6 +85,7 @@ SCHEMA = vol.Schema({
     vol.Optional("notizen"): {
         vol.Optional("standard_schriftgroesse"): _choice(SIZES),
         vol.Optional("kompakt"): bool,
+        vol.Optional("todo_entity"): vol.All(_empty_none, vol.Any(None, cv.entity_domain("todo"))),
     },
     vol.Optional("rezepte"): {
         vol.Optional("buch_variante"): _choice(BOOK_STYLES),
@@ -142,8 +146,13 @@ def view(settings: dict) -> dict:
 async def migrate(old_major: int, old_minor: int, data: dict) -> dict:
     """Speicher älterer Versionen umbauen. Neue Version: SETTINGS_VERSION/MINOR erhöhen und hier einen Schritt ergänzen.
 
-    Bis jetzt gibt es nur Version 1.1. Was die Prüfung nicht kennt, räumt normalize() beim Laden ohnehin weg.
+    1.1 → 1.2: neue Felder allgemein.hintergrund und notizen.todo_entity (Standardwerte, sonst nichts).
+    Was die Prüfung nicht kennt, räumt normalize() beim Laden ohnehin weg.
     """
     if old_major > SETTINGS_VERSION:
         raise NotImplementedError("Gespeicherte Einstellungen sind neuer als diese Nova-Version")
+    if old_major == 1 and old_minor < 2:
+        data = copy.deepcopy(data or {})
+        data.setdefault("allgemein", {}).setdefault("hintergrund", "keiner")
+        data.setdefault("notizen", {}).setdefault("todo_entity", None)
     return data

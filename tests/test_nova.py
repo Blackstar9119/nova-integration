@@ -190,3 +190,48 @@ async def test_schriften(hass, hass_client, nova):
     res = await client.get("/nova/static/fonts/nova-hand-400.woff2")
     assert res.status == 200
     assert (await res.read())[:4] == b"wOF2"
+
+
+async def test_notes_todo_sync(hass, ws, tmp_path):
+    """Notizen ↔ todo-Liste: Nova → todo, Assist legt Notiz an, Ändern und Löschen in beide Richtungen."""
+    hass.config.config_dir = str(tmp_path)
+    (tmp_path / ".storage").mkdir()
+    todo = MockConfigEntry(domain="local_todo", data={"todo_list_name": "Notizen", "storage_key": "notizen"})
+    todo.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(todo.entry_id)
+    await hass.async_block_till_done()
+    eid = "todo.notizen"
+    data = hass.data[DOMAIN]
+    await ws("nova/notes/save", note={"title": "Urlaub", "body": "<p>Pässe</p><ul><li>Koffer</li></ul>"})
+    await ws("nova/notes/save", note={"title": "", "body": "<p>Zahnarzt anrufen</p>"})
+    assert (await ws("nova/settings/set", settings={"notizen": {"todo_entity": eid}}))["success"]
+    await _settle(hass)
+    items = await _todo(hass, eid)
+    assert set(items) == {"Urlaub", "Zahnarzt anrufen"}
+    assert items["Urlaub"]["description"] == "Pässe\n• Koffer"
+    # Assist legt etwas an → neue Notiz
+    await hass.services.async_call("todo", "add_item", {"entity_id": eid, "item": "Geschenk Oma", "description": "Buch\nBlumen"}, blocking=True)
+    await _settle(hass)
+    oma = next(n for n in data.notes if n["title"] == "Geschenk Oma")
+    assert oma["body"] == "<p>Buch</p><p>Blumen</p>"
+    # Umbenennen in der todo-Liste → Titel der Notiz
+    await hass.services.async_call("todo", "update_item", {"entity_id": eid, "item": "Urlaub", "rename": "Urlaub 2027"}, blocking=True)
+    await _settle(hass)
+    assert any(n["title"] == "Urlaub 2027" for n in data.notes)
+    # Löschen in Nova → todo-Eintrag weg; Löschen in todo → Notiz weg
+    await ws("nova/notes/delete", note_id=oma["id"])
+    await _settle(hass)
+    assert "Geschenk Oma" not in await _todo(hass, eid)
+    await hass.services.async_call("todo", "remove_item", {"entity_id": eid, "item": ["Zahnarzt anrufen"]}, blocking=True)
+    await _settle(hass)
+    assert [n["title"] for n in data.notes] == ["Urlaub 2027"]
+    # Liste abwählen → Zuordnung vergessen
+    await ws("nova/settings/set", settings={"notizen": {"todo_entity": None}})
+    assert data.notes[0]["todo_uid"] is None
+
+
+def test_plain_text():
+    from custom_components.nova.sanitize import from_plain, to_plain
+
+    assert to_plain("<p>a <b>b</b></p><p>c<br>d</p>") == "a b\nc\nd"
+    assert from_plain("x < y\n\nz") == "<p>x &lt; y</p><p><br></p><p>z</p>"

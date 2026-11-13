@@ -6,6 +6,7 @@ import voluptuous as vol
 from homeassistant.components import websocket_api
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import config_validation as cv
+from homeassistant.loader import async_get_integration
 
 from .const import API_VERSION, CONF_MODULES, DOMAIN, IMAGE_MODULES, MODULES
 from .recipe_import import RecipeImportError, import_recipe
@@ -68,6 +69,7 @@ async def ws_info(hass, connection, msg):
         "ready": data is not None,
         CONF_MODULES: [m for m in MODULES if data and m in data.enabled],
         "settings": True,
+        "version": (await async_get_integration(hass, DOMAIN)).version,
     })
 
 

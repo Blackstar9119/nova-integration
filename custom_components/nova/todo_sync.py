@@ -19,6 +19,7 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.event import async_call_later, async_track_state_change_event, async_track_time_interval
 
 from .const import UNITS
+from .sanitize import from_plain, to_plain
 from .storage import NovaData, hkey
 
 _LOGGER = logging.getLogger(__name__)
@@ -53,7 +54,12 @@ def parse(text: str) -> dict:
     return {"name": text}
 
 
-class TodoSync:
+class _TodoMirror:
+    """Gemeinsames Gerüst: auf die todo-Liste hören, Änderungen sammeln (DELAY), dann _reconcile() unter Sperre."""
+
+    HOOK = ""  # Name des Rückrufs in NovaData, den storage.py nach jeder Änderung aufruft
+    SECTION = ""  # Bereich der Einstellungen mit todo_entity
+
     def __init__(self, hass: HomeAssistant, data: NovaData) -> None:
         self.hass = hass
         self.data = data
@@ -70,14 +76,14 @@ class TodoSync:
     async def start(self) -> None:
         if self.running:
             return
-        self.data.on_shop_change = self.schedule
+        setattr(self.data, self.HOOK, self.schedule)
         self._unsubs.append(async_track_time_interval(self.hass, callback(lambda _now: self.schedule()), POLL))
         self._watch()
         self.schedule()
 
     @callback
     def stop(self) -> None:
-        self.data.on_shop_change = None
+        setattr(self.data, self.HOOK, None)
         if self._timer:
             self._timer()
         for u in self._unsubs + self._entity_unsub:
@@ -87,7 +93,7 @@ class TodoSync:
 
     @property
     def entity(self) -> str | None:
-        return self.data.settings["einkauf"]["todo_entity"]
+        return self.data.settings[self.SECTION]["todo_entity"]
 
     @callback
     def _watch(self) -> None:
@@ -138,6 +144,15 @@ class TodoSync:
 
     async def _call(self, service: str, data: dict) -> None:
         await self.hass.services.async_call("todo", service, {"entity_id": self.entity, **data}, blocking=True)
+
+    async def _reconcile(self) -> None:
+        raise NotImplementedError
+
+
+class TodoSync(_TodoMirror):
+    """Einkaufsliste ↔ todo-Liste (einkauf.todo_entity)."""
+
+    HOOK, SECTION = "on_shop_change", "einkauf"
 
     async def _reconcile(self) -> None:
         eid, data = self.entity, self.data
@@ -229,3 +244,102 @@ class TodoSync:
             changed = True
         if changed:
             data._changed("shopping", sync=False)  # noqa: SLF001
+
+
+def note_summary(note: dict) -> str:
+    """Titel des todo-Eintrags: Titel der Notiz, sonst die erste Textzeile."""
+    title = note.get("title") or next((ln for ln in to_plain(note.get("body", "")).splitlines() if ln.strip()), "")
+    return (title.strip() or "Notiz")[:200]
+
+
+class NoteSync(_TodoMirror):
+    """Notizen ↔ todo-Liste (notizen.todo_entity), z. B. damit Assist Notizen anlegen kann.
+
+    Je Notiz ein todo-Eintrag: Titel = Titel der Notiz, Beschreibung = Text als Klartext. Nova ist führend.
+    Von außen: neuer offener Eintrag → neue Notiz, geänderter Titel/Beschreibung → Notiz übernimmt ihn
+    (Formatierung geht dabei verloren), gelöschter Eintrag → Notiz weg. Abhaken spielt keine Rolle.
+    """
+
+    HOOK, SECTION = "on_notes_change", "notizen"
+
+    async def _reconcile(self) -> None:
+        eid, data = self.entity, self.data
+        if not eid or eid not in self.hass.states.async_entity_ids("todo"):
+            return
+        sync = data.notes_sync
+        snap: dict = sync.setdefault("snap", {})
+        todo = {t["uid"]: t for t in await self._items(eid)}
+        changed = False
+
+        remove = [u for u in sync.get("remove", []) if u in todo]
+        if remove:
+            await self._call("remove_item", {"item": remove})
+            for u in remove:
+                todo.pop(u, None)
+                snap.pop(u, None)
+        if sync.get("remove"):
+            sync["remove"] = []
+            changed = True
+
+        # Änderungen von außen übernehmen
+        for note in list(data.notes):
+            uid = note.get("todo_uid")
+            if not uid:
+                continue
+            t = todo.get(uid)
+            if t is None:
+                if uid in snap:  # in der todo-Liste gelöscht
+                    snap.pop(uid)
+                    data.note_delete(note["id"], sync=False)
+                else:
+                    note["todo_uid"] = None
+                changed = True
+                continue
+            cur = [t["summary"], t.get("description") or ""]
+            if uid in snap and snap[uid] != cur:
+                upd = {"id": note["id"]}
+                if cur[0] != snap[uid][0]:
+                    upd["title"] = cur[0]
+                if cur[1] != snap[uid][1]:
+                    upd["body"] = from_plain(cur[1])
+                data.note_save(upd, sync=False)
+                changed = True
+
+        # Neue offene Einträge von außen → neue Notiz
+        mapped = {n.get("todo_uid") for n in data.notes}
+        for uid, t in todo.items():
+            if uid in mapped or uid in snap or t["status"] != OPEN:
+                continue
+            note = data.note_save({"title": t["summary"], "body": from_plain(t.get("description") or "")}, sync=False)
+            note["todo_uid"] = uid
+            snap[uid] = [t["summary"], t.get("description") or ""]
+            changed = True
+
+        # todo-Liste auf den Stand von Nova bringen
+        added = []
+        for note in data.notes:
+            want = [note_summary(note), to_plain(note.get("body", ""))]
+            uid = note.get("todo_uid")
+            if uid and uid in todo:
+                if [todo[uid]["summary"], todo[uid].get("description") or ""] != want:
+                    await self._call("update_item", {"item": uid, "rename": want[0], "description": want[1]})
+                snap[uid] = want
+            elif not uid:
+                await self._call("add_item", {"item": want[0], "description": want[1]})
+                added.append((note, want))
+        if added:
+            fresh = [t for t in await self._items(eid) if t["uid"] not in todo]
+            for note, want in added:
+                t = next((x for x in fresh if x["summary"] == want[0]), None)
+                if t:
+                    fresh.remove(t)
+                    note["todo_uid"] = t["uid"]
+                    snap[t["uid"]] = [t["summary"], t.get("description") or ""]
+            changed = True
+
+        live = {n.get("todo_uid") for n in data.notes}
+        for uid in [u for u in snap if u not in live]:
+            snap.pop(uid)
+            changed = True
+        if changed:
+            data._changed("notes", sync=False)  # noqa: SLF001
