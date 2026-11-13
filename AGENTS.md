@@ -21,6 +21,7 @@ custom_components/nova/
   sanitize.py          Bereinigung von formatiertem Text (feste Liste erlaubter Elemente) und einfachem Text
   todo_sync.py         Abgleich der Einkaufsliste mit einer todo-Entität (für Assist)
   translations/        de.json, en.json
+  static/fonts/        Schriften des Nova Rezeptbuchs (Caveat, EB Garamond als Latin-Subset, OFL), ausgeliefert unter /nova/static
 tests/                 pytest (pytest-homeassistant-custom-component)
 hacs.json              Metadaten für den Marketplace
 README.md              Kurzbeschreibung für Nutzer
