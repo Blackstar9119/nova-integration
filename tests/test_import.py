@@ -42,6 +42,7 @@ def test_parse_ingredient():
     assert parse_ingredient("1-2 Zehe/n Knoblauch") == {"qty": 1, "unit": "Zehe", "name": "Knoblauch"}
     assert parse_ingredient("1/2 Liter Brühe") == {"qty": .5, "unit": "l", "name": "Brühe"}
     assert parse_ingredient("2 Tomate/n") == {"qty": 2, "unit": "", "name": "Tomate"}
+    assert parse_ingredient("3 tablespoons butter, melted") == {"qty": 3, "unit": "EL", "name": "butter, melted"}
     assert parse_ingredient("  ") is None
 
 
@@ -60,6 +61,18 @@ def test_extract_graph():
     assert d["title"] == "Pfannkuchen" and d["servings"] == 2 and d["time"] == 20
     assert d["steps"] == "<ol><li>Mehl und Eier verrühren</li><li>Backen</li></ol>"
     assert extract_recipe("<html><p>kein Rezept</p></html>") is None
+
+
+def test_image_reference():
+    """Chefkoch/Yoast: "image" ist nur ein Verweis {"@id": …} auf ein ImageObject im @graph."""
+    from custom_components.nova.recipe_import import _image_url, _index, _ld_blocks
+    page = '<script type="application/ld+json">' + json.dumps({"@graph": [
+        {"@type": "Recipe", "name": "x", "image": {"@id": "https://s.de/r#primaryimage"}},
+        {"@type": "ImageObject", "@id": "https://s.de/r#primaryimage", "url": "/bilder/lasagne.jpg"}]}) + "</script>"
+    idx = {}
+    for d in _ld_blocks(page):
+        _index(d, idx)
+    assert _image_url(extract_recipe(page)["image"], "https://s.de/r", idx) == "https://s.de/bilder/lasagne.jpg"
 
 
 def _jpeg() -> bytes:
