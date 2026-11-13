@@ -19,6 +19,9 @@ custom_components/nova/
   storage.py           NovaData – ALLE Daten und ihre Regeln (prüfen, bereinigen, speichern, Abonnenten benachrichtigen)
   settings.py          Einstellungen: Standardwerte, voluptuous-Schema, Migration des Speichers, Ansicht ohne Geheimnisse
   websocket_api.py     WebSocket-Befehle nova/<modul>/<befehl> – dünn, ruft nur storage.py auf
+  cards.py             Nova Cards ausliefern: static/nova-cards.js per frontend.add_extra_js_url mit ?v=<Version>-<Fingerabdruck>
+                       anmelden (keine Dashboard-Ressource nötig), alte Ressource nova-cards.js nur lesend erkennen → Hinweis
+                       unter Reparaturen
   recipe_import.py     Rezept-Import per Link: Seite laden (nur öffentliche Adressen), schema.org Recipe aus JSON-LD lesen,
                        Zutaten zerlegen, Bild verkleinern (Pillow) – liefert nur einen Entwurf, speichert nichts
   sanitize.py          Bereinigung von formatiertem Text (feste Liste erlaubter Elemente) und einfachem Text
@@ -26,6 +29,8 @@ custom_components/nova/
   translations/        de.json, en.json
   static/nova-panel.js ERZEUGT in nova-cards („npm run panel“ aus src/panel.js) – Nova-Panel in der Seitenleiste (Einstellungen,
                        nur Admins), hierher kopieren, nie direkt bearbeiten
+  static/nova-cards.js ERZEUGT in nova-cards („npm run integration“, schreibt direkt hierher, wenn beide Repos nebeneinander liegen) –
+                       alle Nova Cards, Version aus manifest.json, nie direkt bearbeiten
   static/fonts/        Schriften des Nova Rezeptbuchs (Caveat, EB Garamond als Latin-Subset, OFL), ausgeliefert unter /nova/static
 tests/                 pytest (pytest-homeassistant-custom-component)
 hacs.json              Metadaten für den Marketplace
@@ -56,6 +61,8 @@ README.md              Kurzbeschreibung für Nutzer
   WebSocket-Nachricht), sondern `note_id`, `item_id` …
 - **Jede Änderung der Daten geht über `_changed()`** – das speichert (verzögert) und benachrichtigt alle Abonnenten.
 - **Kein blockierender Code im Event-Loop:** Dateizugriffe über `hass.async_add_executor_job`.
+- **Nova Cards** kommen mit der Integration und teilen ihre Version: nach Änderungen an den Karten in nova-cards
+  `npm run integration` und `static/nova-cards.js` hier mit committen. Der Dev-Build (`nova-dev-*` über jsDelivr) bleibt davon unberührt.
 - **Version** nur in `manifest.json`. Releases (Tag, GitHub-Release) nur, wenn der Nutzer es ausdrücklich sagt.
 - **Versionsschema:** Betas heißen `vX.Y.ZbN` (z. B. `v0.1.0b1`, `v0.1.0b2`), stabile Releases `vX.Y.Z`. In `manifest.json` steht
   dieselbe Nummer ohne `v` (`0.1.0b1`), der Git-Tag mit `v`. Betas werden auf GitHub als „Pre-release“ markiert.
@@ -75,6 +82,7 @@ Mit `# HA-INTERN:` markiert, jeweils mit Fallback:
 | Stelle | Datei | Fallback |
 |---|---|---|
 | `TodoListEntity.async_subscribe_updates` (Änderungen ohne neuen Zustand, z. B. Umbenennen) | `todo_sync.py` | Zustandsänderung der Liste + Abgleich alle 5 Minuten |
+| `hass.data["lovelace"].resources` (Ressourcen lesen, `async_add_listener`) | `cards.py` | kein Hinweis auf die alte Ressource, Karten laufen trotzdem nur einmal |
 
 ## Tests ausführen
 

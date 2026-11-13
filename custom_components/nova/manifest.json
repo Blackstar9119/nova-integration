@@ -1,6 +1,7 @@
 {
   "domain": "nova",
   "name": "Nova",
+  "after_dependencies": ["lovelace"],
   "codeowners": ["@Blackstar9119"],
   "config_flow": true,
   "dependencies": ["http", "websocket_api", "todo", "frontend", "panel_custom"],

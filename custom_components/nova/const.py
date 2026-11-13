@@ -21,6 +21,10 @@ THEMES = ("blau", "hell", "midnight", "velvet")
 BOOK_STYLES = ("old", "modern", "fantasy")
 THEME_HELPER = "input_select.nova_theme"
 
+# Nova Cards liefert die Integration selbst aus (static/nova-cards.js, gebaut in nova-cards mit „npm run integration“)
+CARDS_FILE = "nova-cards.js"
+CARDS_URL = "/nova/static/nova-cards.js"
+
 UNITS = ["Stk", "g", "kg", "ml", "l", "Packung"]
 RECIPE_UNITS = [*UNITS, "TL", "EL", "Prise", "Msp.", "Tasse", "Cup", "Becher", "cl", "Bund", "Dose", "Glas", "Zehe", "Scheibe", "Blatt", "Handvoll", ""]
 HISTORY_MAX = 200

@@ -30,5 +30,11 @@
         "recipes": "Recipes"
       }
     }
+  },
+  "issues": {
+    "old_cards_resource": {
+      "title": "Remove old Nova Cards resource",
+      "description": "Nova Cards now ship with the Nova integration. Dashboards → Resources still lists the separately installed file: {url}\n\nThe cards still only run once (the integration's version wins), but the old file is loaded for nothing. To get rid of it:\n\n1. Open the **Marketplace**, find **Nova Cards** and choose **Remove** – this removes the resource as well.\n2. Without the Marketplace: **Settings → Dashboards → ⋮ → Resources** and delete the entry.\n3. Hard-reload the browser once (Ctrl/Cmd+Shift+R or clear the app cache).\n\nYour dashboards stay as they are – the card types `custom:nova-…` do not change."
+    }
   }
 }
