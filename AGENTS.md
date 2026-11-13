@@ -44,6 +44,8 @@ README.md              Kurzbeschreibung für Nutzer
 - **Jede Änderung der Daten geht über `_changed()`** – das speichert (verzögert) und benachrichtigt alle Abonnenten.
 - **Kein blockierender Code im Event-Loop:** Dateizugriffe über `hass.async_add_executor_job`.
 - **Version** nur in `manifest.json`. Releases (Tag, GitHub-Release) nur, wenn der Nutzer es ausdrücklich sagt.
+- **Versionsschema:** Betas heißen `vX.Y.ZbN` (z. B. `v0.1.0b1`, `v0.1.0b2`), stabile Releases `vX.Y.Z`. In `manifest.json` steht
+  dieselbe Nummer ohne `v` (`0.1.0b1`), der Git-Tag mit `v`. Betas werden auf GitHub als „Pre-release“ markiert.
 - **Alles auf Deutsch:** Kommentare, Fehlermeldungen, README. Übersetzungen immer `de.json` und `en.json`.
 - **Im Text für Nutzer heißt es „Marketplace“**, nicht HACS.
 - **Tests:** vor jedem Commit `pytest`. Neue Befehle bekommen einen Test.
