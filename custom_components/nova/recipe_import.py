@@ -16,12 +16,16 @@ from io import BytesIO
 from html import escape, unescape
 from urllib.parse import urljoin, urlsplit
 
+import logging
+
 import aiohttp
 from PIL import Image, UnidentifiedImageError
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .const import RECIPE_UNITS
+
+_LOGGER = logging.getLogger(__name__)
 
 PAGE_MAX = 3_000_000
 IMAGE_MAX = 6_000_000
@@ -32,7 +36,8 @@ HEADERS = {
     "Accept": "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8",
     "Accept-Language": "de-DE,de;q=0.9,en;q=0.6",
 }
-MAGIC = ((b"RIFF", "webp"), (b"\xff\xd8\xff", "jpg"), (b"\x89PNG\r\n\x1a\n", "png"))
+# Bilder: lieber JPEG/PNG/WebP als AVIF, das kann nicht jede Pillow-Version
+IMAGE_HEADERS = {**HEADERS, "Accept": "image/jpeg,image/png,image/webp;q=0.9,image/*;q=0.5,*/*;q=0.1"}
 IMG_SIDE = 960  # wie die Karten beim Hochladen
 
 
@@ -49,8 +54,8 @@ class RecipeImportError(Exception):
 UNIT_WORDS = {
     "g": "g", "gr": "g", "gramm": "g", "kg": "kg", "kilo": "kg", "kilogramm": "kg",
     "ml": "ml", "milliliter": "ml", "l": "l", "liter": "l", "cl": "cl", "zentiliter": "cl",
-    "el": "EL", "essl": "EL", "esslöffel": "EL", "eßlöffel": "EL", "tbsp": "EL",
-    "tl": "TL", "teel": "TL", "teelöffel": "TL", "tsp": "TL",
+    "el": "EL", "essl": "EL", "esslöffel": "EL", "eßlöffel": "EL", "tbsp": "EL", "tablespoon": "EL", "tablespoons": "EL",
+    "tl": "TL", "teel": "TL", "teelöffel": "TL", "tsp": "TL", "teaspoon": "TL", "teaspoons": "TL",
     "prise": "Prise", "prisen": "Prise", "msp": "Msp.", "messerspitze": "Msp.", "messerspitzen": "Msp.",
     "tasse": "Tasse", "tassen": "Tasse", "cup": "Cup", "cups": "Cup", "becher": "Becher",
     "bund": "Bund", "dose": "Dose", "dosen": "Dose", "glas": "Glas", "gläser": "Glas",
@@ -158,14 +163,34 @@ def _find_recipe(node):
 LD_RE = re.compile(r"<script[^>]*type\s*=\s*[\"']?application/ld\+json[\"']?[^>]*>(.*?)</script>", re.I | re.S)
 
 
-def extract_recipe(page: str) -> dict | None:
+def _ld_blocks(page: str) -> list:
+    out = []
     for block in LD_RE.findall(page):
         block = block.strip().removeprefix("<!--").removesuffix("-->").strip()
         block = re.sub(r"^//\s*<!\[CDATA\[|//\s*\]\]>$", "", block).strip()
         try:
-            data = json.loads(block, strict=False)
+            out.append(json.loads(block, strict=False))
         except ValueError:
             continue
+    return out
+
+
+def _index(node, idx: dict) -> dict:
+    """Alle Objekte mit @id sammeln – Angaben wie "image": {"@id": "…#primaryimage"} verweisen darauf (Yoast, Chefkoch)."""
+    if isinstance(node, list):
+        for x in node:
+            _index(x, idx)
+    elif isinstance(node, dict):
+        if isinstance(node.get("@id"), str) and len(node) > 1:
+            idx.setdefault(node["@id"], node)
+        for v in node.values():
+            if isinstance(v, (dict, list)):
+                _index(v, idx)
+    return idx
+
+
+def extract_recipe(page: str) -> dict | None:
+    for data in _ld_blocks(page):
         if (r := _find_recipe(data)) is not None:
             return r
     return None
@@ -188,14 +213,19 @@ def _steps(v) -> list[str]:
     return out
 
 
-def _image_url(v, base: str) -> str | None:
+def _image_url(v, base: str, idx: dict | None = None, depth: int = 0) -> str | None:
+    if depth > 4:
+        return None
     if isinstance(v, list):
         for x in v:
-            if u := _image_url(x, base):
+            if u := _image_url(x, base, idx, depth + 1):
                 return u
         return None
     if isinstance(v, dict):
-        return _image_url(v.get("url") or v.get("contentUrl"), base)
+        # nur ein Verweis per @id → das Objekt dazu nachschlagen
+        if not (v.get("url") or v.get("contentUrl")) and idx and (ref := idx.get(v.get("@id"))) is not None and ref is not v:
+            return _image_url(ref, base, idx, depth + 1)
+        return _image_url(v.get("url") or v.get("contentUrl"), base, idx, depth + 1)
     if isinstance(v, str) and v.strip():
         u = urljoin(base, v.strip())
         return u if urlsplit(u).scheme in ("http", "https") else None
@@ -237,7 +267,7 @@ def shrink(data: bytes) -> bytes | None:
             out = BytesIO()
             im.convert("RGB").save(out, "JPEG", quality=82, optimize=True)
             return out.getvalue()
-    except (UnidentifiedImageError, OSError, ValueError):
+    except (UnidentifiedImageError, OSError, ValueError, Image.DecompressionBombError):
         return None
 
 
@@ -255,11 +285,12 @@ async def _check_host(hass: HomeAssistant, url: str) -> None:
             raise RecipeImportError("blocked", "Adressen im eigenen Netz werden nicht importiert")
 
 
-async def _get(hass: HomeAssistant, url: str, limit: int) -> tuple[bytes, str, str]:
+async def _get(hass: HomeAssistant, url: str, limit: int, headers: dict = HEADERS) -> tuple[bytes, str, str]:
     await _check_host(hass, url)
     session = async_get_clientsession(hass)
     try:
-        async with session.get(url, headers=HEADERS, timeout=aiohttp.ClientTimeout(total=TIMEOUT), allow_redirects=True, max_redirects=5) as resp:
+        async with session.get(url, headers=headers, timeout=aiohttp.ClientTimeout(total=TIMEOUT), allow_redirects=True, max_redirects=5) as resp:
+            _LOGGER.debug("Rezept-Import: GET %s → HTTP %s, Content-Type %r, Ziel %s", url, resp.status, resp.headers.get("Content-Type"), resp.url)
             if resp.status in (401, 403, 429):
                 raise RecipeImportError("blocked", "Die Seite lässt keinen Abruf zu")
             if resp.status >= 400:
@@ -274,6 +305,7 @@ async def _get(hass: HomeAssistant, url: str, limit: int) -> tuple[bytes, str, s
                     raise RecipeImportError("too_large", "Die Seite ist zu groß")
             return body, resp.headers.get("Content-Type", ""), str(resp.url)
     except (aiohttp.ClientError, asyncio.TimeoutError) as err:
+        _LOGGER.debug("Rezept-Import: GET %s fehlgeschlagen: %r", url, err)
         raise RecipeImportError("fetch_failed", "Die Seite ist nicht erreichbar") from err
 
 
@@ -303,13 +335,26 @@ async def import_recipe(hass: HomeAssistant, url: str) -> dict:
     if not draft["title"] and not draft["ingredients"]:
         raise RecipeImportError("no_recipe", "")
     draft["image_data"] = None
-    if img := _image_url(r.get("image") or r.get("thumbnailUrl"), final):
+    idx: dict = {}
+    for data in _ld_blocks(page):
+        _index(data, idx)
+    img = _image_url(r.get("image") or r.get("thumbnailUrl"), final, idx)
+    if not img:
+        # Ersatz: Vorschaubild der Seite (og:image)
+        og = re.search(r"<meta[^>]+property=[\"']og:image[\"'][^>]+content=[\"']([^\"']+)", page, re.I) or \
+            re.search(r"<meta[^>]+content=[\"']([^\"']+)[\"'][^>]+property=[\"']og:image[\"']", page, re.I)
+        img = _image_url(unescape(og.group(1)), final) if og else None
+    _LOGGER.debug("Rezept-Import: Bild-Angabe %r → %s", r.get("image") or r.get("thumbnailUrl"), img)
+    if img:
         try:
-            data, _, _ = await _get(hass, img, IMAGE_MAX)
-            if any(data.startswith(sig) for sig, _ in MAGIC):
-                small = await hass.async_add_executor_job(shrink, data)
-                if small:
-                    draft["image_data"] = "data:image/jpeg;base64," + base64.b64encode(small).decode()
-        except RecipeImportError:
-            pass  # ohne Bild geht es auch
+            # Referer wie im Browser: manche Bild-Server (CDN) liefern sonst nichts oder ein anderes Format
+            data, ctype, _ = await _get(hass, img, IMAGE_MAX, {**IMAGE_HEADERS, "Referer": final})
+            # Pillow erkennt das Format selbst (JPEG, PNG, WebP, AVIF …), gespeichert wird später immer JPEG
+            small = await hass.async_add_executor_job(shrink, data)
+            if small:
+                draft["image_data"] = "data:image/jpeg;base64," + base64.b64encode(small).decode()
+            else:
+                _LOGGER.debug("Rezept-Import: Bild %s nicht lesbar (%s, %d Bytes, Anfang %r)", img, ctype, len(data), data[:16])
+        except RecipeImportError as err:
+            _LOGGER.debug("Rezept-Import: Bild %s nicht geladen: %s", img, err)  # ohne Bild geht es auch
     return draft
