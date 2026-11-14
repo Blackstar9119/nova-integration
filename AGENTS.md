@@ -1,17 +1,23 @@
-# Nova – Hinweise für Entwickler und Agenten
+# Nova Homeverse – Hinweise für Entwickler und Agenten
 
 ## Projekt
 
-Nova ist die Home-Assistant-Integration (`custom_components/nova`, Domain `nova`) zu den
+Nova Homeverse ist die Home-Assistant-Integration (`custom_components/nova_homeverse`, Domain `nova_homeverse`, früher „Nova“ mit Domain `nova`) zu den
 [Nova Cards](https://github.com/Blackstar9119/nova-cards). Sie speichert, was auf allen Geräten gleich sein soll:
 Theme, Notizen, Einkaufsliste und Rezeptbuch. Die Karten reden über eine WebSocket-API mit ihr.
 Installiert wird über den **Marketplace** (Benutzerdefiniertes Repository, Typ „Integration“), eingerichtet in der
 Oberfläche – kein YAML.
 
+Seit der Umbenennung in **Nova Homeverse** sind bewusst gleich geblieben (Kompatibilität, Daten ohne Migration):
+Speicher `.storage/nova.<name>`, WebSocket-Befehle `nova/…`, Pfad `/nova/static`, Panel-Adresse `/nova`, Panel-Element
+`nova-settings-panel`, Bildordner `www/nova`, Helfer `input_select.nova_theme`, Kartentypen `custom:nova-…`. Alte (`nova`) und
+neue Integration dürfen nicht gleichzeitig laufen: Der Config-Flow bricht mit `old_nova_installed` ab, `async_setup_entry`
+startet nicht und meldet das unter Reparaturen.
+
 ## Ordnerstruktur
 
 ```
-custom_components/nova/
+custom_components/nova_homeverse/
   manifest.json        Metadaten, Versionsnummer (einzige Stelle)
   __init__.py          Einrichten/Entladen des Eintrags, startet/stoppt den todo-Abgleich je nach Modul Einkauf
   config_flow.py       Einrichtung (ohne Eingaben) und Optionen (aktive Module, schreibt module.* der Einstellungen)
@@ -28,6 +34,7 @@ custom_components/nova/
   todo_sync.py         Abgleich mit todo-Entitäten (für Assist): Einkaufsliste (einkauf.todo_entity) und Notizen
                        (notizen.todo_entity, Titel + Klartext); beide dürfen nicht dieselbe Liste nutzen
   translations/        de.json, en.json
+  brand/               Icon und Logo (icon/logo/dark_logo, je @2x) – Home Assistant zeigt sie direkt an; Quelle docs/images/logo/*.svg
   static/nova-panel.js ERZEUGT in nova-cards („npm run panel“ aus src/panel.js) – Nova-Panel in der Seitenleiste (Einstellungen,
                        nur Admins), hierher kopieren, nie direkt bearbeiten
   static/nova-cards.js ERZEUGT in nova-cards („npm run integration“, schreibt direkt hierher, wenn beide Repos nebeneinander liegen) –
@@ -35,6 +42,7 @@ custom_components/nova/
   static/fonts/        Schriften des Nova Rezeptbuchs (Caveat, EB Garamond als Latin-Subset, OFL), ausgeliefert unter /nova/static
 tests/                 pytest (pytest-homeassistant-custom-component)
 hacs.json              Metadaten für den Marketplace
+brands/                Dieselben Bilder im Aufbau von home-assistant/brands, für eine spätere Einreichung
 README.md              Kurzbeschreibung für Nutzer
 ```
 
