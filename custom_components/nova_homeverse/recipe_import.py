@@ -1,7 +1,7 @@
 """Rezept-Import per Link: Seite laden und schema.org-Recipe (JSON-LD) auslesen.
 
 Gespeichert wird hier nichts. Das Ergebnis ist ein Entwurf, den die Karte als Vorschau zeigt; erst „Ins Buch übernehmen“
-speichert über nova/recipes/save (und lädt das Bild über nova/image/upload hoch, verkleinert von der Karte).
+speichert über nova_homeverse/recipes/save (und lädt das Bild über nova_homeverse/image/upload hoch, verkleinert von der Karte).
 """
 
 from __future__ import annotations

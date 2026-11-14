@@ -3,14 +3,16 @@
 ## Projekt
 
 Nova Homeverse ist die Home-Assistant-Integration (`custom_components/nova_homeverse`, Domain `nova_homeverse`, früher „Nova“ mit Domain `nova`) zu den
-[Nova Cards](https://github.com/Blackstar9119/nova-cards). Sie speichert, was auf allen Geräten gleich sein soll:
+Nova Cards. Sie speichert, was auf allen Geräten gleich sein soll:
 Theme, Notizen, Einkaufsliste und Rezeptbuch. Die Karten reden über eine WebSocket-API mit ihr.
 Installiert wird über den **Marketplace** (Benutzerdefiniertes Repository, Typ „Integration“), eingerichtet in der
 Oberfläche – kein YAML.
 
-Seit der Umbenennung in **Nova Homeverse** sind bewusst gleich geblieben (Kompatibilität, Daten ohne Migration):
-Speicher `.storage/nova.<name>`, WebSocket-Befehle `nova/…`, Pfad `/nova/static`, Panel-Adresse `/nova`, Panel-Element
-`nova-settings-panel`, Bildordner `www/nova`, Helfer `input_select.nova_theme`, Kartentypen `custom:nova-…`. Alte (`nova`) und
+Repo: `Blackstar9119/nova-homeverse` (früher `nova-integration`). Alles heißt `nova_homeverse`: Speicher
+`.storage/nova_homeverse.<name>`, WebSocket-Befehle `nova_homeverse/<modul>/<befehl>`, Pfad `/nova_homeverse/static`, Bildordner
+`www/nova_homeverse`, Panel-Adresse `/nova-homeverse`, Panel-Element `nova-homeverse-panel`. Alte Daten (`.storage/nova.<name>`,
+`www/nova`) übernimmt `storage.py` beim Start einmalig und löscht sie danach. Gleich geblieben sind nur die Kartentypen
+`custom:nova-…` und der Helfer `input_select.nova_theme` (Notlösung der Karten ohne Integration). Alte (`nova`) und
 neue Integration dürfen nicht gleichzeitig laufen: Der Config-Flow bricht mit `old_nova_installed` ab, `async_setup_entry`
 startet nicht und meldet das unter Reparaturen.
 
@@ -39,7 +41,7 @@ custom_components/nova_homeverse/
                        nur Admins), hierher kopieren, nie direkt bearbeiten
   static/nova-cards.js ERZEUGT in nova-cards („npm run integration“, schreibt direkt hierher, wenn beide Repos nebeneinander liegen) –
                        alle Nova Cards, Version aus manifest.json, nie direkt bearbeiten
-  static/fonts/        Schriften des Nova Rezeptbuchs (Caveat, EB Garamond als Latin-Subset, OFL), ausgeliefert unter /nova/static
+  static/fonts/        Schriften des Nova Rezeptbuchs (Caveat, EB Garamond als Latin-Subset, OFL), ausgeliefert unter /nova_homeverse/static
 tests/                 pytest (pytest-homeassistant-custom-component)
 hacs.json              Metadaten für den Marketplace
 brands/                Dieselben Bilder im Aufbau von home-assistant/brands, für eine spätere Einreichung
@@ -51,16 +53,16 @@ README.md              Kurzbeschreibung für Nutzer
 - **Module:** `theme`, `notes`, `shopping`, `recipes` (Liste `MODULES` in `const.py`). Ein neues Modul bekommt: Eintrag in
   `MODULES`, Daten + Methoden in `storage.py`, Befehle in `websocket_api.py` (mit `@_guard("<modul>")`), Übersetzung des
   Namens in `translations/*.json` und Tests. Abgeschaltete Module behalten ihre Daten, antworten aber mit `module_disabled`.
-- **Einstellungen** (`nova/settings/get|set|subscribe|reset`, Speicher `.storage/nova.settings`): Bereiche `allgemein`, `module`,
+- **Einstellungen** (`nova_homeverse/settings/get|set|subscribe|reset`, Speicher `.storage/nova_homeverse.settings`): Bereiche `allgemein`, `module`,
   `einkauf`, `notizen`, `rezepte`, `mealie`. Sie sind immer an (kein Modul). Neue Felder: Standardwert in `DEFAULTS` und Prüfung
   in `SCHEMA` (`settings.py`); ändert sich der Aufbau, `SETTINGS_VERSION`/`SETTINGS_MINOR_VERSION` erhöhen und `migrate()`
   ergänzen. `set`/`reset` nur Admins, Lesen alle. Das Theme steht dort (`allgemein.theme`), ebenso die aktiven Module
   (`module.*`, der Options-Dialog schreibt dorthin, Umschalten wirkt ohne Neuladen) und die todo-Liste (`einkauf.todo_entity`).
-  `nova/theme/*` und `nova/shopping/set_sync` bleiben als alte Befehle und dürfen weiter alle Nutzer.
+  `nova_homeverse/theme/*` und `nova_homeverse/shopping/set_sync` bleiben als ältere Befehle und dürfen weiter alle Nutzer.
 - **Geheimnisse** (z. B. `mealie.token`, Liste `SECRETS` in `settings.py`) gehen nie an Karten oder Panel: `settings_view()`
   liefert nur `<feld>_gesetzt`. Auf dem Server liest man sie mit `NovaData.secret()`.
-- **Speicher nur über den HA-Store** (`.storage/nova.<name>`, Liste `STORES`), nie eigene Dateien. Einzige Ausnahme: Bilder, die liegen
-  verkleinert in `/config/www/nova/<modul>/` (ausgeliefert als `/local/nova/<modul>/<datei>`).
+- **Speicher nur über den HA-Store** (`.storage/nova_homeverse.<name>`, Liste `STORES`), nie eigene Dateien. Einzige Ausnahme: Bilder, die liegen
+  verkleinert in `/config/www/nova_homeverse/<modul>/` (ausgeliefert als `/local/nova_homeverse/<modul>/<datei>`).
 - **Nichts ungeprüft speichern.** Alles, was von einer Karte kommt, geht in `storage.py` durch `clean_text`/`clean_html`,
   Icons und Bildnamen durch die Muster dort. Formatierter Text ist HTML aus einer festen Liste (`sanitize.py`); dieselbe Liste
   steht in nova-cards (`src/shared/rich-text.js`) – beide Stellen zusammen ändern. Bilder werden an den ersten Bytes erkannt

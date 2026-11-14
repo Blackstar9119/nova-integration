@@ -93,7 +93,7 @@ async def test_ws_import(hass, nova, ws, aioclient_mock):
     aioclient_mock.get("https://www.example.org/blog", text="<html><title>Mein Blog</title></html>")
     aioclient_mock.get("https://www.example.org/zu", status=403)
     with patch("custom_components.nova_homeverse.recipe_import.socket.getaddrinfo", _public):
-        res = (await ws("nova/recipes/import", url=url))["result"]
+        res = (await ws("nova_homeverse/recipes/import", url=url))["result"]
         rec = res["recipe"]
         assert rec["title"] == "Lasagne von Oma" and res["duplicates"] == []
         img = Image.open(BytesIO(__import__("base64").b64decode(rec["image_data"].split(",", 1)[1])))
@@ -101,16 +101,16 @@ async def test_ws_import(hass, nova, ws, aioclient_mock):
         # nichts gespeichert
         assert hass.data[DOMAIN].recipes == []
         # übernehmen → beim nächsten Import als doppelt erkannt (Link und Titel)
-        saved = (await ws("nova/recipes/save", recipe={"title": "Lasagne von Oma!", "source": url}))["result"]["recipe"]
+        saved = (await ws("nova_homeverse/recipes/save", recipe={"title": "Lasagne von Oma!", "source": url}))["result"]["recipe"]
         assert saved["source"] == url
-        dup = (await ws("nova/recipes/import", url=url))["result"]["duplicates"]
+        dup = (await ws("nova_homeverse/recipes/import", url=url))["result"]["duplicates"]
         assert dup == [{"id": saved["id"], "title": "Lasagne von Oma!"}]
-        err = await ws("nova/recipes/import", url="https://www.example.org/blog")
+        err = await ws("nova_homeverse/recipes/import", url="https://www.example.org/blog")
         assert err["error"]["code"] == "no_recipe" and err["error"]["message"] == "Mein Blog"
-        assert (await ws("nova/recipes/import", url="https://www.example.org/zu"))["error"]["code"] == "blocked"
-        assert (await ws("nova/recipes/import", url="javascript:alert(1)"))["error"]["code"] == "invalid_url"
+        assert (await ws("nova_homeverse/recipes/import", url="https://www.example.org/zu"))["error"]["code"] == "blocked"
+        assert (await ws("nova_homeverse/recipes/import", url="javascript:alert(1)"))["error"]["code"] == "invalid_url"
     # Adressen im eigenen Netz werden nicht abgerufen
     with patch("custom_components.nova_homeverse.recipe_import.socket.getaddrinfo", lambda *_a: [(2, 1, 6, "", ("192.168.1.5", 0))]):
-        assert (await ws("nova/recipes/import", url="http://router.local/"))["error"]["code"] == "blocked"
-    bad = (await ws("nova/recipes/save", recipe={"id": saved["id"], "source": "javascript:alert(1)"}))["result"]["recipe"]
+        assert (await ws("nova_homeverse/recipes/import", url="http://router.local/"))["error"]["code"] == "blocked"
+    bad = (await ws("nova_homeverse/recipes/save", recipe={"id": saved["id"], "source": "javascript:alert(1)"}))["result"]["recipe"]
     assert bad["source"] is None

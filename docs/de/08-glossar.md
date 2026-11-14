@@ -71,7 +71,7 @@ zum Beispiel `mdi:sofa`.
 **Reparatur** – Ein Hinweis von Home Assistant, dass etwas zu tun ist, zum Beispiel ein Neustart. Reparaturen stehen ganz
 oben unter **Einstellungen**.
 
-**Repository** – Ein Projektordner auf GitHub. Nova Homeverse liegt im Repository `Blackstar9119/nova-integration`.
+**Repository** – Ein Projektordner auf GitHub. Nova Homeverse liegt im Repository `Blackstar9119/nova-homeverse`.
 
 **Seitenleiste** – Die Leiste links in Home Assistant mit Dashboards, Einstellungen und dem Nova-Panel.
 

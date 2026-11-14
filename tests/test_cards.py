@@ -22,7 +22,8 @@ def _card_urls(hass):
         ("/hacsfiles/nova-cards/nova-cards.js?hacstag=123", True),
         ("/local/nova-cards.js", True),
         ("https://cdn.jsdelivr.net/gh/Blackstar9119/nova-cards@main/nova-cards.js", True),
-        ("/nova/static/nova-cards.js?v=1", False),
+        ("/nova_homeverse/static/nova-cards.js?v=1", False),
+        ("/nova/static/nova-cards.js?v=1", True),
         ("https://cdn.jsdelivr.net/gh/Blackstar9119/nova-cards@abc/nova-dev-cards.js", False),
         ("/hacsfiles/button-card/button-card.js", False),
         ("", False),
@@ -33,11 +34,11 @@ def test_is_old_resource(url, old):
 
 
 async def test_cards_served_and_registered(hass, hass_client, nova):
-    """Die Karten kommen unter /nova/static mit ?v=<Version>-<Fingerabdruck> und stehen in den Frontend-Modulen."""
+    """Die Karten kommen unter /nova_homeverse/static mit ?v=<Version>-<Fingerabdruck> und stehen in den Frontend-Modulen."""
     urls = _card_urls(hass)
     assert len(urls) == 1
     url = urls[0]
-    assert url.startswith("/nova/static/nova-cards.js?v=")
+    assert url.startswith("/nova_homeverse/static/nova-cards.js?v=")
     manifest = (await async_get_integration(hass, DOMAIN)).version
     assert url.split("?v=")[1].startswith(f"{manifest}-")
     client = await hass_client()

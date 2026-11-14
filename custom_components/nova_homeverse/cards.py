@@ -1,6 +1,6 @@
 """Nova Cards aus der Integration: Datei ausliefern, im Frontend anmelden, alte Dashboard-Ressource erkennen.
 
-Die Karten (static/nova-cards.js) werden in nova-cards gebaut („npm run integration“) und hierher kopiert – nicht
+Die Karten (static/nova-cards.js) werden aus den Quellen der Nova Cards gebaut („npm run integration“) – nicht
 direkt bearbeiten. Angemeldet wird über frontend.add_extra_js_url: Das ist offizielle API, braucht keinen Eintrag unter
 Dashboards → Ressourcen und geht auch bei Dashboards im YAML-Modus. Der Parameter ?v= ändert sich mit jeder Version und
 jedem Build, damit Browser nach einem Update die neue Datei laden.
@@ -40,7 +40,7 @@ def _digest(path: str) -> str | None:
 def is_old_resource(url: str) -> bool:
     """Eintrag unter Ressourcen, der auf eine separat installierte nova-cards.js zeigt (Marketplace, /local, CDN).
 
-    Die eigene Datei der Integration (/nova/static/…) und der Dev-Build (nova-dev-cards.js) zählen nicht.
+    Die eigene Datei der Integration (/nova_homeverse/static/…) und der Dev-Build (nova-dev-cards.js) zählen nicht.
     """
     path = urlsplit(url or "").path
     return path.rsplit("/", 1)[-1] == CARDS_FILE and not path.startswith(CARDS_URL.rsplit("/", 1)[0] + "/")

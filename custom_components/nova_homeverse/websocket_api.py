@@ -1,4 +1,4 @@
-"""WebSocket-API von Nova Homeverse: nova/<modul>/<befehl> (genutzt von Nova Cards, src/shared/nova-store.js)."""
+"""WebSocket-API von Nova Homeverse: nova_homeverse/<modul>/<befehl> (genutzt von Nova Cards, src/shared/nova-store.js)."""
 
 from __future__ import annotations
 
@@ -25,7 +25,7 @@ def _guard(module: str | None):
         async def wrapper(hass, connection, msg):
             data = _data(hass)
             if data is None:
-                connection.send_error(msg["id"], "not_ready", "Nova ist nicht eingerichtet")
+                connection.send_error(msg["id"], "not_ready", "Nova Homeverse ist nicht eingerichtet")
                 return
             try:
                 if module:
@@ -34,7 +34,7 @@ def _guard(module: str | None):
                 if hasattr(res, "__await__"):
                     await res
             except ModuleDisabled as err:
-                connection.send_error(msg["id"], "module_disabled", f"Modul „{err}“ ist in den Optionen von Nova abgeschaltet")
+                connection.send_error(msg["id"], "module_disabled", f"Modul „{err}“ ist in den Optionen von Nova Homeverse abgeschaltet")
             except ValueError as err:
                 connection.send_error(msg["id"], "invalid", str(err))
 
@@ -60,7 +60,7 @@ def _subscribe(kind: str, view):
     return handler
 
 
-@websocket_api.websocket_command({vol.Required("type"): "nova/info"})
+@websocket_api.websocket_command({vol.Required("type"): "nova_homeverse/info"})
 @websocket_api.async_response
 async def ws_info(hass, connection, msg):
     data = _data(hass)
@@ -75,20 +75,20 @@ async def ws_info(hass, connection, msg):
 
 # ---------- Einstellungen ----------
 # Lesen: jeder angemeldete Nutzer. Schreiben/Zurücksetzen: nur Admins. Geheimnisse (Mealie-Token) gehen nie raus.
-@websocket_api.websocket_command({vol.Required("type"): "nova/settings/get"})
+@websocket_api.websocket_command({vol.Required("type"): "nova_homeverse/settings/get"})
 @websocket_api.async_response
 @_guard(None)
 async def ws_settings_get(hass, connection, msg, data: NovaData):
     connection.send_result(msg["id"], data.settings_view())
 
 
-@websocket_api.websocket_command({vol.Required("type"): "nova/settings/subscribe"})
+@websocket_api.websocket_command({vol.Required("type"): "nova_homeverse/settings/subscribe"})
 @websocket_api.async_response
 async def ws_settings_subscribe(hass, connection, msg):
     await _subscribe("settings", lambda d: d.settings_view())(hass, connection, msg)
 
 
-@websocket_api.websocket_command({vol.Required("type"): "nova/settings/set", vol.Required("settings"): dict})
+@websocket_api.websocket_command({vol.Required("type"): "nova_homeverse/settings/set", vol.Required("settings"): dict})
 @websocket_api.require_admin
 @websocket_api.async_response
 @_guard(None)
@@ -96,7 +96,7 @@ async def ws_settings_set(hass, connection, msg, data: NovaData):
     connection.send_result(msg["id"], data.settings_set(msg["settings"]))
 
 
-@websocket_api.websocket_command({vol.Required("type"): "nova/settings/reset", vol.Optional("bereich"): vol.In(SECTIONS)})
+@websocket_api.websocket_command({vol.Required("type"): "nova_homeverse/settings/reset", vol.Optional("bereich"): vol.In(SECTIONS)})
 @websocket_api.require_admin
 @websocket_api.async_response
 @_guard(None)
@@ -105,14 +105,14 @@ async def ws_settings_reset(hass, connection, msg, data: NovaData):
 
 
 # ---------- Theme (alte Befehle, lesen/schreiben allgemein.theme der Einstellungen) ----------
-# nova/theme/set darf jeder angemeldete Nutzer (Themes Schalter auf Wandpanels ohne Admin-Konto).
-@websocket_api.websocket_command({vol.Required("type"): "nova/theme/subscribe"})
+# nova_homeverse/theme/set darf jeder angemeldete Nutzer (Themes Schalter auf Wandpanels ohne Admin-Konto).
+@websocket_api.websocket_command({vol.Required("type"): "nova_homeverse/theme/subscribe"})
 @websocket_api.async_response
 async def ws_theme_subscribe(hass, connection, msg):
     await _subscribe("theme", lambda d: d.theme_view())(hass, connection, msg)
 
 
-@websocket_api.websocket_command({vol.Required("type"): "nova/theme/set", vol.Required("theme"): str})
+@websocket_api.websocket_command({vol.Required("type"): "nova_homeverse/theme/set", vol.Required("theme"): str})
 @websocket_api.async_response
 @_guard("theme")
 async def ws_theme_set(hass, connection, msg, data: NovaData):
@@ -121,14 +121,14 @@ async def ws_theme_set(hass, connection, msg, data: NovaData):
 
 
 # ---------- Notizen ----------
-@websocket_api.websocket_command({vol.Required("type"): "nova/notes/subscribe"})
+@websocket_api.websocket_command({vol.Required("type"): "nova_homeverse/notes/subscribe"})
 @websocket_api.async_response
 async def ws_notes_subscribe(hass, connection, msg):
     await _subscribe("notes", lambda d: d.notes_view())(hass, connection, msg)
 
 
 @websocket_api.websocket_command({
-    vol.Required("type"): "nova/notes/save",
+    vol.Required("type"): "nova_homeverse/notes/save",
     vol.Required("note"): {
         vol.Optional("id"): cv.string,
         vol.Optional("title"): str,
@@ -142,7 +142,7 @@ async def ws_notes_save(hass, connection, msg, data: NovaData):
     connection.send_result(msg["id"], {"note": data.note_save(msg["note"])})
 
 
-@websocket_api.websocket_command({vol.Required("type"): "nova/notes/delete", vol.Required("note_id"): cv.string})
+@websocket_api.websocket_command({vol.Required("type"): "nova_homeverse/notes/delete", vol.Required("note_id"): cv.string})
 @websocket_api.async_response
 @_guard("notes")
 async def ws_notes_delete(hass, connection, msg, data: NovaData):
@@ -151,7 +151,7 @@ async def ws_notes_delete(hass, connection, msg, data: NovaData):
 
 
 # ---------- Einkauf ----------
-@websocket_api.websocket_command({vol.Required("type"): "nova/shopping/subscribe"})
+@websocket_api.websocket_command({vol.Required("type"): "nova_homeverse/shopping/subscribe"})
 @websocket_api.async_response
 async def ws_shop_subscribe(hass, connection, msg):
     await _subscribe("shopping", lambda d: d.shop_view())(hass, connection, msg)
@@ -170,14 +170,14 @@ ITEM = {
 }
 
 
-@websocket_api.websocket_command({vol.Required("type"): "nova/shopping/item_save", vol.Required("item"): ITEM})
+@websocket_api.websocket_command({vol.Required("type"): "nova_homeverse/shopping/item_save", vol.Required("item"): ITEM})
 @websocket_api.async_response
 @_guard("shopping")
 async def ws_item_save(hass, connection, msg, data: NovaData):
     connection.send_result(msg["id"], {"item": data.item_save(msg["item"])})
 
 
-@websocket_api.websocket_command({vol.Required("type"): "nova/shopping/item_delete", vol.Required("item_id"): cv.string})
+@websocket_api.websocket_command({vol.Required("type"): "nova_homeverse/shopping/item_delete", vol.Required("item_id"): cv.string})
 @websocket_api.async_response
 @_guard("shopping")
 async def ws_item_delete(hass, connection, msg, data: NovaData):
@@ -185,14 +185,14 @@ async def ws_item_delete(hass, connection, msg, data: NovaData):
     connection.send_result(msg["id"])
 
 
-@websocket_api.websocket_command({vol.Required("type"): "nova/shopping/clear_done"})
+@websocket_api.websocket_command({vol.Required("type"): "nova_homeverse/shopping/clear_done"})
 @websocket_api.async_response
 @_guard("shopping")
 async def ws_clear_done(hass, connection, msg, data: NovaData):
     connection.send_result(msg["id"], {"removed": data.clear_done()})
 
 
-@websocket_api.websocket_command({vol.Required("type"): "nova/shopping/reorder", vol.Required("ids"): [cv.string]})
+@websocket_api.websocket_command({vol.Required("type"): "nova_homeverse/shopping/reorder", vol.Required("ids"): [cv.string]})
 @websocket_api.async_response
 @_guard("shopping")
 async def ws_reorder(hass, connection, msg, data: NovaData):
@@ -200,7 +200,7 @@ async def ws_reorder(hass, connection, msg, data: NovaData):
     connection.send_result(msg["id"])
 
 
-@websocket_api.websocket_command({vol.Required("type"): "nova/shopping/history_delete", vol.Required("key"): cv.string})
+@websocket_api.websocket_command({vol.Required("type"): "nova_homeverse/shopping/history_delete", vol.Required("key"): cv.string})
 @websocket_api.async_response
 @_guard("shopping")
 async def ws_history_delete(hass, connection, msg, data: NovaData):
@@ -209,7 +209,7 @@ async def ws_history_delete(hass, connection, msg, data: NovaData):
 
 
 @websocket_api.websocket_command({
-    vol.Required("type"): "nova/shopping/store_save",
+    vol.Required("type"): "nova_homeverse/shopping/store_save",
     vol.Required("store"): {
         vol.Optional("id"): cv.string,
         vol.Optional("name"): str,
@@ -223,7 +223,7 @@ async def ws_store_save(hass, connection, msg, data: NovaData):
     connection.send_result(msg["id"], {"store": data.store_save(msg["store"])})
 
 
-@websocket_api.websocket_command({vol.Required("type"): "nova/shopping/store_delete", vol.Required("store_id"): cv.string})
+@websocket_api.websocket_command({vol.Required("type"): "nova_homeverse/shopping/store_delete", vol.Required("store_id"): cv.string})
 @websocket_api.async_response
 @_guard("shopping")
 async def ws_store_delete(hass, connection, msg, data: NovaData):
@@ -232,7 +232,7 @@ async def ws_store_delete(hass, connection, msg, data: NovaData):
 
 
 @websocket_api.websocket_command({
-    vol.Required("type"): "nova/shopping/set_sync",
+    vol.Required("type"): "nova_homeverse/shopping/set_sync",
     vol.Required("entity_id"): vol.Any(None, cv.entity_domain("todo")),
 })
 @websocket_api.async_response
@@ -244,14 +244,14 @@ async def ws_set_sync(hass, connection, msg, data: NovaData):
 
 
 # ---------- Rezeptbuch ----------
-@websocket_api.websocket_command({vol.Required("type"): "nova/recipes/subscribe"})
+@websocket_api.websocket_command({vol.Required("type"): "nova_homeverse/recipes/subscribe"})
 @websocket_api.async_response
 async def ws_recipes_subscribe(hass, connection, msg):
     await _subscribe("recipes", lambda d: d.recipes_view())(hass, connection, msg)
 
 
 @websocket_api.websocket_command({
-    vol.Required("type"): "nova/recipes/save",
+    vol.Required("type"): "nova_homeverse/recipes/save",
     vol.Required("recipe"): {
         vol.Optional("id"): cv.string,
         vol.Optional("title"): str,
@@ -271,7 +271,7 @@ async def ws_recipes_save(hass, connection, msg, data: NovaData):
     connection.send_result(msg["id"], {"recipe": data.recipe_save(msg["recipe"])})
 
 
-@websocket_api.websocket_command({vol.Required("type"): "nova/recipes/delete", vol.Required("recipe_id"): cv.string})
+@websocket_api.websocket_command({vol.Required("type"): "nova_homeverse/recipes/delete", vol.Required("recipe_id"): cv.string})
 @websocket_api.async_response
 @_guard("recipes")
 async def ws_recipes_delete(hass, connection, msg, data: NovaData):
@@ -280,7 +280,7 @@ async def ws_recipes_delete(hass, connection, msg, data: NovaData):
 
 
 @websocket_api.websocket_command({
-    vol.Required("type"): "nova/recipes/to_shopping",
+    vol.Required("type"): "nova_homeverse/recipes/to_shopping",
     vol.Required("recipe_id"): cv.string,
     vol.Optional("servings"): vol.Coerce(float),
     vol.Optional("only"): [int],
@@ -291,7 +291,7 @@ async def ws_recipes_to_shopping(hass, connection, msg, data: NovaData):
     connection.send_result(msg["id"], {"added": data.recipe_to_shopping(msg["recipe_id"], msg.get("servings"), msg.get("only"))})
 
 
-@websocket_api.websocket_command({vol.Required("type"): "nova/recipes/import", vol.Required("url"): str})
+@websocket_api.websocket_command({vol.Required("type"): "nova_homeverse/recipes/import", vol.Required("url"): str})
 @websocket_api.async_response
 @_guard("recipes")
 async def ws_recipes_import(hass, connection, msg, data: NovaData):
@@ -306,7 +306,7 @@ async def ws_recipes_import(hass, connection, msg, data: NovaData):
 
 # ---------- Bilder ----------
 @websocket_api.websocket_command({
-    vol.Required("type"): "nova/image/upload",
+    vol.Required("type"): "nova_homeverse/image/upload",
     vol.Required("module"): vol.In(IMAGE_MODULES),
     vol.Required("data"): str,
 })
