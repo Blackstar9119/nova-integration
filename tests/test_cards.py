@@ -7,8 +7,8 @@ from homeassistant.loader import async_get_integration
 from homeassistant.setup import async_setup_component
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.nova.cards import ISSUE_OLD_RESOURCE, is_old_resource
-from custom_components.nova.const import DOMAIN
+from custom_components.nova_homeverse.cards import ISSUE_OLD_RESOURCE, is_old_resource
+from custom_components.nova_homeverse.const import DOMAIN
 
 
 def _card_urls(hass):
@@ -57,7 +57,7 @@ async def test_old_resource_issue(hass, hass_ws_client):
     item = await resources.async_create_item({"res_type": "module", "url": "/hacsfiles/nova-cards/nova-cards.js?hacstag=1"})
     await resources.async_create_item({"res_type": "module", "url": "/hacsfiles/other/other.js"})
 
-    entry = MockConfigEntry(domain=DOMAIN, title="Nova", data={})
+    entry = MockConfigEntry(domain=DOMAIN, title="Nova Homeverse", data={})
     entry.add_to_hass(hass)
     assert await hass.config_entries.async_setup(entry.entry_id)
     await hass.async_block_till_done()

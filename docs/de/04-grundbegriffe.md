@@ -19,7 +19,7 @@ Neue Dashboards legst du unter **Einstellungen → Dashboards** an. Wie das geht
 Ein Dashboard kann mehrere **Ansichten** haben. Das sind Unterseiten, die oben als Reiter stehen, zum Beispiel
 „Wohnzimmer“, „Küche“ und „Garten“. Im Bild oben sind es die vielen kleinen Symbole in der Kopfzeile.
 
-Eine Ansicht hat einen **Typ**. Für Nova empfehlen wir den Typ **Abschnitte**. Dort liegen die Karten in **Abschnitten**,
+Eine Ansicht hat einen **Typ**. Für Nova Homeverse empfehlen wir den Typ **Abschnitte**. Dort liegen die Karten in **Abschnitten**,
 also in Gruppen, die sich der Bildschirmbreite anpassen. Für Wandtablets gibt es den Typ **Panel**: Dann füllt eine
 einzige Karte die ganze Seite.
 
@@ -28,7 +28,7 @@ Mit [Nova Navi](karten/navi.md) springst du bequem zwischen den Ansichten hin un
 ## Karte
 
 Eine **Karte** ist ein Kästchen auf dem Dashboard. Sie zeigt etwas an oder bedient etwas. Home Assistant bringt eigene
-Karten mit. Nova bringt 24 weitere dazu, alle im selben Look. Eine Übersicht findest du in [Kapitel 5](karten/README.md).
+Karten mit. Nova Homeverse bringt 24 weitere dazu, alle im selben Look. Eine Übersicht findest du in [Kapitel 5](karten/README.md).
 
 <p align="center"><img src="../images/room/room-blue-default.webp" alt="Eine Nova Raum Card" width="420"></p>
 
@@ -67,7 +67,7 @@ Bereiche verwaltest du unter **Einstellungen → Bereiche, Labels & Zonen**.
 
 <p align="center"><img src="../images/ui/begriffe-03-bereiche.webp" alt="Übersicht der Bereiche" width="720"></p>
 
-Warum das für Nova wichtig ist: Einige Karten können mit Bereichen arbeiten. Die [Licht Card](karten/licht.md) holt sich
+Warum das für Nova Homeverse wichtig ist: Einige Karten können mit Bereichen arbeiten. Die [Licht Card](karten/licht.md) holt sich
 zum Beispiel alle Lampen eines Bereichs selbst. Es lohnt sich also, deine Geräte den richtigen Räumen zuzuordnen.
 
 ## Editor

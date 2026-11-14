@@ -7,7 +7,8 @@ from unittest.mock import patch
 
 from PIL import Image
 
-from custom_components.nova.recipe_import import extract_recipe, build_draft, parse_ingredient
+from custom_components.nova_homeverse.const import DOMAIN
+from custom_components.nova_homeverse.recipe_import import extract_recipe, build_draft, parse_ingredient
 
 # Aufbau wie bei Chefkoch: Recipe neben anderen JSON-LD-Blöcken, Anleitung als ein Text, Zeiten als P0DT…
 CHEFKOCH = """<html><head><title>Lasagne von Oma | Chefkoch</title>
@@ -65,7 +66,7 @@ def test_extract_graph():
 
 def test_image_reference():
     """Chefkoch/Yoast: "image" ist nur ein Verweis {"@id": …} auf ein ImageObject im @graph."""
-    from custom_components.nova.recipe_import import _image_url, _index, _ld_blocks
+    from custom_components.nova_homeverse.recipe_import import _image_url, _index, _ld_blocks
     page = '<script type="application/ld+json">' + json.dumps({"@graph": [
         {"@type": "Recipe", "name": "x", "image": {"@id": "https://s.de/r#primaryimage"}},
         {"@type": "ImageObject", "@id": "https://s.de/r#primaryimage", "url": "/bilder/lasagne.jpg"}]}) + "</script>"
@@ -91,14 +92,14 @@ async def test_ws_import(hass, nova, ws, aioclient_mock):
     aioclient_mock.get("https://img.example.org/lasagne.jpg", content=_jpeg())
     aioclient_mock.get("https://www.example.org/blog", text="<html><title>Mein Blog</title></html>")
     aioclient_mock.get("https://www.example.org/zu", status=403)
-    with patch("custom_components.nova.recipe_import.socket.getaddrinfo", _public):
+    with patch("custom_components.nova_homeverse.recipe_import.socket.getaddrinfo", _public):
         res = (await ws("nova/recipes/import", url=url))["result"]
         rec = res["recipe"]
         assert rec["title"] == "Lasagne von Oma" and res["duplicates"] == []
         img = Image.open(BytesIO(__import__("base64").b64decode(rec["image_data"].split(",", 1)[1])))
         assert max(img.size) == 960
         # nichts gespeichert
-        assert hass.data["nova"].recipes == []
+        assert hass.data[DOMAIN].recipes == []
         # übernehmen → beim nächsten Import als doppelt erkannt (Link und Titel)
         saved = (await ws("nova/recipes/save", recipe={"title": "Lasagne von Oma!", "source": url}))["result"]["recipe"]
         assert saved["source"] == url
@@ -109,7 +110,7 @@ async def test_ws_import(hass, nova, ws, aioclient_mock):
         assert (await ws("nova/recipes/import", url="https://www.example.org/zu"))["error"]["code"] == "blocked"
         assert (await ws("nova/recipes/import", url="javascript:alert(1)"))["error"]["code"] == "invalid_url"
     # Adressen im eigenen Netz werden nicht abgerufen
-    with patch("custom_components.nova.recipe_import.socket.getaddrinfo", lambda *_a: [(2, 1, 6, "", ("192.168.1.5", 0))]):
+    with patch("custom_components.nova_homeverse.recipe_import.socket.getaddrinfo", lambda *_a: [(2, 1, 6, "", ("192.168.1.5", 0))]):
         assert (await ws("nova/recipes/import", url="http://router.local/"))["error"]["code"] == "blocked"
     bad = (await ws("nova/recipes/save", recipe={"id": saved["id"], "source": "javascript:alert(1)"}))["result"]["recipe"]
     assert bad["source"] is None

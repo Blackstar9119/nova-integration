@@ -42,7 +42,7 @@ Mehr in [Kapitel 4](04-grundbegriffe.md#entität).
 
 **Gerät** – Ein echtes Gerät wie ein Thermostat oder ein Saugroboter. Ein Gerät hat meist mehrere Entitäten.
 
-**GitHub** – Die Webseite, auf der Nova gespeichert und weiterentwickelt wird. Dort meldest du auch Fehler.
+**GitHub** – Die Webseite, auf der Nova Homeverse gespeichert und weiterentwickelt wird. Dort meldest du auch Fehler.
 
 **Hash** – Der Teil einer Adresse nach dem `#`, zum Beispiel `#wohnzimmer`. Damit öffnest du eine Nova Pop-up Card.
 
@@ -52,17 +52,17 @@ Gerät. Du findest Helfer unter **Einstellungen → Geräte & Dienste → Helfer
 **Icon** – Ein kleines Symbol. Home Assistant nutzt die Sammlung „Material Design Icons“. Ihre Namen beginnen mit `mdi:`,
 zum Beispiel `mdi:sofa`.
 
-**Integration** – Eine Erweiterung, die Home Assistant neue Fähigkeiten gibt. Nova ist eine Integration.
+**Integration** – Eine Erweiterung, die Home Assistant neue Fähigkeiten gibt. Nova Homeverse ist eine Integration.
 
 **Karte** – Ein Kästchen auf dem Dashboard, das etwas anzeigt oder bedient. Mehr in [Kapitel 4](04-grundbegriffe.md#karte).
 
 **Marketplace** – Der Laden in Home Assistant für Erweiterungen aus der Community. Du findest ihn unter **Einstellungen**.
 
-**Modul** – Ein Teil von Nova, den du einzeln an- und ausschalten kannst: Theme, Notizen, Einkauf und Rezeptbuch.
+**Modul** – Ein Teil von Nova Homeverse, den du einzeln an- und ausschalten kannst: Theme, Notizen, Einkauf und Rezeptbuch.
 
-**Neustart** – Home Assistant fährt einmal herunter und wieder hoch. Nötig nach der Installation oder einem Update von Nova.
+**Neustart** – Home Assistant fährt einmal herunter und wieder hoch. Nötig nach der Installation oder einem Update von Nova Homeverse.
 
-**Nova-Panel** – Die Einstellungsseite von Nova. Sie steht links in der Seitenleiste und ist nur für Administratoren.
+**Nova-Panel** – Die Einstellungsseite von Nova Homeverse. Sie steht links in der Seitenleiste als „Nova Homeverse“ und ist nur für Administratoren.
 
 **Panel** – Eine eigene Seite in der Seitenleiste. Außerdem ein Typ von Ansicht, bei dem eine einzige Karte die ganze Seite füllt.
 
@@ -71,19 +71,19 @@ zum Beispiel `mdi:sofa`.
 **Reparatur** – Ein Hinweis von Home Assistant, dass etwas zu tun ist, zum Beispiel ein Neustart. Reparaturen stehen ganz
 oben unter **Einstellungen**.
 
-**Repository** – Ein Projektordner auf GitHub. Nova liegt im Repository `Blackstar9119/nova-integration`.
+**Repository** – Ein Projektordner auf GitHub. Nova Homeverse liegt im Repository `Blackstar9119/nova-integration`.
 
 **Seitenleiste** – Die Leiste links in Home Assistant mit Dashboards, Einstellungen und dem Nova-Panel.
 
 **Sensor** – Eine Entität, die einen Messwert liefert, zum Beispiel Temperatur oder Luftfeuchte.
 
-**Theme** – Ein Farbschema. Nova hat vier: Nova Blau, Nova Hell, Nova Midnight und Nova Velvet.
+**Theme** – Ein Farbschema. Nova Homeverse hat vier: Nova Blau, Nova Hell, Nova Midnight und Nova Velvet.
 
 **todo-Liste** – Eine Liste in Home Assistant, zum Beispiel für Aufgaben oder Einkäufe. Ihre Entitäten beginnen mit `todo.`.
 
 **Vorschau** – Der rechte Teil des Editors. Er zeigt sofort, wie die Karte aussieht.
 
-<a id="yaml"></a>**YAML** – Eine einfache Textform für Einstellungen. Für Nova brauchst du sie nicht, alles geht im grafischen Editor.
+<a id="yaml"></a>**YAML** – Eine einfache Textform für Einstellungen. Für Nova Homeverse brauchst du sie nicht, alles geht im grafischen Editor.
 
 **Zustand** – Der aktuelle Wert einer Entität, zum Beispiel „an“, „aus“ oder „21,5 °C“.
 

@@ -1,4 +1,4 @@
-"""Daten der Nova-Integration: Einstellungen (mit Theme), Notizen, Einkauf, Rezeptbuch und Bilder.
+"""Daten von Nova Homeverse: Einstellungen (mit Theme), Notizen, Einkauf, Rezeptbuch und Bilder.
 
 Gespeichert wird mit dem Store von Home Assistant (.storage/nova.<name>, Liste STORES). Bilder liegen verkleinert unter
 /config/www/nova/<modul>/. Jede Änderung geht an alle Abonnenten (Karten auf allen Geräten).

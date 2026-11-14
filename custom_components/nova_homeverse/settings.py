@@ -1,4 +1,4 @@
-"""Einstellungen der Nova-Integration: Standardwerte, Prüfung (voluptuous) und Migration des Speichers.
+"""Einstellungen von Nova Homeverse: Standardwerte, Prüfung (voluptuous) und Migration des Speichers.
 
 Gespeichert in .storage/nova.settings. Die Daten selbst verwaltet NovaData in storage.py; hier steht nur, welche Werte
 es gibt und welche erlaubt sind. Geheimnisse (Mealie-Token) gehen nie an Karten oder Panel – view() ersetzt sie durch

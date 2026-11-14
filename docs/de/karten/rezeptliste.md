@@ -25,7 +25,7 @@ Wie du eine Karte grundsätzlich hinzufügst, steht in [Kapitel 3](../03-erste-s
 
 1. Öffne dein Dashboard und tippe oben rechts auf den **Stift** (Dashboard bearbeiten).
 2. Tippe im Abschnitt auf **+**, wechsle zum Reiter **Nach Karte** und suche nach „Nova Rezeptliste“. Tippe die Karte an.
-3. Die Karte braucht das Modul **Rezeptbuch** der Nova-Integration. Es ist von Anfang an an.
+3. Die Karte braucht das Modul **Rezeptbuch** der Integration Nova Homeverse. Es ist von Anfang an an.
 4. Unter **Ansicht** wählst du Liste oder Kacheln.
 5. Rechts siehst du sofort, wie die Karte aussieht. Passt alles, tippe auf **Speichern**.
 
@@ -52,7 +52,7 @@ Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schre
 
 Kompakte Rezeptliste, schnell durchsuchbar und auf allen Geräten gleich. Dieselben Rezepte zeigt das
 [Nova Rezeptbuch](rezeptbuch.md) zum Blättern. Die Daten liegen in der
-[Nova-Integration](../../../README.md) (Modul „Rezeptbuch“) – ohne sie zeigt die Karte nur einen Hinweis.
+[Integration Nova Homeverse](../../../README.md) (Modul „Rezeptbuch“) – ohne sie zeigt die Karte nur einen Hinweis.
 
 - **Liste:** Suche (Name, Schlagwort, Zutat), Schlagwörter und Favoriten als Filter-Chips, Favoriten stehen oben.
 - **Rezept:** Bild, Zeit, Schlagwörter, Zutaten und Zubereitung. Mit + / – rechnest du die **Portionen** um, die Mengen
@@ -63,7 +63,7 @@ Kompakte Rezeptliste, schnell durchsuchbar und auf allen Geräten gleich. Diesel
 - **Bearbeiten:** Stift oben rechts. Name, Portionen, Zeit, Schlagwörter, Bild (wird vor dem Speichern verkleinert),
   Zutaten (Menge, Einheit, Name) und die Zubereitung mit Formatierung. Gespeichert wird automatisch, sobald das Rezept
   einen Namen hat. Löschen: Mülleimer, zweimal tippen.
-- **Rezept importieren** (Kettensymbol oben): Link einfügen, z. B. von Chefkoch. Die Nova-Integration liest die Seite
+- **Rezept importieren** (Kettensymbol oben): Link einfügen, z. B. von Chefkoch. Die Integration Nova Homeverse liest die Seite
   (schema.org-Rezeptdaten) und füllt eine Vorschau mit Titel, Portionen, Zeit, Zutaten mit Menge und Einheit, Schritten
   und Bild. Alles lässt sich ändern; gespeichert wird erst mit „Übernehmen“, das Kreuz verwirft die Vorschau. Gibt es das
   Rezept schon (gleicher Link oder Titel), fragt die Karte: ersetzen oder trotzdem neu. Findet die Integration kein Rezept

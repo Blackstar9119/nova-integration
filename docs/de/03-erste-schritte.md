@@ -2,12 +2,12 @@
 
 [← Inhaltsverzeichnis](../README.md)
 
-Nova ist installiert. Jetzt wird es bunt: Du wählst ein Theme, legst dein erstes Dashboard an und setzt deine erste
+Nova Homeverse ist installiert. Jetzt wird es bunt: Du wählst ein Theme, legst dein erstes Dashboard an und setzt deine erste
 Nova Card darauf.
 
 ## 1. Das Nova-Panel
 
-Links in der Seitenleiste steht jetzt **Nova**. Das ist das **Nova-Panel**, die Einstellungsseite von Nova. Ein **Panel**
+Links in der Seitenleiste steht jetzt **Nova Homeverse**. Das ist das **Nova-Panel**, die Einstellungsseite von Nova Homeverse. Ein **Panel**
 ist in Home Assistant einfach eine eigene Seite in der Seitenleiste. Das Nova-Panel sehen nur Administratoren.
 
 <p align="center"><img src="../images/ui/start-01-panel.webp" alt="Das Nova-Panel mit den allgemeinen Einstellungen" width="720"></p>
@@ -38,7 +38,7 @@ Die Änderung gilt sofort, auf allen Geräten. Speichern musst du nichts.
 ## 3. Erstes Dashboard anlegen
 
 Ein **Dashboard** ist eine Seite mit Karten. Home Assistant hat schon eins, die „Übersicht“. Die baut Home Assistant aber
-selbst. Für Nova legst du dir ein eigenes an, das dir ganz allein gehört.
+selbst. Für Nova Homeverse legst du dir ein eigenes an, das dir ganz allein gehört.
 
 Gehe zu **Einstellungen → Dashboards** und klicke unten rechts auf **Dashboard hinzufügen**.
 

@@ -1,4 +1,4 @@
-"""Tests der Nova-Integration: Einrichtung, Module, WebSocket-API, Bereinigung, Bilder, todo-Abgleich."""
+"""Tests von Nova Homeverse: Einrichtung, Module, WebSocket-API, Bereinigung, Bilder, todo-Abgleich."""
 
 import base64
 from datetime import timedelta
@@ -6,9 +6,9 @@ from datetime import timedelta
 from homeassistant.util import dt as dt_util
 from pytest_homeassistant_custom_component.common import MockConfigEntry, async_fire_time_changed
 
-from custom_components.nova.const import CONF_MODULES, DOMAIN
-from custom_components.nova.sanitize import clean_html
-from custom_components.nova.todo_sync import fmt, parse
+from custom_components.nova_homeverse.const import CONF_MODULES, DOMAIN
+from custom_components.nova_homeverse.sanitize import clean_html
+from custom_components.nova_homeverse.todo_sync import fmt, parse
 
 WEBP = b"RIFF\x1a\x00\x00\x00WEBPVP8L\x0d\x00\x00\x00/\x00\x00\x00\x10\x07\x10\x11\x11\x88\x88\xfe\x07\x00"
 
@@ -231,7 +231,33 @@ async def test_notes_todo_sync(hass, ws, tmp_path):
 
 
 def test_plain_text():
-    from custom_components.nova.sanitize import from_plain, to_plain
+    from custom_components.nova_homeverse.sanitize import from_plain, to_plain
 
     assert to_plain("<p>a <b>b</b></p><p>c<br>d</p>") == "a b\nc\nd"
     assert from_plain("x < y\n\nz") == "<p>x &lt; y</p><p><br></p><p>z</p>"
+
+
+async def test_config_flow_old_nova(hass):
+    """Ist die alte Integration „Nova“ noch eingerichtet, bricht die Einrichtung mit Hinweis ab."""
+    MockConfigEntry(domain="nova", title="Nova", data={}).add_to_hass(hass)
+    res = await hass.config_entries.flow.async_init(DOMAIN, context={"source": "user"})
+    assert res["type"] == "abort" and res["reason"] == "old_nova_installed"
+
+
+async def test_setup_refuses_with_old_nova_loaded(hass):
+    """Läuft die alte Integration „Nova“ noch, startet Nova Homeverse nicht und meldet es unter Reparaturen."""
+    from homeassistant.config_entries import ConfigEntryState
+    from homeassistant.helpers import issue_registry as ir
+
+    hass.config.components.add("nova")
+    entry = MockConfigEntry(domain=DOMAIN, data={}, options={CONF_MODULES: ["theme"]})
+    entry.add_to_hass(hass)
+    assert not await hass.config_entries.async_setup(entry.entry_id)
+    assert entry.state is ConfigEntryState.SETUP_ERROR
+    assert ir.async_get(hass).async_get_issue(DOMAIN, "old_nova_installed") is not None
+    assert DOMAIN not in hass.data
+
+    hass.config.components.remove("nova")
+    assert await hass.config_entries.async_reload(entry.entry_id)
+    assert entry.state is ConfigEntryState.LOADED
+    assert ir.async_get(hass).async_get_issue(DOMAIN, "old_nova_installed") is None

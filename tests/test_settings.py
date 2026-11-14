@@ -5,8 +5,8 @@ import json
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.nova.const import CONF_MODULES, DOMAIN
-from custom_components.nova.settings import DEFAULTS, migrate, normalize
+from custom_components.nova_homeverse.const import CONF_MODULES, DOMAIN
+from custom_components.nova_homeverse.settings import DEFAULTS, migrate, normalize
 
 TOKEN = "geheim-1234567890"
 
@@ -224,7 +224,7 @@ async def test_panel(hass, hass_client, nova):
     panels = hass.data["frontend_panels"]
     assert "nova" in panels
     panel = panels["nova"]
-    assert panel.require_admin and panel.sidebar_title == "Nova"
+    assert panel.require_admin and panel.sidebar_title == "Nova Homeverse"
     assert panel.config["_panel_custom"]["name"] == "nova-settings-panel"
     url = panel.config["_panel_custom"]["module_url"]
     client = await hass_client()
