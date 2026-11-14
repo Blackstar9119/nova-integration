@@ -91,15 +91,20 @@ Nova heißt jetzt **Nova Homeverse**. Für Home Assistant ist das eine neue Inte
 Das dauert fünf Minuten, und **deine Daten bleiben erhalten**: Theme, Notizen, Einkaufsliste, Rezepte und Bilder übernimmt
 Nova Homeverse automatisch. Dashboards und Karten musst du nicht anfassen.
 
-1. **Einstellungen → Geräte & Dienste → Nova → ⋮ (drei Punkte) → Löschen.**
-2. Öffne den **Marketplace**, such **Nova** und wähle über **⋮** den Punkt **Entfernen**.
-3. Starte Home Assistant neu.
-4. Installiere **Nova Homeverse** wie in [Kapitel 2](02-installation.md#schritt-3-nova-homeverse-suchen-und-herunterladen)
-   beschrieben (Schritt 3 bis 5). Steht Nova Homeverse noch nicht im Marketplace, lade die Liste einmal neu.
-5. Leer einmal den Browser-Cache.
+1. **Einstellungen → Geräte & Dienste → Nova → ⋮ (drei Punkte) → Löschen.** Das ist der wichtigste Schritt.
+2. Öffne den **Marketplace** und dort **Nova**. Wähle oben rechts **⋮ → Informationen aktualisieren**. Danach heißt der
+   Eintrag **Nova Homeverse**.
+3. Klicke auf **Aktualisieren** bzw. **Herunterladen** und bestätige.
+4. Starte Home Assistant neu.
+5. **Einstellungen → Geräte & Dienste → Integration hinzufügen → Nova Homeverse**, wie in
+   [Kapitel 2, Schritt 5](02-installation.md#schritt-5-integration-nova-homeverse-hinzufügen).
+6. Leer einmal den Browser-Cache.
 
-Läuft die alte Integration noch, startet Nova Homeverse nicht. Unter **Einstellungen → Reparaturen** steht dann
-„Alte Integration „Nova“ entfernen“. Folge den Schritten dort.
+Der alte Ordner `custom_components/nova` bleibt dabei eventuell liegen. Das stört nicht: Ohne Eintrag unter Geräte &
+Dienste wird er nicht geladen.
+
+Hast du Schritt 1 vergessen, startet Nova Homeverse nicht. Unter **Einstellungen → Reparaturen** steht dann
+„Alte Integration „Nova“ entfernen“. Lösch die alte Integration, starte neu, fertig.
 
 ## Einen Fehler melden
 

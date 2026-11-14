@@ -8,7 +8,7 @@
     },
     "abort": {
       "single_instance_allowed": "Nova Homeverse ist schon eingerichtet.",
-      "old_nova_installed": "Die alte Integration „Nova“ ist noch eingerichtet. Lösche sie zuerst unter Einstellungen → Geräte & Dienste, entferne „Nova“ im Marketplace und starte Home Assistant neu. Deine Daten bleiben erhalten."
+      "old_nova_installed": "Die alte Integration „Nova“ ist noch eingerichtet. Lösche sie zuerst unter Einstellungen → Geräte & Dienste → Nova → ⋮ → Löschen und starte Home Assistant neu. Deine Daten bleiben erhalten."
     }
   },
   "options": {
@@ -39,7 +39,7 @@
     },
     "old_nova_installed": {
       "title": "Alte Integration „Nova“ entfernen",
-      "description": "Nova heißt jetzt **Nova Homeverse**. Die alte Integration „Nova“ läuft noch, deshalb startet Nova Homeverse nicht – beide zusammen vertragen sich nicht.\n\n1. **Einstellungen → Geräte & Dienste → Nova → ⋮ → Löschen**.\n2. Im **Marketplace** „Nova“ öffnen und **Entfernen** wählen.\n3. Home Assistant neu starten.\n\nDeine Daten (Theme, Notizen, Einkauf, Rezepte, Bilder) bleiben erhalten, Nova Homeverse übernimmt sie. Dashboards und Karten ändern sich nicht."
+      "description": "Nova heißt jetzt **Nova Homeverse**. Die alte Integration „Nova“ läuft noch, deshalb startet Nova Homeverse nicht – beide zusammen vertragen sich nicht.\n\n1. **Einstellungen → Geräte & Dienste → Nova → ⋮ → Löschen**.\n2. Home Assistant neu starten.\n3. **Integration hinzufügen → Nova Homeverse**.\n\nDeine Daten (Theme, Notizen, Einkauf, Rezepte, Bilder) bleiben erhalten, Nova Homeverse übernimmt sie. Dashboards und Karten ändern sich nicht. Der alte Ordner `custom_components/nova` stört danach nicht mehr und darf liegen bleiben."
     }
   }
 }
