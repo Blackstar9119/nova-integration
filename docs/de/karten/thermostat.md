@@ -36,14 +36,46 @@ Im Editor findest du diese Bereiche: Allgemein · Sensoren · Bedienung · Ausse
 
 ## Rezepte: Wenn du … willst, dann so
 
+Alle Rezepte gehen im grafischen Editor. Öffne dazu dein Dashboard, tippe oben rechts auf den **Stift** und dann auf die Karte.
+Die rot umrahmten Felder im Bild sind die, um die es geht. Darunter steht jeweils dasselbe als YAML, falls du lieber Text schreibst.
+
 ### Wenn die Karte kleiner sein soll, dann so
 
-Unter **Aussehen** den Verlauf ausschalten. Dann bleiben nur Temperatur und Plus/Minus übrig.
+1. Klapp **Aussehen** auf.
+2. Schalte **Kompakt** ein und **Verlauf anzeigen** aus. Dann bleiben nur Temperatur und Plus/Minus übrig.
+3. Tippe auf **Speichern**.
+
+<p align="center"><img src="../../images/thermostat/thermostat-blue-howto-klein.webp" alt="Editor: Kompakt und Verlauf" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
+
+```yaml
+type: custom:nova-thermostat-card
+entity: climate.wohnzimmer
+compact: true
+show_graph: false
+```
+
+</details>
 
 ### Wenn ein offenes Fenster angezeigt werden soll, dann so
 
-Unter **Sensoren** bei **Fenster & Türen** deine Fenstersensoren eintragen. Ist eins offen, zeigt die Karte einen Hinweis.
+1. Klapp **Sensoren** auf.
+2. Trag bei **Fenster & Türen** deine Fenstersensoren ein. Ist eins offen, zeigt die Karte einen Hinweis.
+3. Tippe auf **Speichern**.
 
+<p align="center"><img src="../../images/thermostat/thermostat-blue-howto-fenster.webp" alt="Editor: Fenster und Türen" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
+
+```yaml
+type: custom:nova-thermostat-card
+entity: climate.wohnzimmer
+windows:
+  - binary_sensor.wohnzimmer_fenster
+```
+
+</details>
 ## Häufige Fragen
 
 **Ich finde mein Thermostat nicht in der Liste.**  
@@ -57,8 +89,6 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 ## Alle Optionen (für Fortgeschrittene)
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-thermostat-card`.
-
-Ist-/Solltemperatur, ± Stepper, Verlauf, Modi und Presets.
 
 ### Beispiel in YAML
 

@@ -38,8 +38,7 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-note-card`.
 
-Notizen, die auf allen Geräten gleich sind. Die Daten liegen in der
-[Integration Nova Homeverse](../../../README.md) (Modul „Notizen“) – ohne sie zeigt die Karte nur einen Hinweis.
+Die Daten liegen in der [Integration Nova Homeverse](../../../README.md) (Modul „Notizen“), ohne sie zeigt die Karte nur einen Hinweis.
 
 - **Liste:** angepinnte Notizen oben, darunter die zuletzt geänderten; je Notiz Titel, Vorschau und „zuletzt geändert“.
 - **Notiz öffnen:** antippen. Titel und Text lassen sich direkt bearbeiten, gespeichert wird automatisch kurz nach dem Tippen.

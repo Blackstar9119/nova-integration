@@ -36,14 +36,47 @@ Im Editor findest du diese Bereiche: Allgemein · Bild und Stream · Steuerkreuz
 
 ## Rezepte: Wenn du … willst, dann so
 
+Alle Rezepte gehen im grafischen Editor. Öffne dazu dein Dashboard, tippe oben rechts auf den **Stift** und dann auf die Karte.
+Die rot umrahmten Felder im Bild sind die, um die es geht. Darunter steht jeweils dasselbe als YAML, falls du lieber Text schreibst.
+
 ### Wenn du mehrere Kameras auf einmal sehen willst, dann so
 
-Unter **Splitscreen (weitere Kameras)** weitere Kameras hinzufügen. Jede bekommt eine eigene Kachel.
+1. Klapp **Splitscreen (weitere Kameras)** auf.
+2. Tippe auf **Kamera hinzufügen** und wähl die Kamera. Das wiederholst du für jede weitere.
+3. Bei **Splitscreen-Anordnung** legst du fest, wie die Kacheln stehen. Schmale Karten stapeln automatisch.
+4. Tippe auf **Speichern**.
+
+<p align="center"><img src="../../images/camera/camera-blue-howto-split.webp" alt="Editor: weitere Kameras" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
+
+```yaml
+type: custom:nova-camera-card
+entity: camera.wohnzimmer
+split:
+  - entity: camera.garten
+  - entity: camera.einfahrt
+```
+
+</details>
 
 ### Wenn das Bild beim Antippen groß werden soll, dann so
 
-Unter **Bild und Stream** bei **Bild antippen** das Vollbild wählen.
+1. Klapp **Aktionen** auf.
+2. Wähl bei **Bild antippen** das Vollbild.
+3. Tippe auf **Speichern**.
 
+<p align="center"><img src="../../images/camera/camera-blue-howto-vollbild.webp" alt="Editor: Bild antippen" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
+
+```yaml
+type: custom:nova-camera-card
+entity: camera.wohnzimmer
+image_action: fullscreen
+```
+
+</details>
 ## Häufige Fragen
 
 **Läuft der Stream die ganze Zeit?**  
@@ -58,7 +91,7 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-camera-card`.
 
-Live-Bild von `camera.*` (Stream) oder `image.*` (z. B. 3D-Drucker) mit Kopfzeile, rundem Steuerkreuz zum Schwenken/Neigen, Splitscreen, frei belegbaren Buttons, Info-Chips und Warn-Badges. Der Stream läuft nur, solange die Karte sichtbar ist – sonst Standbild (schont das Wandpanel).
+Für `camera.*` (Stream) oder `image.*` (zum Beispiel 3D-Drucker). Der Stream läuft nur, solange die Karte sichtbar ist, sonst steht ein Standbild da (schont das Wandpanel).
 
 ### Beispiel in YAML
 

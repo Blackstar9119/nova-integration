@@ -44,8 +44,7 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-theme-card`.
 
-Wählt das Nova-Theme für **alle Nova Cards auf allen Geräten** – ein Fingertipp, kein Helfer, kein YAML, keine Theme-Variablen.
-Themes: Nova Blau (Standard), Nova Hell, Nova Midnight und Nova Velvet.
+Das Theme gilt für **alle Nova Cards auf allen Geräten**. Themes: Nova Blau (Standard), Nova Hell, Nova Midnight und Nova Velvet.
 
 ### Anlegen
 

@@ -41,8 +41,7 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-shopping-card`.
 
-Einkaufsliste, die auf allen Geräten gleich ist. Die Daten liegen in der
-[Integration Nova Homeverse](../../../README.md) (Modul „Einkauf“) – ohne sie zeigt die Karte nur einen Hinweis.
+Die Daten liegen in der [Integration Nova Homeverse](../../../README.md) (Modul „Einkauf“), ohne sie zeigt die Karte nur einen Hinweis.
 
 - **Artikel** haben Name, Menge und Einheit (Stk, g, kg, ml, l, Packung), ein Geschäft, ein Icon **oder** ein eigenes Bild und
   eine Notiz mit Formatierung.

@@ -36,10 +36,17 @@ Im Editor findest du diese Bereiche: Allgemein · Bedienung · Apps · Eigene Ta
 
 ## Rezepte: Wenn du … willst, dann so
 
+Alle Rezepte gehen im grafischen Editor. Öffne dazu dein Dashboard, tippe oben rechts auf den **Stift** und dann auf die Karte.
+Die rot umrahmten Felder im Bild sind die, um die es geht. Darunter steht jeweils dasselbe als YAML, falls du lieber Text schreibst.
+
 ### Wenn du eine App hinzufügen willst, die nicht in der Liste steht, dann so
 
-Öffne die App am Fernseher. Dann tippst du im Editor unter **Apps** auf **Laufende App übernehmen**.
+1. Öffne die App am Fernseher.
+2. Klapp im Editor **Apps** auf.
+3. Tippe auf **Laufende App übernehmen**. Der Knopf erscheint nur, solange eine App läuft. Über **App hinzufügen** kannst du eine App auch von Hand eintragen.
+4. Tippe auf **Speichern**.
 
+<p align="center"><img src="../../images/remote/remote-blue-howto-app.webp" alt="Editor: Apps" width="640"></p>
 ## Häufige Fragen
 
 **Warum sehe ich keine Kanal-Tasten?**  
@@ -51,8 +58,7 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-remote-card`.
 
-Fernbedienung für Fernseher und Streaming-Boxen. Die Tastenbefehle passen sich der Integration der Entität an, Tasten,
-die das Gerät nicht kennt, werden ausgeblendet. Pfeile, Lautstärke, Kanäle und Spulen wiederholen sich beim Festhalten.
+Die Tastenbefehle passen sich der Integration der Entität an. Pfeile, Lautstärke, Kanäle und Spulen wiederholen sich beim Festhalten.
 
 | Gerätetyp (`platform`) | Integration | Entität | Apps öffnen über |
 |---|---|---|---|

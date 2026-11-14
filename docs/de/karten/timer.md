@@ -47,22 +47,41 @@ Im Editor findest du diese Bereiche: Timer · Schnellwahl und Knöpfe · Wenn di
 
 ## Rezepte: Wenn du … willst, dann so
 
+Alle Rezepte gehen im grafischen Editor. Öffne dazu dein Dashboard, tippe oben rechts auf den **Stift** und dann auf die Karte.
+Die rot umrahmten Felder im Bild sind die, um die es geht. Darunter steht jeweils dasselbe als YAML, falls du lieber Text schreibst.
+
 ### Wenn du zum ersten Mal einen Timer willst, dann so
 
-1. **Helfer anlegen:** Einstellungen → Geräte & Dienste → Helfer → „Helfer erstellen“ → **Timer**.
-   Name z. B. „Küche Timer“, Dauer z. B. 5 Minuten. Haken bei **„Zustand wiederherstellen“** setzen – dann läuft der Timer
-   auch nach einem Neustart von Home Assistant weiter.
-2. **Karte hinzufügen:** Dashboard bearbeiten → Karte hinzufügen → „Nova Timer Card“ → oben den Timer auswählen. Fertig.
+Zuerst brauchst du einen Timer-Helfer: **Einstellungen → Geräte & Dienste → Helfer → Helfer erstellen → Timer**.
+Name zum Beispiel „Küche Timer“, Dauer zum Beispiel 5 Minuten. Setz den Haken bei **Zustand wiederherstellen**, dann läuft der
+Timer auch nach einem Neustart von Home Assistant weiter.
+
+1. Füg im Dashboard die **Nova Timer Card** hinzu.
+2. Klapp **Timer** auf und wähl bei **Timer-Helfer** deinen Timer.
+3. Tippe auf **Speichern**.
+
+<p align="center"><img src="../../images/timer/timer-blue-howto-erster.webp" alt="Editor: Timer-Helfer" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
 
 ```yaml
 type: custom:nova-timer-card
 entity: timer.kuche_timer
 ```
 
+</details>
+
 ### Wenn du andere Schnellwahl-Knöpfe willst, dann so
 
-Im Editor unter „Schnellwahl und Knöpfe“ die Minuten mit Komma eintragen. `30s` sind Sekunden, `1h` eine Stunde.
+1. Klapp **Schnellwahl und Knöpfe** auf.
+2. Trag bei **Schnellwahl (Minuten, mit Komma)** deine Zeiten ein, zum Beispiel `3, 8, 12, 20`. `30s` sind Sekunden, `1h` eine Stunde.
+3. Tippe auf **Speichern**.
+
 Volle Minuten stehen auf den Knöpfen nur als Zahl (`1`, `5`, `10` …), damit sie auch auf kleinen Displays passen.
+
+<p align="center"><img src="../../images/timer/timer-blue-howto-schnellwahl.webp" alt="Editor: Schnellwahl" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
 
 ```yaml
 type: custom:nova-timer-card
@@ -70,25 +89,27 @@ entity: timer.kuche_timer
 presets: [3, 8, 12, 20]
 ```
 
+</details>
+
 ### Wenn der Platz knapp ist (z. B. Echo Show), dann so
 
-„Eigene Zeit“ (Skala oder Plus/Minus) liegt solange über Start und Schnellwahl (in beiden Layouts) – die Karte
-„Eigene Zeit“ hat hier Minuten (bis 180) und Sekunden nebeneinander und ersetzt solange Start und Schnellwahl (in beiden Layouts) – die Karte
-wird dadurch nicht höher.
+1. Klapp **Aussehen** auf.
+2. Stell **Darstellung** auf **Kompakt**.
+3. Tippe auf **Speichern**.
+
+„Eigene Zeit“ hat dann Minuten (bis 180) und Sekunden nebeneinander und ersetzt solange Start und Schnellwahl. Die Karte wird dadurch nicht höher.
+
+<p align="center"><img src="../../images/timer/timer-blue-howto-kompakt.webp" alt="Editor: Darstellung" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
 
 ```yaml
 type: custom:nova-timer-card
 entity: timer.kuche_timer
-name: Timer
 layout: compact
 ```
 
-### Wenn es beim Ablauf auch klingeln oder eine Ansage geben soll, dann so
-
-Die Karte zeigt den Ablauf nur an. Für Ton oder Ansage (Echo, Lautsprecher, Handy) eine Automation anlegen:
-Auslöser **„Ereignis“** mit dem Ereignistyp `timer.finished` und den Ereignisdaten `entity_id: timer.kuche_timer`,
-Aktion z. B. eine Benachrichtigung oder Ansage. So kommt der Ton genau einmal, egal wie viele Geräte die Karte zeigen.
-
+</details>
 ## Häufige Fragen
 
 **Warum braucht die Karte einen Helfer?**  
@@ -100,13 +121,17 @@ Der Helfer zählt in Home Assistant. Darum zeigen alle Geräte dieselbe Zeit, un
 
 Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 
+## Für Fortgeschrittene
+
+### Wenn es beim Ablauf auch klingeln oder eine Ansage geben soll, dann so
+
+Die Karte zeigt den Ablauf nur an. Für Ton oder Ansage (Echo, Lautsprecher, Handy) legst du eine Automation an:
+Auslöser **„Ereignis“** mit dem Ereignistyp `timer.finished` und den Ereignisdaten `entity_id: timer.kuche_timer`,
+Aktion zum Beispiel eine Benachrichtigung oder Ansage. So kommt der Ton genau einmal, egal wie viele Geräte die Karte zeigen.
+
 ## Alle Optionen (für Fortgeschrittene)
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-timer-card`.
-
-Ein Küchen-Timer fürs Dashboard: antippen, Zeit wählen, läuft. Gezeichnet als Stoppuhr im Nova-Stil, der leuchtende Ring
-zeigt die Restzeit. Ist die Zeit um, klingelt die Karte sichtbar (Rahmen pulsiert, Stoppuhr wackelt, Glocke), bis jemand
-„OK“ drückt.
 
 Die Karte zählt nicht selbst, sondern steuert einen **Timer-Helfer** in Home Assistant. Darum zeigen alle Geräte
 (Echo Show, Handy, Tablet) dieselbe Zeit, und ein Neuladen der Seite ändert nichts.

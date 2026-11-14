@@ -45,10 +45,7 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-area-card`.
 
-Eine Raumansicht als großer Glasrahmen: oben eine Kopfzeile mit Zurück-Knopf, Icon und Raumname, darunter beliebige
-Karten in Zeilen und Spalten – genau wie in der Nova Pop-up Card, nur fest im Dashboard. Rechts neben dem Raumnamen
-sitzen auf Wunsch Chips (Werte oder Knöpfe wie „Alle Lichter im Raum aus“) – derselbe Baustein wie in der
-[Nova Chips Card](chips.md), die es zusätzlich als eigene Karte für das Raster gibt. Gedacht für Raum-Unteransichten (z. B. `/zuhause/wohnzimmer`).
+Gedacht für Raum-Unteransichten, zum Beispiel `/zuhause/wohnzimmer`. Die Chips sind derselbe Baustein wie in der [Nova Chips Card](chips.md).
 
 ### Anlegen
 

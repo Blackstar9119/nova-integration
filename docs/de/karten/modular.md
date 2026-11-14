@@ -36,14 +36,53 @@ Im Editor findest du diese Bereiche: Bausteine · Aussehen · Theme. Tipp einen 
 
 ## Rezepte: Wenn du … willst, dann so
 
+Alle Rezepte gehen im grafischen Editor. Öffne dazu dein Dashboard, tippe oben rechts auf den **Stift** und dann auf die Karte.
+Die rot umrahmten Felder im Bild sind die, um die es geht. Darunter steht jeweils dasselbe als YAML, falls du lieber Text schreibst.
+
 ### Wenn die Karte auf einem Wandpanel größer sein soll, dann so
 
-Unter **Aussehen** die **Größe** auf zum Beispiel 150 Prozent stellen. Schrift, Icons und Abstände wachsen mit.
+1. Klapp **Aussehen** auf.
+2. Stell **Größe** zum Beispiel auf 150 Prozent. Schrift, Icons und Abstände wachsen mit.
+3. Tippe auf **Speichern**.
+
+<p align="center"><img src="../../images/modular/modular-blue-howto-groesse.webp" alt="Editor: Größe" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
+
+```yaml
+type: custom:nova-modular-card
+size: 150
+blocks: …
+```
+
+</details>
 
 ### Wenn eine Warnung erscheinen soll, dann so
 
-Baustein **Warnungen** hinzufügen, Entität wählen und eine Bedingung setzen, zum Beispiel „unter 20“. Bei **Meldung** steht `{state}` für den aktuellen Wert.
+1. Klapp **Bausteine** auf und tippe unten auf **+ Warnungen**.
+2. Klapp darin eine Warnung auf und wähl die Entität.
+3. Setz eine Bedingung, zum Beispiel **Warnen unter** 20.
+4. Schreib die **Meldung**. `{state}` steht dabei für den aktuellen Wert.
+5. Tippe auf **Speichern**.
 
+<p align="center"><img src="../../images/modular/modular-blue-howto-warnung.webp" alt="Editor: Warnung mit Entität, Bedingung und Meldung" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
+
+```yaml
+type: custom:nova-modular-card
+blocks:
+  - type: header
+    name: Futterautomat
+    icon: mdi:cat
+  - type: alerts
+    alerts:
+      - entity: sensor.futterautomat_batterie
+        below: 20
+        message: Akku nur noch {state} %
+```
+
+</details>
 ## Häufige Fragen
 
 **Was ist der Unterschied zur Nova Gerät Card?**  
@@ -54,8 +93,6 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 ## Alle Optionen (für Fortgeschrittene)
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-modular-card`.
-
-Gerätekarte aus frei kombinierbaren Bausteinen – z. B. Futterautomat, Airfryer, Katzenklo. Im Editor Bausteine hinzufügen, sortieren und löschen.
 
 ### Beispiel in YAML
 

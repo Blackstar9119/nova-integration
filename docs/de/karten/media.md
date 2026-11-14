@@ -36,10 +36,30 @@ Im Editor findest du diese Bereiche: Allgemein · Bedienung · Aussehen · Music
 
 ## Rezepte: Wenn du … willst, dann so
 
+Alle Rezepte gehen im grafischen Editor. Öffne dazu dein Dashboard, tippe oben rechts auf den **Stift** und dann auf die Karte.
+Die rot umrahmten Felder im Bild sind die, um die es geht. Darunter steht jeweils dasselbe als YAML, falls du lieber Text schreibst.
+
 ### Wenn die Karte automatisch zum Lautsprecher springen soll, der gerade spielt, dann so
 
-Unter **Weitere Player** die Lautsprecher eintragen und **Automatisch zum spielenden Player** einschalten.
+1. Klapp **Weitere Player** auf.
+2. Tippe auf **Player hinzufügen** und trag deine anderen Lautsprecher ein.
+3. Schalte **Automatisch zum spielenden Player** ein.
+4. Tippe auf **Speichern**.
 
+<p align="center"><img src="../../images/media/media-blue-howto-auto.webp" alt="Editor: weitere Player und Automatik" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
+
+```yaml
+type: custom:nova-media-card
+entity: media_player.wohnzimmer
+auto_switch: true
+players:
+  - entity: media_player.kuche
+  - entity: media_player.bad
+```
+
+</details>
 ## Häufige Fragen
 
 **Warum fehlt bei mir der Lautstärkeregler?**  
@@ -54,8 +74,7 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-media-card`.
 
-Media-Player-Karte im Look der Modular Card: Cover als Hintergrund, Titel, Interpret, App-Logo – leuchtet beim Abspielen.
-Buttons erscheinen nur, wenn der Player sie kann (`supported_features`). Music Assistant wird automatisch erkannt.
+Knöpfe erscheinen nur, wenn der Player sie kann (`supported_features`). Music Assistant wird automatisch erkannt.
 
 ### Beispiel in YAML
 

@@ -35,49 +35,93 @@ Im Editor findest du diese Bereiche: Uhr · Anzeige · Aussehen · Aktionen · T
 
 ## Rezepte: Wenn du … willst, dann so
 
+Alle Rezepte gehen im grafischen Editor. Öffne dazu dein Dashboard, tippe oben rechts auf den **Stift** und dann auf die Karte.
+Die rot umrahmten Felder im Bild sind die, um die es geht. Darunter steht jeweils dasselbe als YAML, falls du lieber Text schreibst.
+
 ### Wenn du einfach nur eine Uhr willst, dann so
 
-Dashboard bearbeiten → Karte hinzufügen → „Nova Uhr Card“. Mehr braucht es nicht, es gibt nichts auszuwählen.
+1. Füg im Dashboard die **Nova Uhr Card** hinzu. Mehr braucht es nicht, es gibt nichts auszuwählen.
+2. Tippe auf **Speichern**.
+
+<p align="center"><img src="../../images/clock/clock-blue-howto-einfach.webp" alt="Editor der Uhr" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
 
 ```yaml
 type: custom:nova-clock-card
 ```
 
+</details>
+
 ### Wenn du eine Klappzahl-Uhr wie am Bahnhof willst, dann so
 
-Im Editor „Stil“ auf „Klappzahlen“ stellen. Bei jedem Wechsel klappt die obere Hälfte der Ziffer um (600 ms) – nur die
-Ziffern, die sich ändern. Gezeigt werden nur Stunden und Minuten.
+1. Klapp **Uhr** auf.
+2. Stell **Stil** auf **Klappzahlen**.
+3. Tippe auf **Speichern**.
+
+Bei jedem Wechsel klappt die obere Hälfte der Ziffern um, die sich ändern. Gezeigt werden Stunden und Minuten.
+
+<p align="center"><img src="../../images/clock/clock-blue-howto-klappzahlen.webp" alt="Editor: Stil Klappzahlen" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
 
 ```yaml
 type: custom:nova-clock-card
 style: flip
 ```
 
+</details>
+
 ### Wenn du ein Zifferblatt willst, dann so
 
-Im Editor „Stil“ auf „Analog“ stellen. Der Sekundenzeiger läuft in deiner Akzentfarbe gleitend (`sweep`), springt jede
-Sekunde (`tick`) oder fehlt ganz (`none`).
+1. Klapp **Uhr** auf.
+2. Stell **Stil** auf **Analog (Zifferblatt)**.
+3. Wähl beim **Sekundenzeiger**, wie er läuft: gleitend, springend oder gar nicht.
+4. Tippe auf **Speichern**.
+
+<p align="center"><img src="../../images/clock/clock-blue-howto-analog.webp" alt="Editor: Stil Analog und Sekundenzeiger" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
 
 ```yaml
 type: custom:nova-clock-card
 style: analog
-second_hand: sweep
+second_hand: sweep   # tick = springt, none = kein Sekundenzeiger
 ```
+
+</details>
 
 ### Wenn die Uhr mit dem Tag die Farbe wechseln soll, dann so
 
-Stil „Leuchtziffern“: große, dünne Ziffern mit Leuchten. Die Farbe folgt dem Sonnenstand aus `sun.sun` – vor
-Sonnenaufgang nachtblau, morgens warm, mittags weiß, abends tiefblau. Die Übergänge laufen fließend.
+1. Klapp **Uhr** auf.
+2. Stell **Stil** auf **Leuchtziffern**.
+3. Tippe auf **Speichern**.
+
+Die Farbe folgt dem Sonnenstand: vor Sonnenaufgang nachtblau, morgens warm, mittags weiß, abends tiefblau. Die Übergänge laufen fließend.
+
+<p align="center"><img src="../../images/clock/clock-blue-howto-leuchtziffern.webp" alt="Editor: Stil Leuchtziffern" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
 
 ```yaml
 type: custom:nova-clock-card
 style: glow
 ```
 
+</details>
+
 ### Wenn du einen Radiowecker willst, dann so
 
-Stil „Radiowecker“: LED-Ziffern im Sieben-Segment-Stil, ausgeschaltete Segmente schimmern leicht durch, der Doppelpunkt
-blinkt. Farbe der Ziffern: Rot, Grün, Blau oder Bernstein.
+1. Klapp **Uhr** auf.
+2. Stell **Stil** auf **Radiowecker**.
+3. Wähl die Farbe der Ziffern: Rot, Grün, Blau oder Bernstein.
+4. Tippe auf **Speichern**.
+
+Die LED-Ziffern sehen aus wie beim alten Radiowecker, ausgeschaltete Segmente schimmern leicht durch und der Doppelpunkt blinkt.
+
+<p align="center"><img src="../../images/clock/clock-blue-howto-radiowecker.webp" alt="Editor: Stil Radiowecker und Farbe" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
 
 ```yaml
 type: custom:nova-clock-card
@@ -85,7 +129,17 @@ style: retro
 retro_color: amber
 ```
 
+</details>
+
 ### Wenn du nur die Uhrzeit ohne Datum willst, dann so
+
+1. Klapp **Anzeige** auf.
+2. Schalte **Wochentag** und **Datum** aus.
+3. Tippe auf **Speichern**.
+
+<p align="center"><img src="../../images/clock/clock-blue-howto-ohne-datum.webp" alt="Editor: Wochentag und Datum aus" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
 
 ```yaml
 type: custom:nova-clock-card
@@ -93,72 +147,107 @@ show_weekday: false
 show_date: false
 ```
 
+</details>
+
 ### Wenn Temperatur und Luftfeuchte klein unter der Uhr stehen sollen, dann so
 
-Im Editor unter „Anzeige“ bei „Werte unter der Uhr“ die Sensoren auswählen. Sie erscheinen als dezente Zeile mit Icon.
+1. Klapp **Anzeige** auf.
+2. Wähl bei **Werte unter der Uhr** deine Sensoren. Sie erscheinen als dezente Zeile mit Icon.
+3. Tippe auf **Speichern**.
+
+<p align="center"><img src="../../images/clock/clock-blue-howto-werte.webp" alt="Editor: Werte unter der Uhr" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
 
 ```yaml
 type: custom:nova-clock-card
-show_weekday: false
-show_date: false
 entities:
   - sensor.kuche_temperatur
   - sensor.kuche_luftfeuchtigkeit
 ```
 
+</details>
+
 ### Wenn die Uhr kleiner oder größer sein soll, dann so
 
-Im Editor unter „Aussehen“ die „Größe“ wählen: Klein, Mittel (Standard) oder Groß. Wochentag, Datum und Werte wachsen mit.
-Für eine ganz bestimmte Größe trägst du bei „Schriftgröße“ einen festen Wert ein, z. B. `48px` oder `3rem` – der hat Vorrang.
+1. Klapp **Aussehen** auf.
+2. Wähl bei **Größe** Klein, Mittel oder Groß. Wochentag, Datum und Werte wachsen mit.
+3. Für eine ganz bestimmte Größe trägst du bei **Schriftgröße** einen festen Wert ein, zum Beispiel `48px` oder `3rem`. Der hat Vorrang.
+4. Tippe auf **Speichern**.
+
+Hat die Karte eine feste Höhe, passt sich die Uhr von selbst an und läuft nie über die Karte.
+
+<p align="center"><img src="../../images/clock/clock-blue-howto-groesse.webp" alt="Editor: Größe und Schriftgröße" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
 
 ```yaml
 type: custom:nova-clock-card
 size: small
+# oder ein fester Wert:
+# font_size: 3rem
 ```
 
-```yaml
-type: custom:nova-clock-card
-font_size: 3rem
-```
+</details>
 
-Hat die Karte eine feste Höhe (z. B. `grid_options: rows: 2` im Abschnitts-Layout), passt sich die Uhr automatisch an:
-Sie wird so weit kleiner, dass nie etwas über die Karte läuft. Karten mit automatischer Höhe bleiben, wie sie sind.
+### Wenn Wochentag und Datum anders aussehen sollen, dann so
 
-### Wenn Wochentag und Datum größer oder kleiner sein sollen als die Uhrzeit, dann so
+1. Klapp **Aussehen** auf.
+2. Wähl bei **Datumsformat** zum Beispiel „8. November“ oder „8. November 2026“.
+3. Bei **Größe von Wochentag und Datum** wählst du Klein, Mittel oder Groß, oder tippst einen eigenen Wert wie `18px` ein. Die Uhrzeit bleibt, wie sie ist.
+4. Tippe auf **Speichern**.
 
-Im Editor unter „Aussehen“ bei „Größe von Wochentag und Datum“ Klein, Mittel oder Groß wählen – oder einen eigenen Wert wie
-`18px` oder `1.2rem` eintippen. Das gilt nur für Wochentag und Datum, die Uhrzeit bleibt, wie sie ist. Bei fester Kartenhöhe
-wird trotzdem alles zusammen so eingepasst, dass nichts übersteht – auch bei `style: flip` und `layout: row`.
-Dort steht auch das Datumsformat, z. B. „8. November“ (`long`) oder „8. November 2026“ (`long_year`).
+<p align="center"><img src="../../images/clock/clock-blue-howto-datum.webp" alt="Editor: Datumsformat und Größe" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
 
 ```yaml
 type: custom:nova-clock-card
 style: flip
 date_size: large
-date_format: long
+date_format: long   # long_year = mit Jahr
 ```
+
+</details>
 
 ### Wenn die Karte breit und flach ist, dann so
 
-In einer breiten, flachen Karte stehen Uhrzeit und Datum automatisch nebeneinander – die Uhrzeit links so hoch wie die Karte,
-Überschrift, Datum und Werte rechts daneben. Das passiert nur, wenn untereinander nicht alles passt. Mit „Anordnung“ legst du
-es fest: `stacked` (immer untereinander) oder `row` (immer nebeneinander).
+In einer breiten, flachen Karte stehen Uhrzeit und Datum von selbst nebeneinander, wenn untereinander nicht alles passt.
+
+1. Klapp **Aussehen** auf.
+2. Stell **Anordnung** auf **Nebeneinander**, wenn es immer so sein soll, oder auf **Untereinander** für das Gegenteil.
+3. Tippe auf **Speichern**.
+
+<p align="center"><img src="../../images/clock/clock-blue-howto-breit.webp" alt="Editor: Anordnung" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
 
 ```yaml
 type: custom:nova-clock-card
-layout: row
+layout: row   # stacked = immer untereinander
 grid_options:
   columns: 30
   rows: 2
 ```
 
+</details>
+
 ### Wenn die Uhr ohne Kartenhintergrund auf dem Dashboard stehen soll, dann so
+
+1. Klapp **Aussehen** auf.
+2. Schalte **Glas-Hintergrund** aus.
+3. Tippe auf **Speichern**.
+
+<p align="center"><img src="../../images/clock/clock-blue-howto-ohne-glas.webp" alt="Editor: Glas-Hintergrund aus" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
 
 ```yaml
 type: custom:nova-clock-card
 glass: false
 ```
 
+</details>
 ## Häufige Fragen
 
 **Woher kommt die Zeitzone?**  
@@ -175,9 +264,7 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-clock-card`.
 
-Uhrzeit im Nova-Stil in fünf Stilen: digital mit großen, schlanken Ziffern wie die Uhr der Wetter Card, als Klappzahl-Uhr,
-analog als Zifferblatt mit Chromring und Glas, als Leuchtziffern mit Farbe nach Sonnenstand oder als Radiowecker. Wochentag,
-Datum und Werte auf Wunsch darunter. Die Größe passt sich der Karte an und läuft nie über. Sprache und 12/24 Stunden kommen aus deinem Home-Assistant-Profil, die Zeitzone ist immer die von Home Assistant.
+Sprache und 12/24 Stunden kommen aus deinem Home-Assistant-Profil, die Zeitzone ist immer die von Home Assistant.
 
 | Option | Standard | Bedeutung |
 |---|---|---|

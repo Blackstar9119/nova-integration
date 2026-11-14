@@ -37,18 +37,71 @@ Im Editor findest du diese Bereiche: Allgemein · Anzeige · Buttons · Aussehen
 
 ## Rezepte: Wenn du … willst, dann so
 
+Alle Rezepte gehen im grafischen Editor. Öffne dazu dein Dashboard, tippe oben rechts auf den **Stift** und dann auf die Karte.
+Die rot umrahmten Felder im Bild sind die, um die es geht. Darunter steht jeweils dasselbe als YAML, falls du lieber Text schreibst.
+
 ### Wenn beim Antippen der Kachel ein Pop-up aufgehen soll, dann so
 
-Leg zuerst eine [Nova Pop-up Card](popup.md) an. Dann wählst du im Editor der Raum Card unter **Aktionen** bei **Beim Antippen Nova Pop-up öffnen** dein Pop-up aus der Liste.
+Leg zuerst eine [Nova Pop-up Card](popup.md) an.
+
+1. Klapp **Aktionen** auf.
+2. Wähl bei **Beim Antippen Nova Pop-up öffnen** dein Pop-up aus der Liste.
+3. Tippe auf **Speichern**.
+
+<p align="center"><img src="../../images/room/room-blue-howto-popup.webp" alt="Editor: Pop-up beim Antippen" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
+
+```yaml
+type: custom:nova-room-card
+name: Wohnzimmer
+icon: mdi:sofa
+temperature: sensor.wohnzimmer_temperatur
+popup: wohnzimmer
+```
+
+</details>
 
 ### Wenn statt der Temperatur ein anderer Wert oben rechts stehen soll, dann so
 
-Unter **Anzeige** bei **Info-Entität (ersetzt Temperatur)** eine andere Entität wählen, zum Beispiel die Luftfeuchte.
+1. Klapp **Anzeige** auf.
+2. Wähl bei **Info-Entität (ersetzt Temperatur)** eine andere Entität, zum Beispiel die Luftfeuchte.
+3. Tippe auf **Speichern**.
+
+<p align="center"><img src="../../images/room/room-blue-howto-info.webp" alt="Editor: Info-Entität" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
+
+```yaml
+type: custom:nova-room-card
+name: Küche
+icon: mdi:countertop-outline
+info: sensor.kuche_luftfeuchtigkeit
+info_suffix: " %"
+```
+
+</details>
 
 ### Wenn die Kachel ein Foto vom Raum zeigen soll, dann so
 
-Leg das Bild in den Ordner `www` deiner Home-Assistant-Konfiguration, zum Beispiel als `www/raeume/wohnzimmer.jpg`. Unter **Aussehen** trägst du bei **Bild** dann `/local/raeume/wohnzimmer.jpg` ein.
+Leg das Bild in den Ordner `www` deiner Home-Assistant-Konfiguration, zum Beispiel als `www/raeume/wohnzimmer.jpg`.
 
+1. Klapp **Aussehen** auf.
+2. Trag bei **Hintergrundbild (URL)** `/local/raeume/wohnzimmer.jpg` ein.
+3. Tippe auf **Speichern**.
+
+<p align="center"><img src="../../images/room/room-blue-howto-bild.webp" alt="Editor: Hintergrundbild" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
+
+```yaml
+type: custom:nova-room-card
+name: Wohnzimmer
+icon: mdi:sofa
+image: /local/raeume/wohnzimmer.jpg
+```
+
+</details>
 ## Häufige Fragen
 
 **Was passiert beim Antippen eines Knopfs?**  
@@ -62,8 +115,6 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 ## Alle Optionen (für Fortgeschrittene)
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-room-card`.
-
-Raumkachel mit Temperatur, Fenster-Warnung und frei belegbaren runden Buttons. Leuchtet, wenn Licht im Raum an ist.
 
 ### Beispiel in YAML
 

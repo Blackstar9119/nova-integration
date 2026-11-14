@@ -35,10 +35,30 @@ Im Editor findest du diese Bereiche: Allgemein · Termine · Müllarten · Ausse
 
 ## Rezepte: Wenn du … willst, dann so
 
+Alle Rezepte gehen im grafischen Editor. Öffne dazu dein Dashboard, tippe oben rechts auf den **Stift** und dann auf die Karte.
+Die rot umrahmten Felder im Bild sind die, um die es geht. Darunter steht jeweils dasselbe als YAML, falls du lieber Text schreibst.
+
 ### Wenn deine Stadt die Tonnen anders nennt, dann so
 
-Unter **Müllarten** die Art aufklappen und bei **Stichwort im Termintitel** das Wort aus deinem Kalender eintragen, zum Beispiel „Wertstoff“.
+1. Klapp **Müllarten** auf und dann die Art, zum Beispiel den Gelben Sack.
+2. Trag bei **Stichwort im Termintitel** das Wort aus deinem Kalender ein, zum Beispiel „Wertstoff“. Mehrere Wörter trennst du mit Komma.
+3. Tippe auf **Speichern**.
 
+<p align="center"><img src="../../images/waste/waste-blue-howto-stichwort.webp" alt="Editor: Stichwort im Termintitel" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
+
+```yaml
+type: custom:nova-waste-card
+entities:
+  - calendar.abfall
+types:
+  - match: Gelb, Wertstoff
+    name: Gelber Sack
+    icon: mdi:recycle
+```
+
+</details>
 ## Häufige Fragen
 
 **Wie oft holt die Karte neue Termine?**  
@@ -53,10 +73,7 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-waste-card`.
 
-Nächste Müllabholungen aus einem oder mehreren Kalendern (z. B. iCal-Abfallkalender) – mit Müllart, Icon, Farbe, Datum und
-„heute / morgen / in X Tagen“. Abholungen heute und morgen werden hervorgehoben, der Rahmen leuchtet in der Farbe der Müllart.
-Farben werden nicht frei gewählt, sondern als Farbrolle – so färbt ein Theme alle Karten einheitlich um.
-Die Termine kommen über die Kalender-API von Home Assistant: beim Laden der Karte, danach stündlich und direkt nach Mitternacht.
+Farben sind Farbrollen aus dem Theme, so färbt ein Theme alle Karten einheitlich um. Die Termine kommen über die Kalender-API von Home Assistant: beim Laden der Karte, danach stündlich und direkt nach Mitternacht.
 
 ### Beispiel in YAML
 

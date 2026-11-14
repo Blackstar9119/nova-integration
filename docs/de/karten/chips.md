@@ -36,16 +36,34 @@ Im Editor findest du diese Bereiche: Allgemein · Chips · Theme. Tipp einen Ber
 
 ## Rezepte: Wenn du … willst, dann so
 
+Alle Rezepte gehen im grafischen Editor. Öffne dazu dein Dashboard, tippe oben rechts auf den **Stift** und dann auf die Karte.
+Die rot umrahmten Felder im Bild sind die, um die es geht. Darunter steht jeweils dasselbe als YAML, falls du lieber Text schreibst.
+
 ### Wenn ein Chip nur bei offenem Fenster erscheinen soll, dann so
 
-Beim Chip bei **Nur anzeigen bei Zustand** den Wert `on` eintragen.
+1. Klapp **Chips** auf und dann den Chip mit dem Fenstersensor.
+2. Trag bei **Nur anzeigen bei Zustand** `on` ein.
+3. Tippe auf **Speichern**.
 
+<p align="center"><img src="../../images/chips/chips-blue-howto-fenster.webp" alt="Editor: Nur anzeigen bei Zustand" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
+
+```yaml
+type: custom:nova-chips-card
+chips:
+  - entity: binary_sensor.wohnzimmer_fenster
+    name: Fenster offen
+    icon: mdi:window-open-variant
+    state: "on"
+```
+
+</details>
 ## Alle Optionen (für Fortgeschrittene)
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-chips-card`.
 
-Eine Reihe frei belegbarer Chips. Jeder Chip ist entweder ein **Wert-Chip** (zeigt den Zustand einer Entität) oder ein
-**Knopf-Chip** (führt eine Aktion aus). Alles lässt sich im grafischen Editor einstellen, Standard ist: keine Chips.
+Jeder Chip ist entweder ein **Wert-Chip** (zeigt den Zustand einer Entität) oder ein **Knopf-Chip** (führt eine Aktion aus).
 
 ### Optionen der Karte
 

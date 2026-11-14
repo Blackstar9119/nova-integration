@@ -38,13 +38,21 @@ Im Editor findest du diese Bereiche: Seiten · Aufteilung · Karten · Wischen u
 
 ## Rezepte: Wenn du … willst, dann so
 
+Alle Rezepte gehen im grafischen Editor. Öffne dazu dein Dashboard, tippe oben rechts auf den **Stift** und dann auf die Karte.
+Die rot umrahmten Felder im Bild sind die, um die es geht. Darunter steht jeweils dasselbe als YAML, falls du lieber Text schreibst.
+
 ### Wenn du zum ersten Mal Seiten zum Wischen willst, dann so
 
-1. Dashboard bearbeiten → Karte hinzufügen → „Nova Swipe Card“. Es sind schon zwei leere Seiten da.
-2. Im Editor unter **Seiten** eine Seite antippen. Die Vorschau springt mit.
-3. Unter **Aufteilung** eine Vorlage wählen (z. B. „Zwei nebeneinander“) und unter **Karten** die leeren Plätze antippen –
-   es öffnet sich die normale Kartenauswahl von Home Assistant.
-4. Weitere Seiten mit „Seite hinzufügen“. Sortieren geht am Griff links oder mit den Pfeilen.
+1. Füg im Dashboard die **Nova Swipe Card** hinzu. Es sind schon zwei leere Seiten da.
+2. Klapp **Seiten** auf und tippe eine Seite an. Die Vorschau springt mit.
+3. Klapp **Aufteilung: …** auf (dahinter steht der Name der Seite) und wähl eine Vorlage, zum Beispiel „Zwei nebeneinander“.
+4. Klapp **Karten: …** auf und tippe auf die leeren Plätze. Es öffnet sich die normale Kartenauswahl von Home Assistant.
+5. Weitere Seiten legst du mit **Seite hinzufügen** an. Sortieren geht am Griff links oder mit den Pfeilen.
+6. Tippe auf **Speichern**.
+
+<p align="center"><img src="../../images/swipe/swipe-blue-howto-erste.webp" alt="Editor: Seiten, Aufteilung und Karten" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
 
 ```yaml
 type: custom:nova-swipe-card
@@ -64,11 +72,22 @@ pages:
               entity: timer.kuche_timer
 ```
 
+</details>
+
 ### Wenn die Karte ein Wand-Display ganz ausfüllen soll, dann so
 
-„Ganze Höhe ausfüllen“ (`fill: true`) macht die Karte so hoch wie ihren Platz, und die Karten einer Seite strecken sich auf
-diese Höhe. Damit das klappt, braucht die Karte einen Platz mit fester Höhe – z. B. eine Ansicht vom Typ „Panel“ oder ein
-Raster-Layout mit `height: 100dvh`. Passt der Inhalt einer Seite trotzdem nicht, scrollt nur diese Seite.
+Dafür braucht die Karte einen Platz mit fester Höhe, am einfachsten eine Ansicht vom Typ **Panel**.
+
+1. Klapp **Wischen und Anzeige** auf.
+2. Schalte **Ganze Höhe ausfüllen** ein. Die Karten einer Seite strecken sich dann auf die volle Höhe.
+3. Bei **Untereinander unter Breite** legst du fest, ab wann die Karten auf schmalen Bildschirmen untereinander rutschen.
+4. Tippe auf **Speichern**.
+
+Passt der Inhalt einer Seite trotzdem nicht, scrollt nur diese Seite.
+
+<p align="center"><img src="../../images/swipe/swipe-blue-howto-fuellen.webp" alt="Editor: Ganze Höhe ausfüllen" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
 
 ```yaml
 type: custom:nova-swipe-card
@@ -77,14 +96,20 @@ stack_below: 600
 pages: …
 ```
 
+</details>
+
 ### Wenn unten etwas abgeschnitten wird (z. B. Echo Show), dann so
 
-Für ein Wand-Display reicht eine Ansicht vom Typ **„Panel“** und diese Karte – alles im grafischen Editor, ganz ohne YAML.
-„Rand“ (`margin`, z. B. 8 px) gibt rundherum etwas Luft, damit die Karten nicht am Fensterrand kleben.
+Manche Browser melden die Bildschirmhöhe falsch. Dann ist die Karte höher als das, was man sieht.
 
-Manche Browser melden die Bildschirmhöhe falsch, dann ist „100vh“ höher als das, was man sieht. „Bis zum unteren
-Bildschirmrand“ (`fit_screen: true`) misst das sichtbare Fenster direkt und lässt die Karte genau dort enden. Das schließt
-„Ganze Höhe ausfüllen“ mit ein.
+1. Klapp **Wischen und Anzeige** auf.
+2. Schalte **Bis zum unteren Bildschirmrand** ein. Die Karte misst dann das sichtbare Fenster und endet genau dort. Das schließt „Ganze Höhe ausfüllen“ mit ein.
+3. Stell bei **Rand** zum Beispiel 8 Pixel ein, damit die Karten nicht am Fensterrand kleben.
+4. Tippe auf **Speichern**.
+
+<p align="center"><img src="../../images/swipe/swipe-blue-howto-bildschirm.webp" alt="Editor: Bis zum unteren Bildschirmrand und Rand" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
 
 ```yaml
 type: custom:nova-swipe-card
@@ -93,9 +118,17 @@ margin: 8
 pages: …
 ```
 
+</details>
+
 ### Wenn das Display nach einer Weile wieder die erste Seite zeigen soll, dann so
 
-„Zurück zu Seite 1 nach“ auf z. B. 120 Sekunden stellen. Jede Berührung startet die Zeit neu. 0 = aus (Standard).
+1. Klapp **Wischen und Anzeige** auf.
+2. Stell **Zurück zu Seite 1 nach** zum Beispiel auf 120 Sekunden. Jede Berührung startet die Zeit neu, 0 schaltet es aus.
+3. Tippe auf **Speichern**.
+
+<p align="center"><img src="../../images/swipe/swipe-blue-howto-zurueck.webp" alt="Editor: Zurück zu Seite 1" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
 
 ```yaml
 type: custom:nova-swipe-card
@@ -103,6 +136,7 @@ reset_after: 120
 pages: …
 ```
 
+</details>
 ## Häufige Fragen
 
 **Kann ich in der Swipe Card einen Schieberegler bedienen, ohne dass sie wischt?**  
@@ -117,10 +151,6 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 ## Alle Optionen (für Fortgeschrittene)
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-swipe-card`.
-
-Mehrere Seiten in einer Karte – zum Wischen nach links und rechts. Auf jeder Seite liegen beliebige Karten (Nova Cards oder
-Karten von Home Assistant) in Zeilen und Spalten, genau wie in der Pop-up Card. Unten zeigen kleine Punkte, auf welcher Seite
-du bist; antippen springt direkt hin.
 
 Gedacht für kleine Displays wie den Echo Show 5: statt alles auf eine Seite zu quetschen, verteilst du es auf zwei oder drei.
 
