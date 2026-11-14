@@ -2,7 +2,7 @@
 
 **Deutsch** · English (coming soon, see [docs/en](en/README.md))
 
-Willkommen im Handbuch zu Nova. Es führt dich Schritt für Schritt von der Installation bis zu deinem eigenen Dashboard.
+Willkommen im Handbuch zu Nova Homeverse. Es führt dich Schritt für Schritt von der Installation bis zu deinem eigenen Dashboard.
 Vorwissen brauchst du keins.
 
 <p align="center"><img src="images/themes/hero-blue.webp" alt="Nova Cards im Theme Nova Blau" width="720"></p>
@@ -10,13 +10,13 @@ Vorwissen brauchst du keins.
 ## Inhaltsverzeichnis
 
 1. **[Willkommen](de/01-willkommen.md)**
-   Was Nova ist, was du brauchst und wie du dieses Handbuch liest.
+   Was Nova Homeverse ist, was du brauchst und wie du dieses Handbuch liest.
 2. **[Installation Schritt für Schritt](de/02-installation.md)**
    [Marketplace öffnen](de/02-installation.md#schritt-1-marketplace-öffnen) ·
-   [Nova hinzufügen](de/02-installation.md#schritt-2-nova-hinzufügen) ·
-   [Herunterladen](de/02-installation.md#schritt-3-nova-suchen-und-herunterladen) ·
+   [Nova Homeverse hinzufügen](de/02-installation.md#schritt-2-nova-homeverse-hinzufügen) ·
+   [Herunterladen](de/02-installation.md#schritt-3-nova-homeverse-suchen-und-herunterladen) ·
    [Neu starten](de/02-installation.md#schritt-4-home-assistant-neu-starten) ·
-   [Integration hinzufügen](de/02-installation.md#schritt-5-integration-nova-hinzufügen)
+   [Integration hinzufügen](de/02-installation.md#schritt-5-integration-nova-homeverse-hinzufügen)
 3. **[Erste Schritte](de/03-erste-schritte.md)**
    [Nova-Panel](de/03-erste-schritte.md#1-das-nova-panel) ·
    [Theme wählen](de/03-erste-schritte.md#2-theme-wählen) ·
@@ -44,7 +44,7 @@ Vorwissen brauchst du keins.
 
 ## Über die Bilder
 
-Alle Bilder in diesem Handbuch sind echte Bildschirmfotos aus einem laufenden Home Assistant mit Nova. Ein roter Rahmen
+Alle Bilder in diesem Handbuch sind echte Bildschirmfotos aus einem laufenden Home Assistant mit Nova Homeverse. Ein roter Rahmen
 zeigt dir, wohin du klicken sollst.
 
 [← Zurück zur Startseite](../README.md)

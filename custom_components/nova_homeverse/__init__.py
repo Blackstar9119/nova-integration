@@ -1,4 +1,4 @@
-"""Nova – Speicher für Nova Cards: Theme, Notizen, Einkauf und Rezeptbuch, auf allen Geräten gleich."""
+"""Nova Homeverse – Speicher für Nova Cards: Theme, Notizen, Einkauf und Rezeptbuch, auf allen Geräten gleich."""
 
 from __future__ import annotations
 
@@ -8,10 +8,11 @@ from homeassistant.components import frontend, panel_custom
 from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import issue_registry as ir
 from homeassistant.loader import async_get_integration
 
 from .cards import NovaCards
-from .const import CONF_MODULES, DOMAIN, MODULES
+from .const import CONF_MODULES, DOMAIN, ISSUE_OLD_DOMAIN, MODULES, OLD_DOMAIN
 from .storage import NovaData
 from .todo_sync import NoteSync, TodoSync
 from .websocket_api import async_register
@@ -27,6 +28,14 @@ PANEL_ELEMENT = "nova-settings-panel"
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    # Läuft noch die alte Integration „Nova“, würden sich WebSocket-Befehle und Pfade doppeln → nicht starten, Hinweis zeigen
+    if OLD_DOMAIN in hass.config.components:
+        ir.async_create_issue(
+            hass, DOMAIN, ISSUE_OLD_DOMAIN, is_fixable=False, severity=ir.IssueSeverity.ERROR,
+            translation_key=ISSUE_OLD_DOMAIN,
+        )
+        return False
+    ir.async_delete_issue(hass, DOMAIN, ISSUE_OLD_DOMAIN)
     # Welche Module laufen, steht in den Einstellungen (module.*); die Optionen zählen nur beim allerersten Start
     data = NovaData(hass, {m for m in entry.options.get(CONF_MODULES, MODULES) if m in MODULES})
     await data.async_load()
@@ -68,7 +77,7 @@ async def _register_panel(hass: HomeAssistant) -> None:
         hass,
         frontend_url_path=PANEL_URL,
         webcomponent_name=PANEL_ELEMENT,
-        sidebar_title="Nova",
+        sidebar_title="Nova Homeverse",
         sidebar_icon="mdi:star-four-points-outline",
         # Version im Pfad, damit Browser nach einem Update die neue Datei laden
         module_url=f"{STATIC_URL}/nova-panel.js?v={version}",

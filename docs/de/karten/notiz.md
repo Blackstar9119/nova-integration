@@ -19,7 +19,7 @@ Wie du eine Karte grundsätzlich hinzufügst, steht in [Kapitel 3](../03-erste-s
 
 1. Öffne dein Dashboard und tippe oben rechts auf den **Stift** (Dashboard bearbeiten).
 2. Tippe im Abschnitt auf **+**, wechsle zum Reiter **Nach Karte** und suche nach „Nova Notiz“. Tippe die Karte an.
-3. Die Karte braucht das Modul **Notizen** der Nova-Integration. Es ist von Anfang an an.
+3. Die Karte braucht das Modul **Notizen** der Integration Nova Homeverse. Es ist von Anfang an an.
 4. Ein Name genügt. Neue Notizen legst du später mit dem Plus in der Karte an.
 5. Rechts siehst du sofort, wie die Karte aussieht. Passt alles, tippe auf **Speichern**.
 
@@ -39,7 +39,7 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-note-card`.
 
 Notizen, die auf allen Geräten gleich sind. Die Daten liegen in der
-[Nova-Integration](../../../README.md) (Modul „Notizen“) – ohne sie zeigt die Karte nur einen Hinweis.
+[Integration Nova Homeverse](../../../README.md) (Modul „Notizen“) – ohne sie zeigt die Karte nur einen Hinweis.
 
 - **Liste:** angepinnte Notizen oben, darunter die zuletzt geänderten; je Notiz Titel, Vorschau und „zuletzt geändert“.
 - **Notiz öffnen:** antippen. Titel und Text lassen sich direkt bearbeiten, gespeichert wird automatisch kurz nach dem Tippen.

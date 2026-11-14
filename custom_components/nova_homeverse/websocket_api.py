@@ -1,4 +1,4 @@
-"""WebSocket-API der Nova-Integration: nova/<modul>/<befehl> (genutzt von Nova Cards, src/shared/nova-store.js)."""
+"""WebSocket-API von Nova Homeverse: nova/<modul>/<befehl> (genutzt von Nova Cards, src/shared/nova-store.js)."""
 
 from __future__ import annotations
 

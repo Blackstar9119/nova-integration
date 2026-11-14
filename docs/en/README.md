@@ -1,4 +1,4 @@
-# Nova handbook (English)
+# Nova Homeverse handbook (English)
 
 The English translation is on its way. It will mirror the German handbook chapter by chapter, using the same images:
 

@@ -1,0 +1,45 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Nova Homeverse",
+        "description": "Speicher für Nova Cards: Theme, Notizen, Einkauf und Rezeptbuch. Alle Geräte sehen dieselben Daten. Welche Module laufen, stellst du danach in den Optionen ein."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Nova Homeverse ist schon eingerichtet.",
+      "old_nova_installed": "Die alte Integration „Nova“ ist noch eingerichtet. Lösche sie zuerst unter Einstellungen → Geräte & Dienste, entferne „Nova“ im Marketplace und starte Home Assistant neu. Deine Daten bleiben erhalten."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Module",
+        "description": "Abgeschaltete Module behalten ihre Daten, die Karten dazu zeigen nur einen Hinweis. Die Änderung wirkt sofort.",
+        "data": {
+          "modules": "Aktive Module"
+        }
+      }
+    }
+  },
+  "selector": {
+    "modules": {
+      "options": {
+        "theme": "Theme (ersetzt den Helfer „Nova Theme“)",
+        "notes": "Notizen",
+        "shopping": "Einkauf",
+        "recipes": "Rezeptbuch"
+      }
+    }
+  },
+  "issues": {
+    "old_cards_resource": {
+      "title": "Alte Nova-Cards-Ressource entfernen",
+      "description": "Nova Cards kommen jetzt mit der Integration Nova Homeverse. Unter Dashboards → Ressourcen steht aber noch die separat installierte Datei: {url}\n\nDie Karten laufen trotzdem nur einmal (die Version der Integration gewinnt), die alte Datei wird aber unnötig mitgeladen. So wirst du sie los:\n\n1. **Marketplace** öffnen, **Nova Cards** suchen und **Entfernen** wählen – das nimmt auch die Ressource mit.\n2. Ohne Marketplace: **Einstellungen → Dashboards → ⋮ → Ressourcen** und den Eintrag löschen.\n3. Browser einmal hart neu laden (Strg/Cmd+Shift+R bzw. App-Cache leeren).\n\nDeine Dashboards bleiben, wie sie sind – die Kartentypen `custom:nova-…` ändern sich nicht."
+    },
+    "old_nova_installed": {
+      "title": "Alte Integration „Nova“ entfernen",
+      "description": "Nova heißt jetzt **Nova Homeverse**. Die alte Integration „Nova“ läuft noch, deshalb startet Nova Homeverse nicht – beide zusammen vertragen sich nicht.\n\n1. **Einstellungen → Geräte & Dienste → Nova → ⋮ → Löschen**.\n2. Im **Marketplace** „Nova“ öffnen und **Entfernen** wählen.\n3. Home Assistant neu starten.\n\nDeine Daten (Theme, Notizen, Einkauf, Rezepte, Bilder) bleiben erhalten, Nova Homeverse übernimmt sie. Dashboards und Karten ändern sich nicht."
+    }
+  }
+}

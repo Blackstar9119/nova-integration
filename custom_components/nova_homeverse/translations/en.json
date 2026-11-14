@@ -1,0 +1,45 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Nova Homeverse",
+        "description": "Storage for Nova Cards: theme, notes, shopping and recipes. All devices share the same data. Choose the active modules in the options afterwards."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Nova Homeverse is already set up.",
+      "old_nova_installed": "The old “Nova” integration is still set up. Delete it first under Settings → Devices & services, remove “Nova” in the Marketplace and restart Home Assistant. Your data is kept."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Modules",
+        "description": "Disabled modules keep their data; their cards only show a hint. Changes apply immediately.",
+        "data": {
+          "modules": "Active modules"
+        }
+      }
+    }
+  },
+  "selector": {
+    "modules": {
+      "options": {
+        "theme": "Theme (replaces the “Nova Theme” helper)",
+        "notes": "Notes",
+        "shopping": "Shopping",
+        "recipes": "Recipes"
+      }
+    }
+  },
+  "issues": {
+    "old_cards_resource": {
+      "title": "Remove old Nova Cards resource",
+      "description": "Nova Cards now ship with the Nova Homeverse integration. Dashboards → Resources still lists the separately installed file: {url}\n\nThe cards still only run once (the integration's version wins), but the old file is loaded for nothing. To get rid of it:\n\n1. Open the **Marketplace**, find **Nova Cards** and choose **Remove** – this removes the resource as well.\n2. Without the Marketplace: **Settings → Dashboards → ⋮ → Resources** and delete the entry.\n3. Hard-reload the browser once (Ctrl/Cmd+Shift+R or clear the app cache).\n\nYour dashboards stay as they are – the card types `custom:nova-…` do not change."
+    },
+    "old_nova_installed": {
+      "title": "Remove the old “Nova” integration",
+      "description": "Nova is now called **Nova Homeverse**. The old “Nova” integration is still running, so Nova Homeverse does not start – the two cannot run side by side.\n\n1. **Settings → Devices & services → Nova → ⋮ → Delete**.\n2. Open “Nova” in the **Marketplace** and choose **Remove**.\n3. Restart Home Assistant.\n\nYour data (theme, notes, shopping, recipes, images) is kept and Nova Homeverse picks it up. Dashboards and cards do not change."
+    }
+  }
+}

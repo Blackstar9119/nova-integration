@@ -26,7 +26,7 @@ Wie du eine Karte grundsätzlich hinzufügst, steht in [Kapitel 3](../03-erste-s
 
 1. Öffne dein Dashboard und tippe oben rechts auf den **Stift** (Dashboard bearbeiten).
 2. Tippe im Abschnitt auf **+**, wechsle zum Reiter **Nach Karte** und suche nach „Nova Rezeptbuch“. Tippe die Karte an.
-3. Die Karte braucht das Modul **Rezeptbuch** der Nova-Integration.
+3. Die Karte braucht das Modul **Rezeptbuch** der Integration Nova Homeverse.
 4. Unter **Buch** wählst du Titel, Stil und Farbe des Einbands.
 5. Rechts siehst du sofort, wie die Karte aussieht. Passt alles, tippe auf **Speichern**.
 
@@ -37,9 +37,9 @@ Im Editor findest du diese Bereiche: Buch · Seiten und Verhalten · Theme. Tipp
 ## Häufige Fragen
 
 **Woher kommen die Schriften?**  
-Die Nova-Integration liefert sie aus Home Assistant aus. Nichts wird aus dem Internet geladen.
+Die Integration Nova Homeverse liefert sie aus Home Assistant aus. Nichts wird aus dem Internet geladen.
 
-- Schriften (Caveat, EB Garamond) liefert die Nova-Integration aus Home Assistant selbst aus, erst wenn das Buch zu sehen
+- Schriften (Caveat, EB Garamond) liefert die Integration Nova Homeverse aus Home Assistant selbst aus, erst wenn das Buch zu sehen
   ist – nichts wird aus dem Internet geladen. Ältere Integrationen ohne Schriften: dann nimmt das Buch Ersatzschriften.
 - Bilder werden vor dem Hochladen verkleinert (längste Seite 960 px).
 - Theme-Variablen für das Old Book: `--nova-book-paper`, `--nova-book-ink`, `--nova-book-gold`, `--nova-book-brown`,
@@ -55,7 +55,7 @@ Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schre
 
 Ein Kochbuch zum Blättern. Zugeklappt sieht man den Einband, Antippen schlägt das Buch auf, gewischt wird wie in einem echten
 Buch – nach links blättert vor, nach rechts zurück (oder Pfeiltasten). Unter dem Buch liegen große Knöpfe **Zurück**, **Inhalt** und **Weiter** im Stil des Buchs (gut zum Antippen am Wandpanel). Das Lesebändchen unten klappt es wieder zu.
-Die Rezepte kommen aus der [Nova-Integration](../../../README.md) (Modul „Rezeptbuch“) –
+Die Rezepte kommen aus der [Integration Nova Homeverse](../../../README.md) (Modul „Rezeptbuch“) –
 dieselben wie in der [Nova Rezeptliste](rezeptliste.md).
 
 - **Erste Seite:** Inhaltsverzeichnis (nach dem Alphabet), jedes Rezept lässt sich antippen.
@@ -65,8 +65,8 @@ dieselben wie in der [Nova Rezeptliste](rezeptliste.md).
 - **Zutaten auf die Einkaufsliste:** setzt alle Zutaten für die gewählten Portionen auf die Nova-Einkaufsliste; was dort
   schon offen steht, wird in der Menge erhöht.
 - **Rezepte einpflegen** direkt im Buch: „Neues Rezept“ im Inhaltsverzeichnis, unter jedem Rezept „Bearbeiten“ und
-  „Löschen“ (fragt einmal nach). Zutaten als Zeilen mit Menge, Einheit und Name (die Einheiten liefert die Nova-Integration); mehrere Zeilen wie „250 g Mehl“ lassen sich auf einmal einfügen.
-- **Rezept importieren** im Inhaltsverzeichnis: Link einfügen, z. B. von Chefkoch. Die Nova-Integration liest die Seite
+  „Löschen“ (fragt einmal nach). Zutaten als Zeilen mit Menge, Einheit und Name (die Einheiten liefert die Integration Nova Homeverse); mehrere Zeilen wie „250 g Mehl“ lassen sich auf einmal einfügen.
+- **Rezept importieren** im Inhaltsverzeichnis: Link einfügen, z. B. von Chefkoch. Die Integration Nova Homeverse liest die Seite
   (schema.org-Rezeptdaten) und öffnet eine Vorschau im Formular – Titel, Portionen, Zeit, Zutaten mit Menge und Einheit,
   Schritte und Bild, alles änderbar. Gespeichert wird erst mit „Ins Buch übernehmen“. Gibt es das Rezept schon (gleicher
   Link oder Titel), fragt das Buch: ersetzen, trotzdem neu oder abbrechen. Ohne lesbares Rezept auf der Seite bietet es

@@ -1,9 +1,9 @@
-# Nova
+# Nova Homeverse
 
 <p align="center"><img src="docs/images/themes/hero-blue.webp" alt="Nova Cards im Theme Nova Blau"></p>
 
-**Nova macht dein Home Assistant schön und einfach.** Du bekommst 24 Karten für dein Dashboard, alle im selben Look, vom
-Licht über den Saugroboter bis zum Rezeptbuch. Gedacht ist Nova für alle, die ein aufgeräumtes Zuhause-Dashboard wollen,
+**Nova Homeverse macht dein Home Assistant schön und einfach.** Du bekommst 24 Karten für dein Dashboard, alle im selben Look, vom
+Licht über den Saugroboter bis zum Rezeptbuch. Gedacht ist Nova Homeverse für alle, die ein aufgeräumtes Zuhause-Dashboard wollen,
 ohne YAML zu schreiben: Alles lässt sich im grafischen Editor einstellen, und Theme, Notizen, Einkaufsliste und Rezepte
 sind auf jedem Gerät gleich.
 
@@ -44,15 +44,18 @@ Ein Klick auf eine Karte öffnet ihre Anleitung.
 ## Installation in vier Schritten
 
 1. **Einstellungen → Marketplace → Über Link hinzufügen** und `https://github.com/Blackstar9119/nova-integration` eintragen.
-2. **Nova** suchen und **Herunterladen**.
+2. **Nova Homeverse** suchen und **Herunterladen**.
 3. Home Assistant **neu starten**.
-4. **Einstellungen → Geräte & Dienste → Integration hinzufügen → Nova.**
+4. **Einstellungen → Geräte & Dienste → Integration hinzufügen → Nova Homeverse.**
 
 Fertig. Die Nova Cards sind jetzt in jedem Dashboard verfügbar. Jeden Klick mit Bild findest du in
 [Kapitel 2 des Handbuchs](docs/de/02-installation.md).
+
+> **Schon „Nova“ installiert?** Nova heißt jetzt Nova Homeverse. Wie du in fünf Minuten umsteigst, ohne Daten zu verlieren,
+> steht im [Handbuch, Kapitel 7](docs/de/07-hilfe.md#von-nova-auf-nova-homeverse-umsteigen).
 
 <p align="center"><b><a href="docs/README.md">📖 Zum Handbuch</a></b></p>
 
 ## Lizenz
 
-Nova steht unter der [MIT-Lizenz](LICENSE).
+Nova Homeverse steht unter der [MIT-Lizenz](LICENSE).

@@ -1,6 +1,11 @@
-"""Konstanten der Nova-Integration."""
+"""Konstanten der Integration Nova Homeverse."""
 
-DOMAIN = "nova"
+DOMAIN = "nova_homeverse"
+# Domain der alten Integration „Nova“. Beide dürfen nicht gleichzeitig laufen: dieselben WebSocket-Befehle und Pfade.
+OLD_DOMAIN = "nova"
+ISSUE_OLD_DOMAIN = "old_nova_installed"
+# Bewusst unverändert geblieben (Kompatibilität, Daten ohne Migration): Speicher .storage/nova.<name>,
+# WebSocket-Befehle nova/…, Pfad /nova/static, Panel-Adresse /nova, Bildordner www/nova, input_select.nova_theme.
 API_VERSION = 1
 STORAGE_VERSION = 1
 SAVE_DELAY = 2

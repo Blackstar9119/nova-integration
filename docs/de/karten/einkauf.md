@@ -19,7 +19,7 @@ Wie du eine Karte grundsätzlich hinzufügst, steht in [Kapitel 3](../03-erste-s
 
 1. Öffne dein Dashboard und tippe oben rechts auf den **Stift** (Dashboard bearbeiten).
 2. Tippe im Abschnitt auf **+**, wechsle zum Reiter **Nach Karte** und suche nach „Nova Einkauf“. Tippe die Karte an.
-3. Die Karte braucht das Modul **Einkauf** der Nova-Integration. Es ist von Anfang an an.
+3. Die Karte braucht das Modul **Einkauf** der Integration Nova Homeverse. Es ist von Anfang an an.
 4. Ein Name genügt. Weitere Einstellungen findest du unter **Liste**.
 5. Rechts siehst du sofort, wie die Karte aussieht. Passt alles, tippe auf **Speichern**.
 
@@ -30,7 +30,7 @@ Im Editor findest du diese Bereiche: Allgemein · Liste · Abgleich mit todo-Lis
 ## Häufige Fragen
 
 **Wo liegen meine Einträge?**  
-In Home Assistant, in der Nova-Integration. Darum sehen alle Geräte dasselbe.
+In Home Assistant, in der Integration Nova Homeverse. Darum sehen alle Geräte dasselbe.
 
 **Die Karte zeigt nur einen Hinweis statt der Liste.**  
 Dann ist das Modul **Einkauf** aus. Schalt es im Nova-Panel unter **Allgemein → Module** wieder an.
@@ -42,7 +42,7 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-shopping-card`.
 
 Einkaufsliste, die auf allen Geräten gleich ist. Die Daten liegen in der
-[Nova-Integration](../../../README.md) (Modul „Einkauf“) – ohne sie zeigt die Karte nur einen Hinweis.
+[Integration Nova Homeverse](../../../README.md) (Modul „Einkauf“) – ohne sie zeigt die Karte nur einen Hinweis.
 
 - **Artikel** haben Name, Menge und Einheit (Stk, g, kg, ml, l, Packung), ein Geschäft, ein Icon **oder** ein eigenes Bild und
   eine Notiz mit Formatierung.
@@ -89,7 +89,7 @@ print_script: script.einkaufsliste_drucken
 
 ### Abgleich mit einer todo-Liste (Assist)
 
-Mit `entity` hält die Nova-Integration die Einkaufsliste und eine `todo.*`-Liste gleich – in beide Richtungen: hinzufügen,
+Mit `entity` hält die Integration Nova Homeverse die Einkaufsliste und eine `todo.*`-Liste gleich – in beide Richtungen: hinzufügen,
 abhaken, umbenennen, löschen. So funktioniert „Setz Milch auf die Einkaufsliste“ weiter. In der todo-Liste steht ein Artikel
 als `Milch` bzw. mit Menge als `Milch (2 l)`; neue Einträge von dort werden genauso gelesen (auch `2 l Milch`).
 
