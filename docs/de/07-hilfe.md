@@ -115,7 +115,7 @@ Dafür brauchst du ein kostenloses GitHub-Konto.
 Damit wir schnell helfen können, schreib bitte dazu:
 
 - Welche Karte betroffen ist und was genau passiert.
-- Die Version von Nova Homeverse. Sie steht im Nova-Panel unten links, zum Beispiel „Nova Homeverse 0.1.0b8“.
+- Die Version von Nova Homeverse. Sie steht im Nova-Panel unten links, zum Beispiel „Nova Homeverse 0.1.0b9“.
 - Die Version von Home Assistant (**Einstellungen → Info**).
 - Welches Gerät und welchen Browser du benutzt.
 - Ein Bildschirmfoto hilft fast immer.
