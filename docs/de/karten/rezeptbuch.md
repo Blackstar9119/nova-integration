@@ -53,10 +53,7 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-recipe-book-card`.
 
-Ein Kochbuch zum Blättern. Zugeklappt sieht man den Einband, Antippen schlägt das Buch auf, gewischt wird wie in einem echten
-Buch – nach links blättert vor, nach rechts zurück (oder Pfeiltasten). Unter dem Buch liegen große Knöpfe **Zurück**, **Inhalt** und **Weiter** im Stil des Buchs (gut zum Antippen am Wandpanel). Das Lesebändchen unten klappt es wieder zu.
-Die Rezepte kommen aus der [Integration Nova Homeverse](../../../README.md) (Modul „Rezeptbuch“) –
-dieselben wie in der [Nova Rezeptliste](rezeptliste.md).
+Die Rezepte kommen aus der [Integration Nova Homeverse](../../../README.md) (Modul „Rezeptbuch“), dieselben wie in der [Nova Rezeptliste](rezeptliste.md). Blättern geht auch mit den Pfeiltasten.
 
 - **Erste Seite:** Inhaltsverzeichnis (nach dem Alphabet), jedes Rezept lässt sich antippen.
 - **Rezeptseite:** Titel, Zeit und Schlagwörter, Foto, Zutaten, Zubereitung in nummerierten Schritten (jeder Absatz bzw.

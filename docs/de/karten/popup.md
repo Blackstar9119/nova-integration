@@ -49,8 +49,7 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-popup-card`.
 
-Ein Pop-up mit beliebigen Karten (Nova-Karten, HA-Karten, andere Custom Cards). Es öffnet sich, wenn die Adresse auf
-`#hash` endet, z. B. `#wohnzimmer`. Alles lässt sich im grafischen Editor einstellen.
+Das Pop-up öffnet sich, wenn die Adresse auf `#hash` endet, zum Beispiel `#wohnzimmer`.
 
 ### Pop-up anlegen
 

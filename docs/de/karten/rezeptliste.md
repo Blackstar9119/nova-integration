@@ -50,9 +50,7 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-recipe-card`.
 
-Kompakte Rezeptliste, schnell durchsuchbar und auf allen Geräten gleich. Dieselben Rezepte zeigt das
-[Nova Rezeptbuch](rezeptbuch.md) zum Blättern. Die Daten liegen in der
-[Integration Nova Homeverse](../../../README.md) (Modul „Rezeptbuch“) – ohne sie zeigt die Karte nur einen Hinweis.
+Die Daten liegen in der [Integration Nova Homeverse](../../../README.md) (Modul „Rezeptbuch“), ohne sie zeigt die Karte nur einen Hinweis.
 
 - **Liste:** Suche (Name, Schlagwort, Zutat), Schlagwörter und Favoriten als Filter-Chips, Favoriten stehen oben.
 - **Rezept:** Bild, Zeit, Schlagwörter, Zutaten und Zubereitung. Mit + / – rechnest du die **Portionen** um, die Mengen

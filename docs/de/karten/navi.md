@@ -37,18 +37,70 @@ Im Editor findest du diese Bereiche: Allgemein · Buttons · Layout und Aussehen
 
 ## Rezepte: Wenn du … willst, dann so
 
+Alle Rezepte gehen im grafischen Editor. Öffne dazu dein Dashboard, tippe oben rechts auf den **Stift** und dann auf die Karte.
+Die rot umrahmten Felder im Bild sind die, um die es geht. Darunter steht jeweils dasselbe als YAML, falls du lieber Text schreibst.
+
 ### Wenn ein Knopf ein Pop-up öffnen soll, dann so
 
-Leg eine [Nova Pop-up Card](popup.md) an. Beim Knopf wählst du dann unter **Nova Pop-up öffnen** das Pop-up aus der Liste.
+Leg zuerst eine [Nova Pop-up Card](popup.md) an.
+
+1. Klapp **Buttons** auf und dann den Knopf.
+2. Wähl bei **Nova Pop-up öffnen** das Pop-up aus der Liste.
+3. Tippe auf **Speichern**.
+
+<p align="center"><img src="../../images/navi/navi-blue-howto-popup.webp" alt="Editor: Nova Pop-up öffnen" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
+
+```yaml
+type: custom:nova-navi-card
+items:
+  - icon: mdi:home
+    name: Start
+    navigation_path: /dashboard-nova/start
+  - icon: mdi:sofa
+    name: Wohnzimmer
+    popup_hash: wohnzimmer
+```
+
+</details>
 
 ### Wenn die Leiste in jeder Ansicht gleich sein soll, ohne sie überall neu zu bauen, dann so
 
-Bau die Leiste einmal und trag in den anderen Ansichten bei **Einträge aus anderem Dashboard übernehmen** den Pfad des Dashboards ein, aus dem sie die Knöpfe holt.
+Bau die Leiste einmal fertig. In allen anderen Ansichten legst du eine leere Navi Card an und holst die Knöpfe von dort:
+
+1. Klapp **Allgemein** auf.
+2. Trag bei **Einträge aus anderem Dashboard übernehmen** den Pfad des Dashboards ein, in dem die fertige Leiste liegt, zum Beispiel `/dashboard-nova`.
+3. Tippe auf **Speichern**.
+
+<p align="center"><img src="../../images/navi/navi-blue-howto-quelle.webp" alt="Editor: Einträge übernehmen" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
+
+```yaml
+type: custom:nova-navi-card
+source: /dashboard-nova
+```
+
+</details>
 
 ### Wenn am PC eine Seitenleiste statt der Leiste unten erscheinen soll, dann so
 
-Unter **Layout und Aussehen** bei **Seitenleiste auf breiten Bildschirmen** links oder rechts wählen. Ab 1024 Pixeln Breite steht die Leiste dann senkrecht am Rand.
+1. Klapp **Layout und Aussehen** auf.
+2. Wähl bei **Seitenleiste auf breiten Bildschirmen** links oder rechts. Ab 1024 Pixeln Breite steht die Leiste dann senkrecht am Rand.
+3. Tippe auf **Speichern**.
 
+<p align="center"><img src="../../images/navi/navi-blue-howto-seitenleiste.webp" alt="Editor: Seitenleiste" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
+
+```yaml
+type: custom:nova-navi-card
+sidebar: left
+items: …
+```
+
+</details>
 ## Häufige Fragen
 
 **Woher weiß die Leiste, welcher Knopf gerade aktiv ist?**  
@@ -62,11 +114,6 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 ## Alle Optionen (für Fortgeschrittene)
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-navi-card`.
-
-Navigationsleiste mit runden Buttons, schwebend am unteren oder oberen Rand, auf breiten Bildschirmen auf Wunsch als
-Seitenleiste. Ein Button kann navigieren, eine Aktion auslösen, ein kleines Untermenü oder ein Pop-up öffnen. Badges
-zeigen Punkte oder Zahlen, eine Media-Leiste über der Navigation den laufenden Player. Alles ist im grafischen Editor
-einstellbar.
 
 > Früher hieß die Karte **Nova Dock Card** (`custom:nova-dock-card`). Der alte Typ funktioniert weiter, im Editor steht
 > sie jetzt als **Nova Navi**. Zum Umstellen in der Konfiguration nur `type` ändern.

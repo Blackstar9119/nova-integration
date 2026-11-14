@@ -37,14 +37,50 @@ Im Editor findest du diese Bereiche: Allgemein · Lampen · Farbknöpfe · Ausse
 
 ## Rezepte: Wenn du … willst, dann so
 
+Alle Rezepte gehen im grafischen Editor. Öffne dazu dein Dashboard, tippe oben rechts auf den **Stift** und dann auf die Karte.
+Die rot umrahmten Felder im Bild sind die, um die es geht. Darunter steht jeweils dasselbe als YAML, falls du lieber Text schreibst.
+
 ### Wenn eine Lampe nicht in der Karte auftauchen soll, dann so
 
-Bei einem Bereich trägst du sie unter **Allgemein** bei **Ausblenden (bei Bereich)** ein.
+Das geht, wenn die Karte die Lampen aus einem Bereich holt.
+
+1. Klapp **Lampen** auf.
+2. Wähl bei **Bereich (alle Lampen automatisch)** deinen Raum.
+3. Trag bei **Ausblenden (bei Bereich)** die Lampe ein, die fehlen soll.
+4. Tippe auf **Speichern**.
+
+<p align="center"><img src="../../images/light/light-blue-howto-ausblenden.webp" alt="Editor: Bereich und Ausblenden" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
+
+```yaml
+type: custom:nova-light-card
+area: wohnzimmer
+exclude:
+  - light.leselampe
+```
+
+</details>
 
 ### Wenn die Kacheln flacher sein sollen (kleines Display), dann so
 
-Unter **Lampen** die Lampe aufklappen und den Helligkeitsregler ausschalten. Die Kachel wird dann deutlich flacher.
+1. Klapp **Lampen** auf und dann die Lampe.
+2. Schalte **Helligkeitsregler** aus. Die Kachel wird deutlich flacher.
+3. Tippe auf **Speichern**.
 
+<p align="center"><img src="../../images/light/light-blue-howto-flach.webp" alt="Editor: Helligkeitsregler aus" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
+
+```yaml
+type: custom:nova-light-card
+entities:
+  - entity: light.deckenlampe
+    slider: false
+  - light.stehlampe
+```
+
+</details>
 ## Häufige Fragen
 
 **Warum steht „Wohnzimmer“ nicht vor jedem Lampennamen?**  
@@ -59,7 +95,7 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-light-card`.
 
-Lampen als Kacheln: Antippen schaltet, Regler dimmt, Kachel leuchtet in der Lichtfarbe. Eine Lampe = Einzelkachel, mehrere = Sammelkarte.
+Eine Lampe ergibt eine Einzelkachel, mehrere eine Sammelkarte.
 
 ### Beispiel in YAML
 

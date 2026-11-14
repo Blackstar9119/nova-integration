@@ -49,10 +49,11 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-vacuum-card`.
 
-Saugroboter mit Status, Akku und Steuer-Pillen (Start, Pause, Stopp, Zur Station) – leuchtet beim Reinigen. Buttons erscheinen nur, wenn der Roboter sie kann (`supported_features`).
-Mit Animation von Roboter und Station: fährt beim Reinigen, wischt (nasse Spur), fährt zurück, lädt, saugt ab, wäscht und trocknet den Mopp, zeigt Frisch-/Schmutzwassertank. Die nötigen Entitäten sucht die Karte selbst am Gerät des Roboters und seiner Station (auch wenn die Station ein eigenes Gerät ist, wie bei Roborock) – ohne sie läuft die Animation nur mit dem `vacuum`-Zustand, den jeder Roboter hat.
-Bei einer Störung zeigt die Karte den konkreten Fehler, z. B. „Hauptbürste blockiert“ statt nur „Fehler“, auch Fehler der Station. Die Fehler-Sensoren findet sie am Gerät selbst (Roborock: „Staubsauger-Fehler“ und „Ladestation-Fehler“).
-Optional: Karte/Kamera-Bild (bei breiter Karte, z. B. im Popup, automatisch daneben), Saugstärke, Raumreinigung per Segment, Schalter (Staubentleerung, Moppwäsche …) sowie Infos und Verbrauchsteile. Alles im grafischen Editor einstellbar.
+Die nötigen Entitäten sucht die Karte selbst am Gerät des Roboters und seiner Station, auch wenn die Station ein eigenes Gerät ist
+(wie bei Roborock). Ohne sie läuft die Animation nur mit dem `vacuum`-Zustand, den jeder Roboter hat. Die Fehler-Sensoren findet
+sie ebenfalls am Gerät (Roborock: „Staubsauger-Fehler“ und „Ladestation-Fehler“). Buttons erscheinen nur, wenn der Roboter sie
+kann (`supported_features`). Optional: Karte oder Kamerabild (bei breiter Karte automatisch daneben), Saugstärke, Raumreinigung
+per Segment, Schalter (Staubentleerung, Moppwäsche …) sowie Infos und Verbrauchsteile.
 
 ### Beispiel in YAML
 

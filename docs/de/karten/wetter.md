@@ -36,14 +36,45 @@ Im Editor findest du diese Bereiche: Allgemein · Aktuelles Wetter · Zusatzwert
 
 ## Rezepte: Wenn du … willst, dann so
 
+Alle Rezepte gehen im grafischen Editor. Öffne dazu dein Dashboard, tippe oben rechts auf den **Stift** und dann auf die Karte.
+Die rot umrahmten Felder im Bild sind die, um die es geht. Darunter steht jeweils dasselbe als YAML, falls du lieber Text schreibst.
+
 ### Wenn du die Temperatur von deinem eigenen Außenfühler willst, dann so
 
-Unter **Aktuelles Wetter** bei **Temperatur-Sensor (optional)** deinen Sensor wählen.
+1. Klapp **Aktuelles Wetter** auf.
+2. Wähl bei **Temperatur-Sensor (optional)** deinen Sensor.
+3. Tippe auf **Speichern**.
+
+<p align="center"><img src="../../images/weather/weather-blue-howto-sensor.webp" alt="Editor: eigener Temperatur-Sensor" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
+
+```yaml
+type: custom:nova-weather-card
+entity: weather.forecast_home
+temperature_entity: sensor.aussen_temperatur
+```
+
+</details>
 
 ### Wenn nur das aktuelle Wetter ohne Vorhersage zu sehen sein soll, dann so
 
-Unter **Vorhersage** beide Vorhersagen ausschalten.
+1. Klapp **Vorhersage** auf.
+2. Schalte **Tagesvorhersage anzeigen** und **Stundenvorhersage anzeigen** aus.
+3. Tippe auf **Speichern**.
 
+<p align="center"><img src="../../images/weather/weather-blue-howto-ohne-vorhersage.webp" alt="Editor: Vorhersagen aus" width="640"></p>
+
+<details><summary>Für Fortgeschrittene: als YAML</summary>
+
+```yaml
+type: custom:nova-weather-card
+entity: weather.forecast_home
+show_daily: false
+show_hourly: false
+```
+
+</details>
 ## Häufige Fragen
 
 **Ich habe keine Wetter-Entität.**  
@@ -55,8 +86,7 @@ Mehr Hilfe gibt es in [Kapitel 7](../07-hilfe.md).
 
 Alles hier kannst du auch im grafischen Editor einstellen. Wer lieber Text schreibt, tippt im Editor unten auf **Code-Editor anzeigen**. Dort steht die Karte als YAML (eine einfache Textform für Einstellungen). Der Kartentyp ist `custom:nova-weather-card`.
 
-Aktuelles Wetter einer `weather.*`-Entität mit Tages- und Stundenvorhersage: Icon, Temperatur, Zustand, Max/Min, Regen und
-Zusatzwerte wie Luftfeuchte, Wind und Luftdruck. Die Vorhersage kommt direkt von der Wetter-Entität.
+Die Vorhersage kommt direkt von der Wetter-Entität.
 
 ### Beispiel in YAML
 
