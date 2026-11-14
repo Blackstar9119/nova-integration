@@ -6,7 +6,7 @@
   </picture>
 </h1>
 
-<p align="center"><img src="docs/images/themes/hero-blue.webp" alt="Nova Cards im Theme Nova Blau"></p>
+<p align="center"><img src="docs/images/themes/hero-blue.webp" alt="Vier Raumkarten im Theme Nova Blau" width="700"></p>
 
 **Nova Homeverse macht dein Home Assistant schön und einfach.** Du bekommst 24 Karten für dein Dashboard, alle im selben Look, vom
 Licht über den Saugroboter bis zum Rezeptbuch. Gedacht ist Nova Homeverse für alle, die ein aufgeräumtes Zuhause-Dashboard wollen,
@@ -32,19 +32,43 @@ Alle Nova Cards wechseln gemeinsam die Farben, auf allen Geräten.
 
 Ein Klick auf eine Karte öffnet ihre Anleitung.
 
-<p align="center">
-<img src="docs/images/navi/navi-blue-default-anim.webp" alt="Nova Navi in Bewegung" width="32%">
-<img src="docs/images/vacuum/vacuum-blue-cleaning-anim.webp" alt="Nova Saugroboter in Bewegung" width="32%">
-<img src="docs/images/appliance/appliance-blue-washer-running-anim.webp" alt="Nova Gerät in Bewegung" width="32%">
-</p>
+### Räume & Navigation
 
 <table>
-<tr><td align="center" width="25%"><a href="docs/de/karten/raum.md"><img src="docs/images/room/room-blue-default.webp" alt="Nova Raum Card"></a><br><sub><b>Raum</b></sub></td><td align="center" width="25%"><a href="docs/de/karten/bereich.md"><img src="docs/images/area/area-blue-default.webp" alt="Nova Bereich Card"></a><br><sub><b>Bereich</b></sub></td><td align="center" width="25%"><a href="docs/de/karten/popup.md"><img src="docs/images/popup/popup-blue-open.webp" alt="Nova Pop-up Card"></a><br><sub><b>Pop-up</b></sub></td><td align="center" width="25%"><a href="docs/de/karten/navi.md"><img src="docs/images/navi/navi-blue-default.webp" alt="Nova Navi"></a><br><sub><b>Navi</b></sub></td></tr>
-<tr><td align="center" width="25%"><a href="docs/de/karten/swipe.md"><img src="docs/images/swipe/swipe-blue-default.webp" alt="Nova Swipe Card"></a><br><sub><b>Swipe</b></sub></td><td align="center" width="25%"><a href="docs/de/karten/chips.md"><img src="docs/images/chips/chips-blue-default.webp" alt="Nova Chips Card"></a><br><sub><b>Chips</b></sub></td><td align="center" width="25%"><a href="docs/de/karten/licht.md"><img src="docs/images/light/light-blue-group.webp" alt="Nova Licht Card"></a><br><sub><b>Licht</b></sub></td><td align="center" width="25%"><a href="docs/de/karten/thermostat.md"><img src="docs/images/thermostat/thermostat-blue-compact.webp" alt="Nova Thermostat Card"></a><br><sub><b>Thermostat</b></sub></td></tr>
-<tr><td align="center" width="25%"><a href="docs/de/karten/geraet.md"><img src="docs/images/appliance/appliance-blue-washer-running.webp" alt="Nova Gerät Card"></a><br><sub><b>Gerät</b></sub></td><td align="center" width="25%"><a href="docs/de/karten/saugroboter.md"><img src="docs/images/vacuum/vacuum-blue-cleaning.webp" alt="Nova Saugroboter Card"></a><br><sub><b>Saugroboter</b></sub></td><td align="center" width="25%"><a href="docs/de/karten/drucker.md"><img src="docs/images/printer/printer-blue-printing.webp" alt="Nova 3D-Drucker Card"></a><br><sub><b>3D-Drucker</b></sub></td><td align="center" width="25%"><a href="docs/de/karten/modular.md"><img src="docs/images/modular/modular-blue-default.webp" alt="Nova Modular Card"></a><br><sub><b>Modular</b></sub></td></tr>
-<tr><td align="center" width="25%"><a href="docs/de/karten/media.md"><img src="docs/images/media/media-blue-playing.webp" alt="Nova Media Card"></a><br><sub><b>Media</b></sub></td><td align="center" width="25%"><a href="docs/de/karten/fernbedienung.md"><img src="docs/images/remote/remote-blue-default.webp" alt="Nova Fernbedienung"></a><br><sub><b>Fernbedienung</b></sub></td><td align="center" width="25%"><a href="docs/de/karten/kamera.md"><img src="docs/images/camera/camera-blue-default.webp" alt="Nova Kamera Card"></a><br><sub><b>Kamera</b></sub></td><td align="center" width="25%"><a href="docs/de/karten/uhr.md"><img src="docs/images/clock/clock-blue-digital.webp" alt="Nova Uhr Card"></a><br><sub><b>Uhr</b></sub></td></tr>
-<tr><td align="center" width="25%"><a href="docs/de/karten/wetter.md"><img src="docs/images/weather/weather-blue-default.webp" alt="Nova Wetter Card"></a><br><sub><b>Wetter</b></sub></td><td align="center" width="25%"><a href="docs/de/karten/timer.md"><img src="docs/images/timer/timer-blue-idle.webp" alt="Nova Timer Card"></a><br><sub><b>Timer</b></sub></td><td align="center" width="25%"><a href="docs/de/karten/muellkalender.md"><img src="docs/images/waste/waste-blue-default.webp" alt="Nova Müllkalender Card"></a><br><sub><b>Müllkalender</b></sub></td><td align="center" width="25%"><a href="docs/de/karten/einkauf.md"><img src="docs/images/shopping/shopping-blue-default.webp" alt="Nova Einkauf Card"></a><br><sub><b>Einkauf</b></sub></td></tr>
-<tr><td align="center" width="25%"><a href="docs/de/karten/notiz.md"><img src="docs/images/note/note-blue-default.webp" alt="Nova Notiz Card"></a><br><sub><b>Notiz</b></sub></td><td align="center" width="25%"><a href="docs/de/karten/rezeptliste.md"><img src="docs/images/recipe/recipe-blue-list.webp" alt="Nova Rezeptliste"></a><br><sub><b>Rezeptliste</b></sub></td><td align="center" width="25%"><a href="docs/de/karten/rezeptbuch.md"><img src="docs/images/recipe-book/recipe-book-blue-old.webp" alt="Nova Rezeptbuch"></a><br><sub><b>Rezeptbuch</b></sub></td><td align="center" width="25%"><a href="docs/de/karten/themes-schalter.md"><img src="docs/images/theme-switch/theme-switch-blue-button.webp" alt="Nova Themes Schalter"></a><br><sub><b>Themes Schalter</b></sub></td></tr>
+<tr><td align="center" width="33%"><a href="docs/de/karten/raum.md"><img src="docs/images/gallery/room.webp" alt="Nova Raum" width="300"></a><br><sub><b>Raum</b></sub></td><td align="center" width="33%"><a href="docs/de/karten/bereich.md"><img src="docs/images/gallery/area.webp" alt="Nova Bereich" width="300"></a><br><sub><b>Bereich</b></sub></td><td align="center" width="33%"><a href="docs/de/karten/popup.md"><img src="docs/images/gallery/popup.webp" alt="Nova Pop-up" width="300"></a><br><sub><b>Pop-up</b></sub></td></tr>
+<tr><td align="center" width="33%"><a href="docs/de/karten/navi.md"><img src="docs/images/gallery/navi.webp" alt="Nova Navi" width="300"></a><br><sub><b>Navi</b></sub></td><td align="center" width="33%"><a href="docs/de/karten/swipe.md"><img src="docs/images/gallery/swipe.webp" alt="Nova Swipe" width="300"></a><br><sub><b>Swipe</b></sub></td><td align="center" width="33%"><a href="docs/de/karten/chips.md"><img src="docs/images/gallery/chips.webp" alt="Nova Chips" width="300"></a><br><sub><b>Chips</b></sub></td></tr>
+</table>
+
+### Licht & Klima
+
+<table>
+<tr><td align="center" width="33%"><a href="docs/de/karten/licht.md"><img src="docs/images/gallery/light.webp" alt="Nova Licht" width="300"></a><br><sub><b>Licht</b></sub></td><td align="center" width="33%"><a href="docs/de/karten/thermostat.md"><img src="docs/images/gallery/thermostat.webp" alt="Nova Thermostat" width="300"></a><br><sub><b>Thermostat</b></sub></td><td align="center" width="33%"><a href="docs/de/karten/wetter.md"><img src="docs/images/gallery/weather.webp" alt="Nova Wetter" width="300"></a><br><sub><b>Wetter</b></sub></td></tr>
+</table>
+
+### Geräte
+
+<table>
+<tr><td align="center" width="33%"><a href="docs/de/karten/geraet.md"><img src="docs/images/gallery/appliance.webp" alt="Nova Gerät" width="300"></a><br><sub><b>Gerät</b></sub></td><td align="center" width="33%"><a href="docs/de/karten/saugroboter.md"><img src="docs/images/gallery/vacuum.webp" alt="Nova Saugroboter" width="300"></a><br><sub><b>Saugroboter</b></sub></td><td align="center" width="33%"><a href="docs/de/karten/drucker.md"><img src="docs/images/gallery/printer.webp" alt="Nova 3D-Drucker" width="300"></a><br><sub><b>3D-Drucker</b></sub></td></tr>
+<tr><td align="center" width="33%"><a href="docs/de/karten/modular.md"><img src="docs/images/gallery/modular.webp" alt="Nova Modular" width="300"></a><br><sub><b>Modular</b></sub></td><td width="33%"></td><td width="33%"></td></tr>
+</table>
+
+### Medien
+
+<table>
+<tr><td align="center" width="33%"><a href="docs/de/karten/media.md"><img src="docs/images/gallery/media.webp" alt="Nova Media" width="300"></a><br><sub><b>Media</b></sub></td><td align="center" width="33%"><a href="docs/de/karten/fernbedienung.md"><img src="docs/images/gallery/remote.webp" alt="Nova Fernbedienung" width="300"></a><br><sub><b>Fernbedienung</b></sub></td><td align="center" width="33%"><a href="docs/de/karten/kamera.md"><img src="docs/images/gallery/camera.webp" alt="Nova Kamera" width="300"></a><br><sub><b>Kamera</b></sub></td></tr>
+</table>
+
+### Alltag
+
+<table>
+<tr><td align="center" width="33%"><a href="docs/de/karten/uhr.md"><img src="docs/images/gallery/clock.webp" alt="Nova Uhr" width="300"></a><br><sub><b>Uhr</b></sub></td><td align="center" width="33%"><a href="docs/de/karten/timer.md"><img src="docs/images/gallery/timer.webp" alt="Nova Timer" width="300"></a><br><sub><b>Timer</b></sub></td><td align="center" width="33%"><a href="docs/de/karten/muellkalender.md"><img src="docs/images/gallery/waste.webp" alt="Nova Müllkalender" width="300"></a><br><sub><b>Müllkalender</b></sub></td></tr>
+<tr><td align="center" width="33%"><a href="docs/de/karten/notiz.md"><img src="docs/images/gallery/note.webp" alt="Nova Notiz" width="300"></a><br><sub><b>Notiz</b></sub></td><td align="center" width="33%"><a href="docs/de/karten/themes-schalter.md"><img src="docs/images/gallery/theme-switch.webp" alt="Nova Themes Schalter" width="300"></a><br><sub><b>Themes Schalter</b></sub></td><td width="33%"></td></tr>
+</table>
+
+### Küche
+
+<table>
+<tr><td align="center" width="33%"><a href="docs/de/karten/einkauf.md"><img src="docs/images/gallery/shopping.webp" alt="Nova Einkauf" width="300"></a><br><sub><b>Einkauf</b></sub></td><td align="center" width="33%"><a href="docs/de/karten/rezeptliste.md"><img src="docs/images/gallery/recipe.webp" alt="Nova Rezeptliste" width="300"></a><br><sub><b>Rezeptliste</b></sub></td><td align="center" width="33%"><a href="docs/de/karten/rezeptbuch.md"><img src="docs/images/gallery/recipe-book.webp" alt="Nova Rezeptbuch" width="300"></a><br><sub><b>Rezeptbuch</b></sub></td></tr>
 </table>
 
 ## Installation in vier Schritten
