@@ -6,7 +6,7 @@
   </picture>
 </h1>
 
-<p align="center"><img src="docs/images/themes/hero-blue.webp" alt="Nova Cards im Theme Nova Blau"></p>
+<p align="center"><img src="docs/images/themes/hero-blue.webp" alt="Vier Raumkarten im Theme Nova Blau" width="700"></p>
 
 **Nova Homeverse macht dein Home Assistant schön und einfach.** Du bekommst 24 Karten für dein Dashboard, alle im selben Look, vom
 Licht über den Saugroboter bis zum Rezeptbuch. Gedacht ist Nova Homeverse für alle, die ein aufgeräumtes Zuhause-Dashboard wollen,
