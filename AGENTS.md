@@ -26,7 +26,7 @@ custom_components/nova_homeverse/
   const.py             Konstanten: Domain, Module, Einheiten, Themes, Bildordner
   storage.py           NovaData – ALLE Daten und ihre Regeln (prüfen, bereinigen, speichern, Abonnenten benachrichtigen)
   settings.py          Einstellungen: Standardwerte, voluptuous-Schema, Migration des Speichers, Ansicht ohne Geheimnisse
-  websocket_api.py     WebSocket-Befehle nova/<modul>/<befehl> – dünn, ruft nur storage.py auf
+  websocket_api.py     WebSocket-Befehle nova_homeverse/<modul>/<befehl> – dünn, ruft nur storage.py auf
   cards.py             Nova Cards ausliefern: static/nova-cards.js per frontend.add_extra_js_url mit ?v=<Version>-<Fingerabdruck>
                        anmelden (keine Dashboard-Ressource nötig), alte Ressource nova-cards.js nur lesend erkennen → Hinweis
                        unter Reparaturen
