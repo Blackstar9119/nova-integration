@@ -275,7 +275,7 @@ nova-printer-color-light: "#3a4252"   # Gehäuse oben
 
 ### Wenn eine Meldung nicht richtig erkannt wird, dann so
 
-Alle Zuordnungen stehen an einer Stelle: `src/printer-messages.js` in nova-cards.
+Alle Zuordnungen stehen an einer Stelle: `src/printer-messages.js` im Quellcode der Karten.
 
 - Druckphase (Sensor „Aktueller Arbeitsschritt“): in `STAGES` eintragen, z. B. `cleaning_nozzle_tip: 'wipe'`.
 - HMS- oder Druckfehler-Code: in `CODES` eintragen, z. B. `'0300_0100_0001_0001': 'temp'`. Ein kürzerer Code gilt für alle, die so beginnen.

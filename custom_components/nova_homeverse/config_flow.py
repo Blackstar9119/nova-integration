@@ -41,7 +41,7 @@ class NovaOptionsFlow(OptionsFlow):
             if data := self.hass.data.get(DOMAIN):
                 data.settings_set({"module": {m: m in mods for m in MODULES}})
             return self.async_create_entry(data={CONF_MODULES: mods})
-        # Stand aus den Einstellungen (module.*), die auch per nova/settings/set geändert werden können
+        # Stand aus den Einstellungen (module.*), die auch per nova_homeverse/settings/set geändert werden können
         data = self.hass.data.get(DOMAIN)
         current = sorted(data.enabled, key=MODULES.index) if data else self.config_entry.options.get(CONF_MODULES, list(MODULES))
         schema = vol.Schema({

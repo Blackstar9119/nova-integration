@@ -65,7 +65,7 @@ hält er aber manchmal an alten Dateien fest.
 
 ## Eigene Bilder in Einkauf oder Rezepten werden nicht angezeigt
 
-Nova Homeverse legt Bilder verkleinert im Ordner `www/nova` deiner Home-Assistant-Konfiguration ab. Gab es den Ordner `www` vorher
+Nova Homeverse legt Bilder verkleinert im Ordner `www/nova_homeverse` deiner Home-Assistant-Konfiguration ab. Gab es den Ordner `www` vorher
 noch nicht, braucht Home Assistant einmal einen Neustart. Danach erscheinen die Bilder.
 
 ## Nova Homeverse aktualisieren
@@ -109,7 +109,7 @@ Hast du Schritt 1 vergessen, startet Nova Homeverse nicht. Unter **Einstellungen
 ## Einen Fehler melden
 
 Klappt etwas trotzdem nicht? Dann schreib uns. Fehler meldest du auf GitHub:
-**[github.com/Blackstar9119/nova-integration/issues](https://github.com/Blackstar9119/nova-integration/issues)**.
+**[github.com/Blackstar9119/nova-homeverse/issues](https://github.com/Blackstar9119/nova-homeverse/issues)**.
 Dafür brauchst du ein kostenloses GitHub-Konto.
 
 Damit wir schnell helfen können, schreib bitte dazu:

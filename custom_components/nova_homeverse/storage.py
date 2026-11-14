@@ -1,7 +1,8 @@
 """Daten von Nova Homeverse: Einstellungen (mit Theme), Notizen, Einkauf, Rezeptbuch und Bilder.
 
-Gespeichert wird mit dem Store von Home Assistant (.storage/nova.<name>, Liste STORES). Bilder liegen verkleinert unter
-/config/www/nova/<modul>/. Jede Änderung geht an alle Abonnenten (Karten auf allen Geräten).
+Gespeichert wird mit dem Store von Home Assistant (.storage/nova_homeverse.<name>, Liste STORES). Bilder liegen verkleinert
+unter /config/www/nova_homeverse/<modul>/. Jede Änderung geht an alle Abonnenten (Karten auf allen Geräten).
+Daten von vor der Umbenennung (.storage/nova.<name>, www/nova) werden beim Start einmalig übernommen.
 """
 
 from __future__ import annotations
@@ -12,6 +13,7 @@ import secrets
 import time
 import uuid
 from collections.abc import Callable
+import shutil
 from pathlib import Path
 
 from homeassistant.core import HomeAssistant, callback
@@ -24,8 +26,11 @@ from .const import (
     IMAGE_MODULES,
     IMAGE_URL,
     MODULES,
+    OLD_IMAGE_DIR,
+    OLD_STORAGE_PREFIX,
     RECIPE_UNITS,
     SAVE_DELAY,
+    STORAGE_PREFIX,
     STORAGE_VERSION,
     STORES,
     THEME_HELPER,
@@ -90,13 +95,13 @@ class NovaData:
         self.hass = hass
         # Module aus den Optionen des Eintrags – nur beim allerersten Start, danach gelten die Einstellungen
         self._initial_modules = set(MODULES if modules is None else modules)
-        self._stores = {m: Store(hass, STORAGE_VERSION, f"nova.{m}") for m in STORES if m != "settings"}
-        self._stores["settings"] = _SettingsStore(hass, SETTINGS_VERSION, "nova.settings", minor_version=SETTINGS_MINOR_VERSION)
+        self._stores = {m: self._store(STORAGE_PREFIX, m) for m in STORES}
         self.settings: dict = defaults()
         self.notes: list[dict] = []
         self.shop: dict = {}
         self.recipes: list[dict] = []
         self.image_root = Path(hass.config.path(IMAGE_DIR))
+        self._old_image_root = Path(hass.config.path(OLD_IMAGE_DIR))
         self._listeners: dict[str, set[Callable[[], None]]] = {m: set() for m in (*MODULES, "settings")}
         # wird von der todo-Synchronisation gesetzt: nach jeder Änderung an der Einkaufsliste aufrufen
         self.on_shop_change: Callable[[], None] | None = None
@@ -104,9 +109,27 @@ class NovaData:
         self.on_notes_change: Callable[[], None] | None = None
         self.notes_sync: dict = {"entity_id": None, "snap": {}, "remove": []}
 
+    def _store(self, prefix: str, name: str) -> Store:
+        if name == "settings":
+            return _SettingsStore(self.hass, SETTINGS_VERSION, f"{prefix}.settings", minor_version=SETTINGS_MINOR_VERSION)
+        return Store(self.hass, STORAGE_VERSION, f"{prefix}.{name}")
+
+    async def _load(self, name: str):
+        """Speicher laden. Fehlt er, den alten von vor der Umbenennung (.storage/nova.<name>) übernehmen: erst unter dem
+        neuen Namen speichern, dann den alten löschen."""
+        data = await self._stores[name].async_load()
+        if data is not None:
+            return data
+        old = self._store(OLD_STORAGE_PREFIX, name)
+        data = await old.async_load()
+        if data is not None:
+            await self._stores[name].async_save(data)
+            await old.async_remove()
+        return data
+
     async def async_load(self) -> None:
-        raw_settings = await self._stores["settings"].async_load()
-        load = {m: await self._stores[m].async_load() or {} for m in STORES if m != "settings"}
+        raw_settings = await self._load("settings")
+        load = {m: await self._load(m) or {} for m in STORES if m != "settings"}
         self.notes = load["notes"].get("notes", [])
         self.notes_sync = load["notes"].get("sync") or {"entity_id": None, "snap": {}, "remove": []}
         shop = load["shopping"]
@@ -127,19 +150,32 @@ class NovaData:
         if self.notes_sync.get("entity_id") != self.settings["notizen"]["todo_entity"]:
             self._reset_notes_sync(self.settings["notizen"]["todo_entity"], notify=False)
 
-        def mkdirs() -> None:
-            for m in IMAGE_MODULES:
-                (self.image_root / m).mkdir(parents=True, exist_ok=True)
+        await self.hass.async_add_executor_job(self._prepare_images)
 
-        await self.hass.async_add_executor_job(mkdirs)
+    def _prepare_images(self) -> None:
+        """Bildordner anlegen und Bilder von vor der Umbenennung (www/nova/<modul>) herüberholen. Gespeichert sind nur
+        Dateinamen, die Daten bleiben also gültig. Andere Dateien im alten Ordner bleiben liegen."""
+        for m in IMAGE_MODULES:
+            new = self.image_root / m
+            new.mkdir(parents=True, exist_ok=True)
+            old = self._old_image_root / m
+            if not old.is_dir():
+                continue
+            for f in old.iterdir():
+                if f.is_file() and IMAGE_RE.match(f.name) and not (new / f.name).exists():
+                    shutil.move(str(f), str(new / f.name))
+            if not any(old.iterdir()):
+                old.rmdir()
+        if self._old_image_root.is_dir() and not any(self._old_image_root.iterdir()):
+            self._old_image_root.rmdir()
 
     async def _first_settings(self) -> None:
-        """Erster Start mit Einstellungen: bisherige Werte übernehmen – Module aus den Optionen, Theme aus nova.theme
-        (oder dem alten Helfer input_select.nova_theme), todo-Liste aus dem Einkaufs-Abgleich. Danach gibt es nur noch
-        die Einstellungen; der alte Speicher nova.theme wird gelöscht."""
+        """Erster Start mit Einstellungen: bisherige Werte übernehmen – Module aus den Optionen, Theme aus dem alten
+        Speicher nova.theme (oder dem alten Helfer input_select.nova_theme), todo-Liste aus dem Einkaufs-Abgleich. Danach
+        gibt es nur noch die Einstellungen; nova.theme wird gelöscht."""
         s = defaults()
         s["module"] = {m: m in self._initial_modules for m in MODULES}
-        old_theme = Store(self.hass, STORAGE_VERSION, "nova.theme")
+        old_theme = Store(self.hass, STORAGE_VERSION, f"{OLD_STORAGE_PREFIX}.theme")
         key = ((await old_theme.async_load()) or {}).get("theme")
         if key not in THEMES:
             st = self.hass.states.get(THEME_HELPER)
@@ -423,7 +459,7 @@ class NovaData:
 
     @callback
     def set_sync(self, entity_id: str | None) -> None:
-        """todo-Liste für den Abgleich (alter Befehl nova/shopping/set_sync) – steht in den Einstellungen."""
+        """todo-Liste für den Abgleich (Befehl nova_homeverse/shopping/set_sync) – steht in den Einstellungen."""
         self.settings_set({"einkauf": {"todo_entity": entity_id}})
 
     @callback

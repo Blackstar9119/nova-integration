@@ -15,10 +15,10 @@
     "frontend",
     "panel_custom"
   ],
-  "documentation": "https://github.com/Blackstar9119/nova-integration",
+  "documentation": "https://github.com/Blackstar9119/nova-homeverse",
   "integration_type": "service",
   "iot_class": "local_push",
-  "issue_tracker": "https://github.com/Blackstar9119/nova-integration/issues",
+  "issue_tracker": "https://github.com/Blackstar9119/nova-homeverse/issues",
   "requirements": [],
   "single_config_entry": true,
   "version": "0.1.0b8"

@@ -36,7 +36,7 @@ Klicke oben rechts auf **Über Link hinzufügen**.
 Ins Feld **GitHub-Link** kopierst du diese Adresse:
 
 ```
-https://github.com/Blackstar9119/nova-integration
+https://github.com/Blackstar9119/nova-homeverse
 ```
 
 Dann klickst du auf **Hinzufügen**.
@@ -95,7 +95,7 @@ einzeln an- und ausschalten kannst. Am Anfang sind alle an. Das passt für die m
 
 Willst du etwas abschalten? Dann klicke unter **Einstellungen → Geräte & Dienste → Nova Homeverse** auf das **Zahnrad**.
 
-<p align="center"><img src="../images/ui/install-10-nova-integration.webp" alt="Nova Homeverse unter Geräte und Dienste mit dem Zahnrad" width="720"></p>
+<p align="center"><img src="../images/ui/install-10-nova-homeverse.webp" alt="Nova Homeverse unter Geräte und Dienste mit dem Zahnrad" width="720"></p>
 
 Setze oder entferne die Haken und klicke auf **OK**. Die Änderung wirkt sofort. Abgeschaltete Module behalten ihre Daten.
 

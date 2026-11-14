@@ -73,7 +73,7 @@ Ein Klick auf eine Karte öffnet ihre Anleitung.
 
 ## Installation in vier Schritten
 
-1. **Einstellungen → Marketplace → Über Link hinzufügen** und `https://github.com/Blackstar9119/nova-integration` eintragen.
+1. **Einstellungen → Marketplace → Über Link hinzufügen** und `https://github.com/Blackstar9119/nova-homeverse` eintragen.
 2. **Nova Homeverse** suchen und **Herunterladen**.
 3. Home Assistant **neu starten**.
 4. **Einstellungen → Geräte & Dienste → Integration hinzufügen → Nova Homeverse.**

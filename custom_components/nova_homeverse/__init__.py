@@ -12,19 +12,16 @@ from homeassistant.helpers import issue_registry as ir
 from homeassistant.loader import async_get_integration
 
 from .cards import NovaCards
-from .const import CONF_MODULES, DOMAIN, ISSUE_OLD_DOMAIN, MODULES, OLD_DOMAIN
+from .const import CONF_MODULES, DOMAIN, ISSUE_OLD_DOMAIN, MODULES, OLD_DOMAIN, PANEL_ELEMENT, PANEL_URL, STATIC_URL
 from .storage import NovaData
 from .todo_sync import NoteSync, TodoSync
 from .websocket_api import async_register
 
 REGISTERED = f"{DOMAIN}_registered"
-# Schriften des Nova Rezeptbuchs (Caveat, EB Garamond, Latin-Subset, SIL Open Font License) – die Karte lädt sie erst,
-# wenn ein Buch zu sehen ist. Nichts kommt aus dem Internet.
-STATIC_URL = "/nova/static"
-# Nova-Panel in der Seitenleiste (Einstellungen, nur Admins). Die Datei static/nova-panel.js wird in nova-cards gebaut
-# („npm run panel“ aus src/panel.js) und hierher kopiert – nicht direkt bearbeiten.
-PANEL_URL = "nova"
-PANEL_ELEMENT = "nova-settings-panel"
+# Unter STATIC_URL liegen auch die Schriften des Nova Rezeptbuchs (Caveat, EB Garamond, Latin-Subset, SIL Open Font
+# License) – die Karte lädt sie erst, wenn ein Buch zu sehen ist. Nichts kommt aus dem Internet.
+# Nova-Panel in der Seitenleiste (Einstellungen, nur Admins): static/nova-panel.js ist gebaut („npm run panel“), nicht
+# direkt bearbeiten.
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
