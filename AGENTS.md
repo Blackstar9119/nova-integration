@@ -34,6 +34,7 @@ custom_components/nova_homeverse/
   todo_sync.py         Abgleich mit todo-Entitäten (für Assist): Einkaufsliste (einkauf.todo_entity) und Notizen
                        (notizen.todo_entity, Titel + Klartext); beide dürfen nicht dieselbe Liste nutzen
   translations/        de.json, en.json
+  brand/               Icon und Logo (icon/logo/dark_logo, je @2x) – Home Assistant zeigt sie direkt an; Quelle docs/images/logo/*.svg
   static/nova-panel.js ERZEUGT in nova-cards („npm run panel“ aus src/panel.js) – Nova-Panel in der Seitenleiste (Einstellungen,
                        nur Admins), hierher kopieren, nie direkt bearbeiten
   static/nova-cards.js ERZEUGT in nova-cards („npm run integration“, schreibt direkt hierher, wenn beide Repos nebeneinander liegen) –
@@ -41,6 +42,7 @@ custom_components/nova_homeverse/
   static/fonts/        Schriften des Nova Rezeptbuchs (Caveat, EB Garamond als Latin-Subset, OFL), ausgeliefert unter /nova/static
 tests/                 pytest (pytest-homeassistant-custom-component)
 hacs.json              Metadaten für den Marketplace
+brands/                Dieselben Bilder im Aufbau von home-assistant/brands, für eine spätere Einreichung
 README.md              Kurzbeschreibung für Nutzer
 ```
 

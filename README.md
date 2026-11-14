@@ -1,4 +1,10 @@
-# Nova Homeverse
+<h1 align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/logo/logo-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="docs/images/logo/logo-light.svg">
+    <img src="docs/images/logo/logo-light.svg" alt="Nova Homeverse by </Blackstar>" width="560">
+  </picture>
+</h1>
 
 <p align="center"><img src="docs/images/themes/hero-blue.webp" alt="Nova Cards im Theme Nova Blau"></p>
 
